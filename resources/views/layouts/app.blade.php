@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title') - BlogRoom</title>
+    <title>@yield('title') - {{config('app.name')}}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -19,11 +19,16 @@
 </head>
 
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
     <div id="app">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
             <div class="container">
+                <img src="" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    BlogRoom
+                    {{config('app.name')}}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -38,12 +43,12 @@
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto ">
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="/">หน้าแรก</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('about') }}">เกี่ยวกับ</a>
+                            <a class="nav-link" href="{{ route('about') }}">สินค้าทั้งหมด</a>
                         </li>
                         <!-- Authentication Links -->
                         @guest
@@ -55,7 +60,7 @@
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">สมัครเป็นนักเขียน</a>
+                                    <a class="btn btn-outline-success mx-2" type="button" href="{{ route('register') }}">สมัครสมาชิก</a>
                                 </li>
                             @endif
                         @else
