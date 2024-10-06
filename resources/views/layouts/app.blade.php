@@ -26,9 +26,9 @@
     <div id="app">
         <nav class="navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
             <div class="container">
-                <img src="" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{config('app.name')}}
+                    <img src="{{url('images/logo-long.png')}}" alt="Logo" style="width:150px; height:48px;" class="d-inline-block">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
