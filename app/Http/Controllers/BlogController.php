@@ -12,7 +12,7 @@ class BlogController extends Controller
     {
         $logo = Storage::url("images/logo.png");
         $blogs = Blog::orderByDesc('id')->where('status', true)->get();
-        return view('welcome', compact('blogs'));
+        return view('home', compact('blogs'));
     }
 
     function detail($id)

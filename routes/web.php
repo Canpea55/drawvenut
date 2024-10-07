@@ -7,7 +7,7 @@ use App\Http\Controllers\AdminController;
 Route::get('/', [BlogController::class, 'index']);
 Route::get('/detail/{id}', [BlogController::class, 'detail']);
 
-Route::prefix('author')->group(function () {
+Route::prefix('admin')->group(function () {
     Route::get('/blog', [AdminController::class, 'index'])->name('blog');
     Route::get('/form', [AdminController::class, 'createBlog'])->name('form');
     Route::post('/insert', [AdminController::class, 'insert']);
