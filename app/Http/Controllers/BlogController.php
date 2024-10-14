@@ -10,7 +10,6 @@ class BlogController extends Controller
 {
     function index()
     {
-        $logo = Storage::url("images/logo.png");
         $blogs = Blog::orderByDesc('id')->where('status', true)->get();
         return view('home', compact('blogs'));
     }

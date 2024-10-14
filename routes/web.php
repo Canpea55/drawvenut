@@ -1,13 +1,23 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 
-Route::get('/', [BlogController::class, 'index']);
-Route::get('/detail/{id}', [BlogController::class, 'detail']);
+Route::get('/', [ShopController::class, 'index'])->name('home');
+Route::get('/home', [ShopController::class, 'index'])->name('home');
+Route::get('/about', [ShopController::class, 'about'])->name('about');
+Route::fallback(function () {return "404 not found"; });
 
-Route::prefix('admin')->group(function () {
+Route::get('/product', [ShopController::class, 'products'])->name('products');
+Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
+// Route::get('blog/{name}', function ($name) {
+//     return "<h1>Blogs ${name}</h1>";
+// });
+
+Route::prefix('administration')->group(function () {
     Route::get('/blog', [AdminController::class, 'index'])->name('blog');
     Route::get('/form', [AdminController::class, 'createBlog'])->name('form');
     Route::post('/insert', [AdminController::class, 'insert']);
@@ -17,30 +27,4 @@ Route::prefix('admin')->group(function () {
     Route::post('/update/{id}', [AdminController::class, 'update'])->name('update');
 });
 
-Route::get('/about', [AdminController::class, 'about'])->name('about');
-
-Route::get('blog/{name}', function ($name) {
-    return "<h1>Blogs ${name}</h1>";
-});
-
-Route::get('admin', function () {
-    return "<a href='admin/user/kong'>1.Kong</a>";
-});
-Route::get('admin/user/kong', function () {
-    return "<h1>Hello Admin kong</h1>";
-});
-
-Route::get('admin2', function () {
-    return "<a href='" . route('login') . "'>1.Kong</a>";
-});
-Route::get('admin2/user/kong', function () {
-    return "<h1>Hello Admin kong</h1>
-    you have been use a recommanded path";
-})->name('login');
-
-Route::fallback(function () {
-    return "404 not found"; });
-
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

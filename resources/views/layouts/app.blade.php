@@ -24,7 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 
     <div id="app">
-        <nav class="navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
+        <nav class="shadow-sm navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
             <div class="container">
                 
                 <a class="navbar-brand" href="{{ url('/') }}">

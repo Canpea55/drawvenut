@@ -19,13 +19,6 @@ class AdminController extends Controller
         return view('blog', compact('blogs'));
     }
 
-    function about()
-    {
-        $name = "ก้องไข่เข็ม";
-        $date = "19 Sep 2024";
-        return view('about', compact('name', 'date'));
-    }
-
     function createBlog()
     {
         return view('form');

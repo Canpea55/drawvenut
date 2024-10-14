@@ -47,23 +47,6 @@
         </table>
 
         {{ $blogs->links() }}
-
-        <br>
-
-        @foreach ($blogs as $item)
-            <h4>{{ $item->title }}</h4>
-            <p>{{ $item->content }}</p>
-            @if ($item->status)
-                <p class="text text-success">
-                    published
-                </p>
-            @else
-                <p class="text text-danger">
-                    unpublished
-                </p>
-            @endif
-            <hr>
-        @endforeach
     @else
         <div class="text text-center">ไม่มีบทความในระบบ</div>
     @endif
