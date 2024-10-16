@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
+<style>
+    body {
+        min-height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main {
+        flex: 1;
+    }
+</style>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +69,7 @@
                             <a class="nav-link" aria-current="page" href="/">หน้าแรก</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('about') }}">สินค้าทั้งหมด</a>
+                            <a class="nav-link" href="{{ route('search') }}">สินค้าทั้งหมด</a>
                         </li>
                         <!-- Authentication Links -->
                         @guest
@@ -120,15 +133,14 @@
                 background-color: #D09CC7;
                 color: rgba(0, 0, 0, .8);
                 text-align: center;
-            "
-        >
+            ">
             <div>
                 © 2024 Drawvenut. ขอสงวนลิขสิทธิ์
             </div>
             <div style="display: flex">
                 <a class="nav-link" href="{{ route('about') }}">เกี่ยวกับเรา</a>
             </div>
-            
+
         </div>
     </div>
 </body>

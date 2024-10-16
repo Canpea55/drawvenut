@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
@@ -11,9 +12,8 @@ Route::get('/home', [ShopController::class, 'index'])->name('home');
 Route::get('/about', [ShopController::class, 'about'])->name('about');
 Route::fallback(function () {return "404 not found"; });
 
-Route::get('/search', [ShopController::class, 'search'])->name('search');
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
-Route::get('/product', [ShopController::class, 'products'])->name('products');
 Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
 // Route::get('blog/{name}', function ($name) {
 //     return "<h1>Blogs ${name}</h1>";
