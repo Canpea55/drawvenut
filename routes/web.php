@@ -19,6 +19,8 @@ Route::get('/product/{id}', [ShopController::class, 'product'])->name('product')
 //     return "<h1>Blogs ${name}</h1>";
 // });
 
+Route::get('/product-add', [AdminController::class,'addProduct'])->name('product-add');
+
 Route::prefix('administration')->group(function () {
     Route::get('/blog', [AdminController::class, 'index'])->name('blog');
     Route::get('/form', [AdminController::class, 'createBlog'])->name('form');
