@@ -19,13 +19,9 @@ class AdminController extends Controller
         return view('blog', compact('blogs'));
     }
 
-    function createBlog()
+    function productForm()
     {
         return view('form');
-    }
-    function addProduct()
-    {
-        return view('product-add');
     }
 
     function insert(Request $request)

@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'เขียนบล็อก')
+@section('title', 'ฟอร์มสินค้า')
 
 @section('content')
-    <h2 class="text text-center py-4"> เขียนบล็อกใหม่ </h2>
+    <h2 class="text text-center py-4"> ฟอร์มสินค้า </h2>
     <form method="POST" action="insert">
         @csrf
         <div class="form-group py-2">

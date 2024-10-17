@@ -19,11 +19,10 @@ Route::get('/product/{id}', [ShopController::class, 'product'])->name('product')
 //     return "<h1>Blogs ${name}</h1>";
 // });
 
-Route::get('/product-add', [AdminController::class,'addProduct'])->name('product-add');
+Route::get('/form', [AdminController::class, 'productForm'])->name('form');
 
 Route::prefix('administration')->group(function () {
     Route::get('/blog', [AdminController::class, 'index'])->name('blog');
-    Route::get('/form', [AdminController::class, 'createBlog'])->name('form');
     Route::post('/insert', [AdminController::class, 'insert']);
     Route::get('/delete/{id}', [AdminController::class, 'delete'])->name('delete');
     Route::get('/change/{id}', [AdminController::class, 'change'])->name('change');
