@@ -13,17 +13,13 @@ Route::get('/about', [ShopController::class, 'about'])->name('about');
 Route::fallback(function () {return "404 not found"; });
 
 Route::get('/search', [SearchController::class, 'search'])->name('search');
-
 Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
-// Route::get('blog/{name}', function ($name) {
-//     return "<h1>Blogs ${name}</h1>";
-// });
-
-Route::get('/form', [AdminController::class, 'productForm'])->name('form');
 
 Route::prefix('administration')->group(function () {
+    Route::get('/form', [AdminController::class, 'productForm'])->name('form');
+    Route::post('/insert', [AdminController::class, 'productInsert']);
+
     Route::get('/blog', [AdminController::class, 'index'])->name('blog');
-    Route::post('/insert', [AdminController::class, 'insert']);
     Route::get('/delete/{id}', [AdminController::class, 'delete'])->name('delete');
     Route::get('/change/{id}', [AdminController::class, 'change'])->name('change');
     Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('edit');

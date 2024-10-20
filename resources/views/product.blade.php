@@ -13,4 +13,5 @@
     <p>product description = {{ $product->description }}</p>
     <p>isBuyable = {{$product->isBuyable}}</p>
     <p>isDownloadable = {{$product->isDownloadable}}</p>
+    <p>isPublish = {{$product->isPublish}}</p>
 @endsection

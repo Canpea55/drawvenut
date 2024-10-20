@@ -107,11 +107,7 @@
 
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('form') }}">
-                                            เขียนบล็อก
-                                        </a>
-
-                                        <a class="dropdown-item" href="{{ route('blog') }}">
-                                            บล็อกทั้งหมด
+                                            เพิ่มสินค้า
                                         </a>
 
                                         <a class="dropdown-item" href="{{ route('logout') }}"

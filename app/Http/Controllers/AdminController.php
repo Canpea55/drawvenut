@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Blog;
+use App\Models\Product;
 
 class AdminController extends Controller
 {
@@ -24,25 +25,29 @@ class AdminController extends Controller
         return view('form');
     }
 
-    function insert(Request $request)
+    function productInsert(Request $request)
     {
         $request->validate(
             [
-                'title'=>'required|max:16',
-                'content'=>'required'
+                'name'=>'required',
+                'price'=>'required'
             ],
             [
-                'title.required'=>'กรุณาป้อนชื่อบทความก่อน',
-                'title.max'=>'กรุณาอย่าตั้งชื่อเกิน 16 ตัวอักศร',
-                'content.required'=>'กรุณาป้อนบทความของคุณก่อนส่ง'
+                'name.required'=>'กรุณาป้อนชื่อสินค้าก่อน',
+                'price.required'=>'กรุณาป้อนราคาด้วย (อย่างน้อย 0 บาท)'
             ]
         );
         $data=[
-            'title'=>$request->title,
-            'content'=>$request->content
+            'name'=>$request->name,
+            'price'=>$request->price,
+            'description'=> $request->description,
+            'isBuyable' => $request->isBuyable,
+            'isDownloadable'=> $request->isDownloadable,
+            'isPublish' => $request->isDownloadable,
         ];
-        Blog::insert($data);
-        return redirect('/blog');
+        Product::insert($data);
+        // return redirect('/form');
+        dd($data);
     }
 
     function delete($id)
@@ -67,24 +72,24 @@ class AdminController extends Controller
         return view('edit', compact('blog'));
     }
 
-    function update(Request $request, $id)
-    {
-        $request->validate(
-            [
-                'title'=>'required|max:16',
-                'content'=>'required'
-            ],
-            [
-                'title.required'=>'กรุณาป้อนชื่อบทความก่อน',
-                'title.max'=>'กรุณาอย่าตั้งชื่อเกิน 16 ตัวอักศร',
-                'content.required'=>'กรุณาป้อนบทความของคุณก่อนส่ง'
-            ]
-        );
-        $data = [
-            'title'=>$request->title,
-            'content'=>$request->content
-        ];
-        Blog::find($id)->update($data);
-        return redirect('/blog');
-    }
+    // function update(Request $request, $id)
+    // {
+    //     $request->validate(
+    //         [
+    //             'title'=>'required|max:16',
+    //             'content'=>'required'
+    //         ],
+    //         [
+    //             'title.required'=>'กรุณาป้อนชื่อบทความก่อน',
+    //             'title.max'=>'กรุณาอย่าตั้งชื่อเกิน 16 ตัวอักศร',
+    //             'content.required'=>'กรุณาป้อนบทความของคุณก่อนส่ง'
+    //         ]
+    //     );
+    //     $data = [
+    //         'title'=>$request->title,
+    //         'content'=>$request->content
+    //     ];
+    //     Blog::find($id)->update($data);
+    //     return redirect('/blog');
+    // }
 }
