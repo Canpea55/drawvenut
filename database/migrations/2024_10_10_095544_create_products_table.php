@@ -16,9 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->float('price')->nullable();
             $table->text('description')->nullable();
+
             $table->boolean('isBuyable')->default(false);
             $table->boolean('isDownloadable')->default(false);
             $table->boolean('isPublish')->default(false);
+            
             $table->timestamps();
         });
     }

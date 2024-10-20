@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-<style>
+<style type="text/css">
     body {
         min-height: 100vh;
         display: flex;
@@ -21,6 +21,11 @@
 
     main {
         min-height: 100vh;
+    }
+
+    @font-face {
+        font-family: NotoColorEmoji-Regular;
+        src: url('{{ public_path('fonts/NotoColorEmoji-Regular.tff') }}');
     }
 
     @yield('style')
