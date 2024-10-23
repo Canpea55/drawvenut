@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'queue' => true,
+    'queue' => env('SCOUT_QUEUE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -175,28 +175,28 @@ return [
         ],
         // 'max_total_results' => env('TYPESENSE_MAX_TOTAL_RESULTS', 1000),
         'model-settings' => [
-            // User::class => [
-            //     'collection-schema' => [
-            //         'fields' => [
-            //             [
-            //                 'name' => 'id',
-            //                 'type' => 'string',
-            //             ],
-            //             [
-            //                 'name' => 'name',
-            //                 'type' => 'string',
-            //             ],
-            //             [
-            //                 'name' => 'created_at',
-            //                 'type' => 'int64',
-            //             ],
-            //         ],
-            //         'default_sorting_field' => 'created_at',
-            //     ],
-            //     'search-parameters' => [
-            //         'query_by' => 'name'
-            //     ],
-            // ],
+            User::class => [
+                'collection-schema' => [
+                    'fields' => [
+                        [
+                            'name' => 'id',
+                            'type' => 'string',
+                        ],
+                        [
+                            'name' => 'name',
+                            'type' => 'string',
+                        ],
+                        [
+                            'name' => 'created_at',
+                            'type' => 'int64',
+                        ],
+                    ],
+                    'default_sorting_field' => 'created_at',
+                ],
+                'search-parameters' => [
+                    'query_by' => 'name'
+                ],
+            ],
         ],
     ],
 
