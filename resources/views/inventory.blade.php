@@ -4,9 +4,9 @@
 @endsection
 
 @section('title')
-ค้นหา
+คลัง
 @endsection
 
 @section('content')
-    <div class="d-flex main"> search result </div>
+    <div class="d-flex main"> inventory </div>
 @endsection

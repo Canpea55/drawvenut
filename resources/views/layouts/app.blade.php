@@ -83,12 +83,11 @@
 
                         <!-- Right Side Of Navbar -->
                         <ul class="navbar-nav ms-auto ">
+                            
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="/">หน้าแรก</a>
+                                <a class="nav-link" aria-current="page" href="/store">ร้านค้า</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('search') }}">สินค้าทั้งหมด</a>
-                            </li>
+                            
                             <!-- Authentication Links -->
                             @guest
                                 @if (Route::has('login'))
@@ -104,6 +103,24 @@
                                     </li>
                                 @endif
                             @else
+                                <!-- Customer -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('inventory') }}">คลัง</a>
+                                </li>
+
+                                <!-- Administrator -->  
+                                @if (Auth::user()->isAdmin)
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        ✏️
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="nav-link" href="{{ route('form') }}">เพิ่มสินค้า</a>
+                                    </div>
+                                </li>
+                                @endif
+
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -111,10 +128,6 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('form') }}">
-                                            เพิ่มสินค้า
-                                        </a>
-
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">
@@ -127,6 +140,7 @@
                                     </div>
                                 </li>
                             @endguest
+
                         </ul>
                     </div>
                 </div>

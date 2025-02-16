@@ -19,11 +19,21 @@ class ShopController extends Controller
         $date = "19 Sep 2024";
         return view('about', compact('name', 'date'));
     }
+    function store()
+    {
+        $products = Product::orderByDesc('id')->where('isPublish', true)->get();
+        return view('store',compact('products'));
+    }
 
     function product($id)
     {
         $product = Product::find($id);
         return view('product', compact('product'));
+    }
+
+    function inventory()
+    {
+        return view('inventory');
     }
     
 }
