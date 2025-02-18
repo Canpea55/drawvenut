@@ -1,0 +1,31 @@
+@extends('layouts.app')
+
+@section('title', 'บล็อก')
+
+@section('content')
+    <h2>สินค้าในคลัง</h2>
+
+    @if (count($products) > 0)
+        <table class="table table-bordered">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">ชื่อสินค้า</th>
+                    <th scope="col">คำอธิบาย</th>
+                    <th scope="col">ราคา</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($products as $item)
+                    <tr>
+                        <td>{{ $item->name }}</td>
+                        <td>{{ Str::limit($item->description, 64) }}</td>
+                        <td>{{ $item->price }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        {{ $products->links() }}
+    @else
+        <div class="text text-center">ไม่มีสินค้าในระบบ</div>
+    @endif
+@endsection

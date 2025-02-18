@@ -19,11 +19,12 @@ Route::prefix('customer')->group(function () {
     Route::get('/inventory', [ShopController::class, 'inventory'])->name("inventory");
 });
 
-Route::middleware(['auth', 'isAdmin'])->prefix('administration')->group(function () {
+Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::get('/form', [AdminController::class, 'productForm'])->name('form');
     Route::post('/insert', [AdminController::class, 'productInsert']);
+    Route::get('/productList', [AdminController::class, 'productList'])->name('productList');
 
-    Route::get('/blog', [AdminController::class, 'index'])->name('blog');
+    // Route::get('/blog', [AdminController::class, 'index'])->name('blog');
     Route::get('/delete/{id}', [AdminController::class, 'delete'])->name('delete');
     Route::get('/change/{id}', [AdminController::class, 'change'])->name('change');
     Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('edit');

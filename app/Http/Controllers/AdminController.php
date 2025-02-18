@@ -15,15 +15,15 @@ class AdminController extends Controller
         $this->middleware('auth');
     }
 
-    function index()
-    {
-        $blogs=Blog::paginate(5);
-        return view('blog', compact('blogs'));
-    }
+    // function index()
+    // {
+    //     $blogs=Blog::paginate(5);
+    //     return view('blog', compact('blogs'));
+    // }
 
     function productForm()
     {
-        return view('form');
+        return view('/admin/form');
     }
 
     function productInsert(Request $request)
@@ -49,6 +49,12 @@ class AdminController extends Controller
         ];
         Product::insert($data);
         return redirect(route('form'));
+    }
+
+    function productList(Request $request)
+    {
+        $products=Product::paginate(10);
+        return view('/admin/list', compact('products'));
     }
 
     function delete($id)
