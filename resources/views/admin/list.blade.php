@@ -12,6 +12,8 @@
                     <th scope="col">ชื่อสินค้า</th>
                     <th scope="col">คำอธิบาย</th>
                     <th scope="col">ราคา</th>
+                    <th scope="col">ระดับการเผยแพร่</th>
+                    <th scope="col">เครื่องมือ</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,7 +21,28 @@
                     <tr>
                         <td>{{ $item->name }}</td>
                         <td>{{ Str::limit($item->description, 64) }}</td>
-                        <td>{{ $item->price }}</td>
+                        <td class="text-center">{{ $item->price }}</td>
+                        <td class="text-center">
+                            @if ($item->isPublish)
+                                <a href="{{ route('productToggle', $item->id) }}" class="btn btn-success">
+                                    เผยแพร่
+                                </a>
+                            @else
+                                <a href="{{ route('productToggle', $item->id) }}" class="btn btn-secondary">
+                                    ไม่เผยแพร่
+                                </a>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('productDelete', $item->id) }}" class="btn btn-danger"
+                                onclick="return confirm('ลบ {{ $item->name }} ไหม?')">
+                                ลบ
+                            </a>
+
+                            <a href="{{ route('productEdit', $item->id) }}" class="btn btn-warning">
+                                แก้ไข
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

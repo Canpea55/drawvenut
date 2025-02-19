@@ -20,15 +20,13 @@ Route::prefix('customer')->group(function () {
 });
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
-    Route::get('/form', [AdminController::class, 'productForm'])->name('form');
-    Route::post('/insert', [AdminController::class, 'productInsert']);
-    Route::get('/productList', [AdminController::class, 'productList'])->name('productList');
-
-    // Route::get('/blog', [AdminController::class, 'index'])->name('blog');
-    Route::get('/delete/{id}', [AdminController::class, 'delete'])->name('delete');
-    Route::get('/change/{id}', [AdminController::class, 'change'])->name('change');
-    Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('edit');
-    Route::post('/update/{id}', [AdminController::class, 'update'])->name('update');
+    Route::get('/product/form', [AdminController::class, 'productForm'])->name('productForm');
+    Route::post('/product/insert', [AdminController::class, 'productInsert'])->name('productInsert');
+    Route::get('/product/list', [AdminController::class, 'productList'])->name('productList');
+    Route::get('/product/delete/{id}', [AdminController::class, 'productDelete'])->name('productDelete');
+    Route::get('/product/change/{id}', [AdminController::class, 'productToggle'])->name('productToggle');
+    Route::get('/product/edit/{id}', [AdminController::class, 'productEdit'])->name('productEdit');
+    Route::post('/product/update/{id}', [AdminController::class, 'productUpdate'])->name('productUpdate');
 });
 
 Auth::routes();

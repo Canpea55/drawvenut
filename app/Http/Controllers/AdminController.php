@@ -15,12 +15,6 @@ class AdminController extends Controller
         $this->middleware('auth');
     }
 
-    // function index()
-    // {
-    //     $blogs=Blog::paginate(5);
-    //     return view('blog', compact('blogs'));
-    // }
-
     function productForm()
     {
         return view('/admin/form');
@@ -57,46 +51,50 @@ class AdminController extends Controller
         return view('/admin/list', compact('products'));
     }
 
-    function delete($id)
+    function productDelete($id)
     {
-        Blog::find($id)->delete();
+        Product::find($id)->delete();
         return redirect()->back();
     }
 
-    function change($id)
+    function productToggle($id)
     {
-        $blog = Blog::find($id);
+        $product = Product::find($id);
         $data = [
-            'status' => !$blog->status
+            'isPublish' => !$product->isPublish
         ];
-        Blog::find($id)->update($data);
+        Product::find($id)->update($data);
         return redirect()->back();
     }
 
-    function edit($id)
+    function productEdit($id)
     {
-        $blog = Blog::find($id);
-        return view('edit', compact('blog'));
+        $product = Product::find($id);
+        return view('admin.edit', compact('product'));
     }
 
-    function update(Request $request, $id)
+    function productUpdate(Request $request, $id)
     {
         $request->validate(
             [
-                'title'=>'required|max:16',
-                'content'=>'required'
+                'name'=>'required',
+                'price'=>'required',
             ],
             [
-                'title.required'=>'กรุณาป้อนชื่อบทความก่อน',
-                'title.max'=>'กรุณาอย่าตั้งชื่อเกิน 16 ตัวอักศร',
-                'content.required'=>'กรุณาป้อนบทความของคุณก่อนส่ง'
+                'name.required'=>'กรุณาป้อนชื่อสินค้าก่อน',
+                'price.required'=>'กรุณาป้อนราคาด้วย (อย่างน้อย 0 บาท)',
+                // 'price.min'=>'ราคาอย่างน้อยต้องมากกว่าหรือเท่ากับ 0',
             ]
         );
-        $data = [
-            'title'=>$request->title,
-            'content'=>$request->content
+        $data=[
+            'name'=>$request->name,
+            'price'=>$request->price,
+            'description'=> $request->description,
+            'isBuyable' => $request->has('isBuyable'),
+            'isDownloadable'=> $request->has('isDownloadable'),
+            'isPublish' => $request->has('isPublish'),
         ];
-        Blog::find($id)->update($data);
-        return redirect('/blog');
+        Product::find($id)->update($data);
+        return redirect(route('productList'));
     }
 }
