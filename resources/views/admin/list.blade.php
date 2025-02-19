@@ -6,7 +6,7 @@
     <h2>สินค้าในคลัง</h2>
 
     @if (count($products) > 0)
-        <table class="table table-bordered">
+        <table class="table table-bordered align-middle">
             <thead class="text-center">
                 <tr>
                     <th scope="col">ชื่อสินค้า</th>
