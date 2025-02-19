@@ -20,12 +20,15 @@ Route::prefix('customer')->group(function () {
 });
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
-    Route::get('/product/form', [AdminController::class, 'productForm'])->name('productForm');
-    Route::post('/product/insert', [AdminController::class, 'productInsert'])->name('productInsert');
+    //pages
+    Route::get('/product/create', [AdminController::class, 'productCreate'])->name('productCreate');
+    Route::get('/product/edit/{id}', [AdminController::class, 'productEdit'])->name('productEdit');
     Route::get('/product/list', [AdminController::class, 'productList'])->name('productList');
+    
+    //func
+    Route::post('/product/insert', [AdminController::class, 'productInsert'])->name('productInsert');
     Route::get('/product/delete/{id}', [AdminController::class, 'productDelete'])->name('productDelete');
     Route::get('/product/change/{id}', [AdminController::class, 'productToggle'])->name('productToggle');
-    Route::get('/product/edit/{id}', [AdminController::class, 'productEdit'])->name('productEdit');
     Route::post('/product/update/{id}', [AdminController::class, 'productUpdate'])->name('productUpdate');
 });
 

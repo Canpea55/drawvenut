@@ -116,7 +116,7 @@
                                         ✏️
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="nav-link" href="{{ route('productForm') }}">เพิ่มสินค้า</a>
+                                        <a class="nav-link" href="{{ route('productCreate') }}">เพิ่มสินค้า</a>
                                         <a class="nav-link" href="{{ route('productList') }}">คลังสินค้า</a>
                                     </div>
                                 </li>

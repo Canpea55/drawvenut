@@ -4,7 +4,7 @@
 
 @section('content')
     <h2 class="text text-center py-4"> ฟอร์มสินค้า </h2>
-    <form method="POST" action="insert">
+    <form method="POST" action="insert" enctype="multipart/form-data">
         @csrf
         <div class="form-group py-2">
             <label for="name" class="py-2">ชื่อสินค้า</label>
@@ -50,6 +50,15 @@
             <input class="form-check-input" name="isPublish" type="checkbox" value="1" {{old('isBuyable') ? 'checked' : ''}}>
             <label for="isPublish" class="form-check-label">เผยแพร่?</label>
         </div>
+
+        {{-- <div class="form-group py-2">
+            <label for="tags" class="form-label">Tag</label>
+            <select id="tags" class="form-select" name="tags[]" multiple>
+                @foreach($tags as $tag)
+                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                @endforeach
+            </select>
+        </div> --}}
 
         <div class="form-group py-2">
             <input type="submit" value="บันทึก" class="btn btn-primary py-2">

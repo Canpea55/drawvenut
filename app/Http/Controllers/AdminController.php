@@ -15,12 +15,47 @@ class AdminController extends Controller
         $this->middleware('auth');
     }
 
-    function productForm()
+    function productCreate()
     {
-        return view('/admin/form');
+        return view('admin/create');
     }
 
     function productInsert(Request $request)
+    {
+        $request->validate(
+            [
+                'name'=>'required',
+                'price'=>'required',
+                'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            ],
+            [
+                'name.required'=>'กรุณาป้อนชื่อสินค้าก่อน',
+                'price.required'=>'กรุณาป้อนราคาด้วย (อย่างน้อย 0 บาท)',
+            ]
+        );
+
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imagePaths[] = $image->store('products', 'public');
+            }
+        }
+
+        // Create product
+        $product = Product::create([
+            'name'=>$request->name,
+            'price'=>$request->price,
+            'description'=> $request->description,
+            'images' => json_encode($imagePaths),
+            'isBuyable' => $request->has('isBuyable'),
+            'isDownloadable'=> $request->has('isDownloadable'),
+            'isPublish' => $request->has('isPublish'),
+        ]);
+
+        return redirect(route('productForm'));
+    }
+
+    function productUpdate(Request $request, $id)
     {
         $request->validate(
             [
@@ -41,8 +76,8 @@ class AdminController extends Controller
             'isDownloadable'=> $request->has('isDownloadable'),
             'isPublish' => $request->has('isPublish'),
         ];
-        Product::insert($data);
-        return redirect(route('productForm'));
+        Product::find($id)->update($data);
+        return redirect(route('productList'));
     }
 
     function productList(Request $request)
@@ -73,28 +108,5 @@ class AdminController extends Controller
         return view('admin.edit', compact('product'));
     }
 
-    function productUpdate(Request $request, $id)
-    {
-        $request->validate(
-            [
-                'name'=>'required',
-                'price'=>'required',
-            ],
-            [
-                'name.required'=>'กรุณาป้อนชื่อสินค้าก่อน',
-                'price.required'=>'กรุณาป้อนราคาด้วย (อย่างน้อย 0 บาท)',
-                // 'price.min'=>'ราคาอย่างน้อยต้องมากกว่าหรือเท่ากับ 0',
-            ]
-        );
-        $data=[
-            'name'=>$request->name,
-            'price'=>$request->price,
-            'description'=> $request->description,
-            'isBuyable' => $request->has('isBuyable'),
-            'isDownloadable'=> $request->has('isDownloadable'),
-            'isPublish' => $request->has('isPublish'),
-        ];
-        Product::find($id)->update($data);
-        return redirect(route('productList'));
-    }
+    
 }
