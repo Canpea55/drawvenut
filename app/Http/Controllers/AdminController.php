@@ -42,7 +42,7 @@ class AdminController extends Controller
             'isPublish' => $request->has('isPublish'),
         ];
         Product::insert($data);
-        return redirect(route('form'));
+        return redirect(route('productForm'));
     }
 
     function productList(Request $request)
