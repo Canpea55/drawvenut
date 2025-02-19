@@ -37,17 +37,17 @@
         </div>
 
         <div class="form-group py-2">
-            <input class="form-check-input" name="isBuyable" type="checkbox" value="{{$product->isBuyable}}" {{old('isBuyable') ? 'checked' : ''}}>
+            <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
             <label for="isBuyable" class="form-check-label">ซื้อได้?</label>
         </div>
 
         <div class="form-group py-2">
-            <input class="form-check-input" name="isDownloadable" type="checkbox" value="{{$product->isDownloadable}}" {{old('isDownloadable') ? 'checked' : ''}}>
+            <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
             <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
         </div>
 
         <div class="form-group py-2">
-            <input class="form-check-input" name="isPublish" type="checkbox" value="{{$product->isPublish}}" {{old('isPublish') ? 'checked' : ''}}>
+            <input class="form-check-input" name="isPublish" type="checkbox" {{$product->isPublish ? 'checked' : ''}}>
             <label for="isPublish" class="form-check-label">เผยแพร่?</label>
         </div>
 
