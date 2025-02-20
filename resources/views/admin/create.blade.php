@@ -6,6 +6,12 @@
     <h2 class="text text-center py-4"> ฟอร์มสินค้า </h2>
     <form method="POST" action="insert" enctype="multipart/form-data">
         @csrf
+
+        <div class="form-group py-4">
+            <input class="form-check-input" name="createMultiple" type="checkbox" checked>
+            <label for="createMultiple" class="form-check-label">เพิ่มหลายอัน</label>
+        </div>
+
         <div class="form-group py-2">
             <label for="name" class="py-2">ชื่อสินค้า</label>
             <input type="text" name="name" class="form-control">

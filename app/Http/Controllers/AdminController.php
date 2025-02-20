@@ -51,6 +51,9 @@ class AdminController extends Controller
             'isPublish' => $request->has('isPublish'),
         ]);
 
+        if(!$request->input("createMultiple")) {
+            return redirect(route('productList'));
+        }
         return redirect(route('productCreate'));
     }
 
@@ -81,7 +84,7 @@ class AdminController extends Controller
 
     function productList(Request $request)
     {
-        $products=Product::paginate(10);
+        $products=Product::orderBy('id', 'desc')->paginate(10);
         return view('/admin/list', compact('products'));
     }
 
