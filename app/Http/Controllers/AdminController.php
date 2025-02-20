@@ -26,19 +26,18 @@ class AdminController extends Controller
             [
                 'name'=>'required',
                 'price'=>'required',
-                'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Only allow images
             ],
             [
                 'name.required'=>'กรุณาป้อนชื่อสินค้าก่อน',
                 'price.required'=>'กรุณาป้อนราคาด้วย (อย่างน้อย 0 บาท)',
             ]
         );
-
-        $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $imagePaths[] = $image->store('products', 'public');
-            }
+      
+        // Handle file upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public'); // Store in storage/app/public/products
         }
 
         // Create product
@@ -46,13 +45,13 @@ class AdminController extends Controller
             'name'=>$request->name,
             'price'=>$request->price,
             'description'=> $request->description,
-            'images' => json_encode($imagePaths),
+            'image' => $imagePath, // Save the path
             'isBuyable' => $request->has('isBuyable'),
             'isDownloadable'=> $request->has('isDownloadable'),
             'isPublish' => $request->has('isPublish'),
         ]);
 
-        return redirect(route('productForm'));
+        return redirect(route('productCreate'));
     }
 
     function productUpdate(Request $request, $id)

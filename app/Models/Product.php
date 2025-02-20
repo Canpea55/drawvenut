@@ -16,19 +16,7 @@ class Product extends Model
         'description',
         'isBuyable',
         'isDownloadable',
-        'isPublish'
+        'isPublish',
+        'image'
     ];
-
-    /**
-     * Get the indexable data array for the model.
-     *
-     * @return array<string, mixed>
-     */
-    public function toSearchableArray(): array
-    {
-        return array_merge($this->toArray(), [
-            'id' => (string) $this->id,
-            'created_at' => $this->created_at->timestamp,
-        ]);
-    }
 }

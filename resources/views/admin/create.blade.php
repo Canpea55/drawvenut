@@ -51,14 +51,8 @@
             <label for="isPublish" class="form-check-label">เผยแพร่?</label>
         </div>
 
-        {{-- <div class="form-group py-2">
-            <label for="tags" class="form-label">Tag</label>
-            <select id="tags" class="form-select" name="tags[]" multiple>
-                @foreach($tags as $tag)
-                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                @endforeach
-            </select>
-        </div> --}}
+        <label>Upload Image:</label>
+        <input type="file" name="image" accept="image/*">
 
         <div class="form-group py-2">
             <input type="submit" value="บันทึก" class="btn btn-primary py-2">
