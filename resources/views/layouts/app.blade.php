@@ -110,16 +110,23 @@
 
                                 <!-- Administrator -->  
                                 @if (Auth::user()->isAdmin)
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        ✏️
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="nav-link" href="{{ route('productCreate') }}">เพิ่มสินค้า</a>
-                                        <a class="nav-link" href="{{ route('productList') }}">คลังสินค้า</a>
-                                    </div>
-                                </li>
+                                    <li class="nav-item btn-group my-auto ms-2">
+                                        <a class="btn btn-primary btn-sm" 
+                                        href="{{ route('productList') }}">
+                                            คลังสินค้า
+                                        </a>
+
+                                        <a type="button" 
+                                        class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split my-auto me-2"
+                                        data-bs-toggle="dropdown" 
+                                        aria-expanded="false">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </a>
+
+                                        <ul class="dropdown-menu mx-auto">
+                                            <a class="nav-link" href="{{ route('productCreate') }}">เพิ่มสินค้า</a>
+                                        </ul>
+                                    </li>
                                 @endif
 
                                 <li class="nav-item dropdown">

@@ -21,7 +21,7 @@
             <tbody>
                 @foreach ($products as $item)
                     <tr>
-                        <td class="text-center ">
+                        <td class="text-center">
                             @php
                                 $images = json_decode($item->images, true);
                             @endphp
