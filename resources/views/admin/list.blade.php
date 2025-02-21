@@ -22,11 +22,22 @@
                 @foreach ($products as $item)
                     <tr>
                         <td class="text-center ">
-                            @if ($item->image)
-                                <img src="{{ Storage::url($item->image) }}" alt="Product Image" width="150">
-                            @else
-                                <p>No Image Available</p>
-                            @endif
+                            @php
+                                $images = json_decode($item->images, true);
+                            @endphp
+
+                            <div class="flex gap-2">
+                                @if(is_array($images) && count($images) > 0)
+                                    @foreach($images as $image)
+                                        <img src="{{ Storage::url($image) }}" 
+                                            alt="Product Image" 
+                                            width="100" 
+                                            class="rounded border">
+                                    @endforeach
+                                @else
+                                    <p>No Images Available</p>
+                                @endif
+                            </div>
                         </td>
                         <td class="text-center">{{ $item->name }}</td>
                         <td class="text-center">{{ Str::limit($item->description, 64) }}</td>

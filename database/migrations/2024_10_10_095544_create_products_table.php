@@ -17,8 +17,7 @@ return new class extends Migration
             $table->float('price')->nullable();
             $table->text('description')->nullable();
 
-            // $table->json('images')->nullable(); 
-            $table->string('image')->nullable(); // Store the image path
+            $table->json('images')->nullable(); // Store images as JSON
 
             $table->boolean('isBuyable')->default(false);
             $table->boolean('isDownloadable')->default(false);

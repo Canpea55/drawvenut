@@ -26,7 +26,7 @@ class AdminController extends Controller
             [
                 'name'=>'required',
                 'price'=>'required',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Only allow images
+                'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
             ],
             [
                 'name.required'=>'กรุณาป้อนชื่อสินค้าก่อน',
@@ -34,10 +34,12 @@ class AdminController extends Controller
             ]
         );
       
-        // Handle file upload
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public'); // Store in storage/app/public/products
+        // Handle multiple file uploads
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imagePaths[] = $image->store('products', 'public'); // Store each image
+            }
         }
 
         // Create product
@@ -45,16 +47,16 @@ class AdminController extends Controller
             'name'=>$request->name,
             'price'=>$request->price,
             'description'=> $request->description,
-            'image' => $imagePath, // Save the path
+            'images' => json_encode($imagePaths), // Store as JSON
             'isBuyable' => $request->has('isBuyable'),
             'isDownloadable'=> $request->has('isDownloadable'),
             'isPublish' => $request->has('isPublish'),
         ]);
 
         if(!$request->input("createMultiple")) {
-            return redirect(route('productList'));
+            return redirect(route('productList'))->with('success', 'Product added successfully!');
         }
-        return redirect(route('productCreate'));
+        return redirect(route('productCreate'))->with('success', 'Product added successfully!');
     }
 
     function productUpdate(Request $request, $id)

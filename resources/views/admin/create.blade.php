@@ -57,11 +57,34 @@
             <label for="isPublish" class="form-check-label">เผยแพร่?</label>
         </div>
 
-        <label>Upload Image:</label>
-        <input type="file" name="image" accept="image/*">
+        <label>Upload Images:</label>
+        <input type="file" name="images[]" accept="image/*" multiple onchange="previewImages(event)">
+
+        <div id="preview-container" class="flex gap-2 mt-2"></div> <!-- Image previews appear here -->
+
 
         <div class="form-group py-2">
             <input type="submit" value="บันทึก" class="btn btn-primary py-2">
         </div>
     </form>
+
+    <script>
+        function previewImages(event) {
+            let previewContainer = document.getElementById("preview-container");
+            previewContainer.innerHTML = ""; // Clear previous previews
+        
+            Array.from(event.target.files).forEach(file => {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.width = 100;
+                    img.classList.add("rounded", "border");
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+
 @endsection

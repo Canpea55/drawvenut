@@ -14,9 +14,9 @@ class Product extends Model
         'name',
         'price',
         'description',
+        'images',
         'isBuyable',
         'isDownloadable',
         'isPublish',
-        'image'
     ];
 }
