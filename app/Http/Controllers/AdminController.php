@@ -26,7 +26,6 @@ class AdminController extends Controller
             [
                 'name'=>'required',
                 'price'=>'required',
-                'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
             ],
             [
                 'name.required'=>'กรุณาป้อนชื่อสินค้าก่อน',
@@ -34,12 +33,27 @@ class AdminController extends Controller
             ]
         );
       
-        // Handle multiple file uploads
-        $imagePaths = [];
+        // Handle Image Upload
+        $storedImages = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $imagePaths[] = $image->store('products', 'public'); // Store each image
+                
+                // Get the original file name
+                $originalName = $image->getClientOriginalName();
+
+                $storedImages[] = $image->storeAs('products', $originalName, 'public');
+
+                // $storedImages[] = $image->store('products', 'public'); // Save image and store path
             }
+        }
+        
+
+        // Decode the image order from JSON and sort the uploaded images accordingly
+        $imageOrder = json_decode($request->image_order, true);
+        if (!empty($imageOrder)) {
+            usort($storedImages, function ($a, $b) use ($imageOrder) {
+                return array_search(basename($a), $imageOrder) - array_search(basename($b), $imageOrder);
+            });
         }
 
         // Create product
@@ -47,7 +61,7 @@ class AdminController extends Controller
             'name'=>$request->name,
             'price'=>$request->price,
             'description'=> $request->description,
-            'images' => json_encode($imagePaths), // Store as JSON
+            'images' => json_encode($storedImages),
             'isBuyable' => $request->has('isBuyable'),
             'isDownloadable'=> $request->has('isDownloadable'),
             'isPublish' => $request->has('isPublish'),
