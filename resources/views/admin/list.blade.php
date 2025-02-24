@@ -28,14 +28,15 @@
 
                             <div class="flex gap-2">
                                 @if(is_array($images) && count($images) > 0)
-                                    @foreach($images as $image)
-                                        <img src="{{ Storage::url($image) }}" 
-                                            alt="Product Image" 
-                                            width="100" 
-                                            class="rounded border">
-                                    @endforeach
+                                    @php
+                                        $image = $images[0];
+                                    @endphp    
+                                    <img src="{{ Storage::url($image) }}" 
+                                        alt="Product Image" 
+                                        width="100" 
+                                        class="rounded border">
                                 @else
-                                    <p>No Images Available</p>
+                                    No Images Available
                                 @endif
                             </div>
                         </td>
