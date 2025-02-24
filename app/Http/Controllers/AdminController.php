@@ -41,7 +41,7 @@ class AdminController extends Controller
                 // Get the original file name
                 $originalName = $image->getClientOriginalName();
                 
-                $storedImages[] = $image->storeAs('products', $originalName, 'public');
+                $storedImages[] = $image->storeAs('images/products', $originalName, 'public');
                 
                 // $storedImages[] = $image->store('products', 'public'); // Save image and store path
             }
@@ -94,7 +94,7 @@ class AdminController extends Controller
                 // Get the original file name
                 $originalName = $image->getClientOriginalName();
                 
-                $storedImages[] = $image->storeAs('products', $originalName, 'public');
+                $storedImages[] = $image->storeAs('images/products', $originalName, 'public');
             }
         }
 
@@ -104,7 +104,7 @@ class AdminController extends Controller
         {
             foreach($imageOrder as &$image)
             {
-                $image = str_replace("new_products/", "products/", $image);
+                $image = str_replace("new_images/", "images/", $image);
             }
             $storedImages = $imageOrder;
         }
