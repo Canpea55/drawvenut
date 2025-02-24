@@ -3,12 +3,12 @@
 @section('title', 'ฟอร์มสินค้า')
 
 @section('content')
-    <h2 class="text text-center py-4"> ฟอร์มสินค้า </h2>
     <form method="POST" action="insert" enctype="multipart/form-data">
         @csrf
-
-        <div class="form-group py-4">
-            <input class="form-check-input" name="createMultiple" type="checkbox" checked>
+        
+        <div class="form-group py-4 text-center">
+            <h1 class="text text-center"> ฟอร์มสินค้า </h1>
+            <input class="form-check-input" name="createMultiple" type="checkbox">
             <label for="createMultiple" class="form-check-label">เพิ่มหลายอัน</label>
         </div>
 
@@ -43,15 +43,24 @@
         </div>
 
         <div class="form-group py-2">
+            <div class="py-2">
+                <label for="download" class="py-2">ลิ้งค์ดาวห์โหลด</label>
+                <input type="text" name="download" class="form-control">
+            </div>
+            
+            <div class="py-2">
+                <input class="form-check-input" name="isDownloadable" type="checkbox" value="1" {{old('isBuyable') ? 'checked' : ''}}>
+                <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
+            </div>
+        </div>
+        
+        
+        <div class="form-group py-2">
             <input class="form-check-input" name="isBuyable" type="checkbox" value="1" {{old('isBuyable') ? 'checked' : ''}}>
             <label for="isBuyable" class="form-check-label">ซื้อได้?</label>
         </div>
 
-        <div class="form-group py-2">
-            <input class="form-check-input" name="isDownloadable" type="checkbox" value="1" {{old('isBuyable') ? 'checked' : ''}}>
-            <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
-        </div>
-
+        
         <div class="form-group py-2">
             <input class="form-check-input" name="isPublish" type="checkbox" value="1" {{old('isBuyable') ? 'checked' : ''}}>
             <label for="isPublish" class="form-check-label">เผยแพร่?</label>
@@ -63,11 +72,11 @@
             
             <!-- Images will be displayed here and can be dragged to rearrange -->
             <div id="preview-container" class="flex gap-2 mt-2 border p-2" style="display: flex; flex-wrap: wrap;"></div>
-
+            
             <!-- Hidden input to store the reordered image paths -->
             <input type="hidden" name="image_order" id="image_order">
         </div>
-
+        
         <div class="form-group py-2">
             <input type="submit" value="บันทึก" class="btn btn-primary py-2">
         </div>

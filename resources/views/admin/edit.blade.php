@@ -3,9 +3,13 @@
 @section('title', 'แก้ไขสินค้า')
 
 @section('content')
-    <h2 class="text text-center py-4"> แก้ไขรายละเอียดสินค้า </h2>
     <form method="POST" action="{{ route('productUpdate', $product->id) }}" enctype="multipart/form-data">
         @csrf
+
+        <div class="form-group py-4 text-center">
+            <h1 class="text text-center"> แก้ไขรายละเอียดสินค้า </h1>
+        </div>
+
         <div class="form-group py-2">
             <label for="name" class="py-2">ชื่อสินค้า</label>
             <input type="text" name="name" class="form-control" value="{{$product->name}}">
@@ -37,13 +41,20 @@
         </div>
 
         <div class="form-group py-2">
-            <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
-            <label for="isBuyable" class="form-check-label">ซื้อได้?</label>
+            <div class="py-2">
+                <label for="download" class="py-2">ลิ้งค์ดาวห์โหลด</label>
+                <input type="text" name="download" class="form-control">
+            </div>
+
+            <div class="py-2">
+                <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
+                <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
+            </div>
         </div>
 
         <div class="form-group py-2">
-            <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
-            <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
+            <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
+            <label for="isBuyable" class="form-check-label">ซื้อได้?</label>
         </div>
 
         <div class="form-group py-2">

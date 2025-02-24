@@ -22,6 +22,8 @@ return new class extends Migration
             $table->boolean('isBuyable')->default(false);
             $table->boolean('isDownloadable')->default(false);
             $table->boolean('isPublish')->default(false);
+
+            $table->string('download')->nullable();
             
             $table->timestamps();
         });

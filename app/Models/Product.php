@@ -18,5 +18,6 @@ class Product extends Model
         'isBuyable',
         'isDownloadable',
         'isPublish',
+        'download',
     ];
 }
