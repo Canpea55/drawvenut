@@ -166,9 +166,9 @@
             const orderArray = [];
             document.querySelectorAll("#preview-container .image-wrapper").forEach(wrapper => {
                 if (wrapper.dataset.id) {
-                    orderArray.push(`existing_${wrapper.dataset.id}`);
+                    orderArray.push(`${wrapper.dataset.id}`);
                 } else if (wrapper.dataset.name) {
-                    orderArray.push(`new_${wrapper.dataset.name}`);
+                    orderArray.push(`${wrapper.dataset.name}`);
                 }
             });
             document.getElementById('image_order').value = JSON.stringify(orderArray);
