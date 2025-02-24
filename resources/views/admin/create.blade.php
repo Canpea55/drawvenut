@@ -44,7 +44,7 @@
 
         <div class="form-group py-2">
             <div class="py-2">
-                <label for="download" class="py-2">ลิ้งค์ดาวห์โหลด</label>
+                <label for="download" class="py-2">ลิ้งค์ดาวห์โหลดสินค้า</label>
                 <input type="text" name="download" class="form-control">
             </div>
             

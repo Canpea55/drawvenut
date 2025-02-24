@@ -64,6 +64,7 @@ class AdminController extends Controller
             'isBuyable' => $request->has('isBuyable'),
             'isDownloadable'=> $request->has('isDownloadable'),
             'isPublish' => $request->has('isPublish'),
+            'download' => $request->download,
         ]);
 
         if(!$request->input("createMultiple")) {
