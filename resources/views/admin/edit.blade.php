@@ -66,17 +66,19 @@
                 @php
                     $images = json_decode($product->images, true);
                 @endphp
-                @foreach ($images as $image)
-                    <div class="image-wrapper" data-name="{{ $image }}" style="position: relative; display: inline-block; margin: 5px;">
-                        <img src="{{Storage::url($image)}}" width="100" class="rounded border">
-                        <button 
-                            style="position: absolute; top: 0px; right: 0px; background: white; color: white; border: none; cursor: pointer;" 
-                            type="button" 
-                            class="delete-btn">
-                            ❌
-                        </button>
-                    </div>
-                @endforeach
+                @if (!empty($images))
+                    @foreach ($images as $image)
+                        <div class="image-wrapper" data-name="{{ $image }}" style="position: relative; display: inline-block; margin: 5px;">
+                            <img src="{{Storage::url($image)}}" width="100" class="rounded border">
+                            <button 
+                                style="position: absolute; top: 0px; right: 0px; background: white; color: white; border: none; cursor: pointer;" 
+                                type="button" 
+                                class="delete-btn">
+                                ❌
+                            </button>
+                        </div>
+                    @endforeach
+                @endif
             </div>
 
             <input type="hidden" name="image_order" id="image_order">
