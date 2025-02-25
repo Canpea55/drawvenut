@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
-use App\Models\Blog;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -17,7 +17,7 @@ class AdminController extends Controller
 
     function productCreate()
     {
-        return view('admin/create');
+        return view('admin/products/create');
     }
 
     function productInsert(Request $request)
@@ -135,7 +135,7 @@ class AdminController extends Controller
     function productList(Request $request)
     {
         $products=Product::orderBy('id', 'desc')->paginate(10);
-        return view('/admin/list', compact('products'));
+        return view('/admin/products/list', compact('products'));
     }
 
     function productDelete($id)
@@ -157,8 +157,14 @@ class AdminController extends Controller
     function productEdit($id)
     {
         $product = Product::find($id);
-        return view('admin.edit', compact('product'));
+        return view('admin/products/edit', compact('product'));
     }
 
+
+    function userList(Request $request)
+    {
+        $users=User::orderBy('id', 'desc')->paginate(10);
+        return view('/admin/users/list', compact('users'));
+    }
     
 }

@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'คลังสินค้า')
+@section('title', 'จัดการสินค้า')
 
 @section('content')
-    <h2>คลังสินค้า</h2>
+    <h1 class="my-4 text-center">จัดการสินค้า</h1>
 
     <a class="btn btn-primary my-2" href="{{route("productCreate")}}">เพิ่มสินค้า</a>
 
