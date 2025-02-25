@@ -113,19 +113,17 @@
                                     <li class="nav-item btn-group my-auto ms-2">
                                         <a class="btn btn-primary btn-sm" 
                                         href="{{ route('productList') }}">
-                                            คลังสินค้า
+                                            จัดการสินค้า
                                         </a>
-
                                         <a type="button" 
                                         class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split my-auto me-2"
                                         data-bs-toggle="dropdown" 
                                         aria-expanded="false">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </a>
-
-                                        <ul class="dropdown-menu mx-auto">
-                                            <a class="nav-link" href="{{ route('productCreate') }}">เพิ่มสินค้า</a>
-                                        </ul>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{{ route('userList') }}">จัดการผู้ใช้งาน</a>
+                                        </div>
                                     </li>
                                 @endif
 

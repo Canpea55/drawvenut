@@ -20,16 +20,20 @@ Route::prefix('customer')->group(function () {
 });
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
-    //pages
+    //product
     Route::get('/product/create', [AdminController::class, 'productCreate'])->name('productCreate');
     Route::get('/product/edit/{id}', [AdminController::class, 'productEdit'])->name('productEdit');
     Route::get('/product/list', [AdminController::class, 'productList'])->name('productList');
-    
-    //func
     Route::post('/product/insert', [AdminController::class, 'productInsert'])->name('productInsert');
     Route::get('/product/delete/{id}', [AdminController::class, 'productDelete'])->name('productDelete');
     Route::get('/product/change/{id}', [AdminController::class, 'productToggle'])->name('productToggle');
     Route::post('/product/update/{id}', [AdminController::class, 'productUpdate'])->name('productUpdate');
+    
+    //user
+    Route::get('/users/list', [AdminController::class, 'userList'])->name('userList');
+    Route::get('/users/edit/{id}', [AdminController::class, 'userEdit'])->name('userEdit');
+    Route::post('/users/update/{id}', [AdminController::class, 'userUpdate'])->name('userUpdate');
+    Route::get('/users/delete/{id}', [AdminController::class, 'userDelete'])->name('userDelete');
 });
 
 Auth::routes();
