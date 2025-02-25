@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-    <h1 class="my-4">product name = {{ $blog->name }}</h1>
+    <h1 class="my-4">product name = {{ $product->name }}</h1>
     <p>price = {{ $product->price}}</p>
     <p>product description = {{ $product->description }}</p>
     <p>isBuyable = {{$product->isBuyable}}</p>

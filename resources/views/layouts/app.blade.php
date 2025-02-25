@@ -58,11 +58,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" 
+        integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async>
+    </script>
 
     <div id="app">
         {{-- header navbar --}}
         <header>
-            <nav class="shadow-sm navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
+            <nav class="shadow navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
                 <div class="container">
 
                     <a class="navbar-brand" href="{{ url('/') }}">
@@ -85,7 +88,7 @@
                         <ul class="navbar-nav ms-auto ">
                             
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="/store">ร้านค้า</a>
+                                <a class="nav-link" aria-current="page" href="/">ร้านค้า</a>
                             </li>
                             
                             <!-- Authentication Links -->
@@ -160,15 +163,28 @@
             </div>
         </main>
 
-        {{-- footer navbar --}}
+        {{-- footer--}}
         <footer>
-            <div>
-                © 2024 Drawvenut. ขอสงวนลิขสิทธิ์
-            </div>
-            <div style="display: flex">
-                <a class="nav-link" href="{{ route('about') }}">เกี่ยวกับเรา</a>
+            <div class="container">
+                <div class="float-start">
+                    <a class="text-start nav-link" href="{{ route('about') }}">© 2024 Drawvenut. ขอสงวนลิขสิทธิ์</a>
+                </div>
+                <div class="float-end">
+                    <a class="nav-link" href="#">กลับขึ้นข้างบนสุด</a>
+                </div>
             </div>
         </footer>
+
+        <!-- <footer class="text-body-secondary py-5">
+            <div class="container">
+                <p class="float-end mb-1">
+                    <a href="#">Back to top</a>
+                </p>
+                <p class="float-start mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+                <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="/docs/5.3/getting-started/introduction/">getting started guide</a>.</p>
+            </div>
+        </footer> -->
+
     </div>
 </body>
 

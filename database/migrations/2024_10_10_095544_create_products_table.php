@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('isDownloadable')->default(false);
             $table->boolean('isPublish')->default(false);
 
-            $table->string('download')->nullable();
+            $table->string('download', 2048)->nullable();
             
             $table->timestamps();
         });

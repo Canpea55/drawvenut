@@ -7,12 +7,10 @@ use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 
-Route::get('/', [ShopController::class, 'index'])->name('home');
+Route::get('/', [ShopController::class, 'index'])->name('index');
 Route::get('/about', [ShopController::class, 'about'])->name('about');
 Route::fallback(function () {return "404 not found"; });
 
-// Route::get('/search', [SearchController::class, 'search'])->name('search');
-Route::get('/store', [ShopController::class, 'store'])->name('name');
 Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
 
 Route::prefix('customer')->group(function () {
