@@ -177,32 +177,9 @@
                 </div>
             </div>
         </div>
-    @else
-        <div class="text text-center">ไม่มีบทความในระบบ</div>
-    @endif
-
-    @if (count($products) > 0)
-        <table class="table table-primary rounded">
-            <thead class="text-center">
-                <tr>
-                    <th scope="col">ชื่อสินค้า</th>
-                    <th scope="col">คำอธิบาย</th>
-                    <th scope="col">ราคา</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($products as $item)
-                    <tr>
-                        <td>{{ $item->name }}</td>
-                        <td>{{ Str::limit($item->description, 64) }}</td>
-                        <td>{{ $item->price }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
         {{ $products->links() }}
     @else
-        <div class="text text-center">ไม่มีสินค้า</div>
+        <div class="text text-center">ไม่มีสินค้าจะขายแล้วจ้า</div>
     @endif
 
 @endsection
