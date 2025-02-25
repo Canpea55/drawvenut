@@ -25,7 +25,7 @@
             <div class="input-group">
                 <input type="number" name="price" class="form-control" value="{{$product->price}}">
                 <div class="input-group-append">
-                    <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">🪙</span>
+                    <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">฿</span>
                 </div>
             </div>
         </div>
