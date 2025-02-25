@@ -122,6 +122,9 @@
     ร้านค้า
 @endsection
 
+@section('script')
+@endsection
+
 @section('content')
 
     <div class="rounded position-relative overflow-hidden m-md-3 text-center bg-banner">
@@ -156,7 +159,7 @@
                                                 preserveAspectRatio="xMidYMid slice" focusable="false">
                                                 <title>Placeholder</title>
                                                 <rect width="100%" height="100%" fill="#D09CC7" />
-                                                <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                                                <text x="50%" y="50%" fill="#eceeef" dy=".3em">No Image Available</text>
                                             </svg>
                                         @endif
                                         <div class="card-body">
