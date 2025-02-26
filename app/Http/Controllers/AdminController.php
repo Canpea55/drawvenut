@@ -129,6 +129,7 @@ class AdminController extends Controller
             'isBuyable' => $request->has('isBuyable'),
             'isDownloadable'=> $request->has('isDownloadable'),
             'isPublish' => $request->has('isPublish'),
+            'download' => $request->download,
         ];
 
         Product::find($id)->update($product);
@@ -217,7 +218,7 @@ class AdminController extends Controller
                 'email'=>$request->email,
             ]);
         }
-        
+
         return redirect(route('userList'));
     }
 
