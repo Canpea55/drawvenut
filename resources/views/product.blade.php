@@ -67,7 +67,7 @@
         <div class="container p-4">
             <div class="row">
                 <!-- Left Column: Main Image and Thumbnails -->
-                <div class="col-12 col-lg-4 my-2">
+                <div class="col-12 col-lg-8 my-2">
                     @php
                         $images = json_decode($product->images, true);
                     @endphp
@@ -90,7 +90,7 @@
                     @endif
                 </div>
                 <!-- Right Column: Product Details -->
-                <div class="col-12 col-lg-8 my-2 d-flex flex-column">
+                <div class="col-12 col-lg-4 my-2 d-flex flex-column">
                     @php
                     if( $product->price <= 0) {
                         $pricetag = 'ฟรี!';
@@ -109,7 +109,13 @@
                                 <a type="button" class="btn btn-success btn-lg" href="{{$product->download}}" download>ดาวน์โหลด</a>
                             @endif
                         @else
-                            <button type="button" class="btn btn-primary btn-lg">เพิ่มใส่ตะกร้า</button>
+                            <form action="{{ route('cart.add') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <input type="hidden" name="name" value="{{ $product->name }}">
+                                <input type="hidden" name="price" value="{{ $product->price }}">
+                                <button type="submit" class="btn btn-primary btn-lg">เพิ่มใส่ตะกร้า</button>
+                            </form>
                             <button type="button" class="btn btn-danger btn-lg">ซื้อเลย</button>
                             @if ($product->isDownloadable)
                                 <a type="button" class="btn btn-success btn-lg" href="{{$product->download}}" download>ดาวน์โหลด</a>
