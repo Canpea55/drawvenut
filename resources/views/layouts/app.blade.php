@@ -101,45 +101,33 @@
                                     <a class="nav-link" href="{{ route('inventory') }}">คลัง</a>
                                 </li>
 
-                                <!-- Administrator -->  
-                                @if (Auth::user()->isAdmin)
-                                    <li class="nav-item btn-group my-auto ms-2">
-                                        <a class="btn btn-primary btn-sm" 
-                                        href="{{ route('productList') }}">
-                                            จัดการสินค้า
-                                        </a>
-                                        <a type="button" 
-                                        class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split my-auto me-2"
-                                        data-bs-toggle="dropdown" 
-                                        aria-expanded="false">
-                                            <span class="visually-hidden">Toggle Dropdown</span>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="{{ route('userList') }}">จัดการผู้ใช้งาน</a>
-                                        </div>
-                                    </li>
-                                @endif
-
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         {{ Auth::user()->name }}
                                     </a>
 
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                            document.getElementById('logout-form').submit();">
-                                            <!--{{ __(key: 'Logout') }}-->ลงชื่อออก
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
-                                            @csrf
-                                        </form>
-                                    </div>
+                                    <ul class="dropdown-menu">
+                                        <!-- Administrator -->  
+                                        @if (Auth::user()->isAdmin)
+                                            <li><a class="dropdown-item" href="{{ route('productList') }}">จัดการสินค้า</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('userList') }}">จัดการผู้ใช้งาน</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                        @endif
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                                                        document.getElementById('logout-form').submit();">
+                                                <!--{{ __(key: 'Logout') }}-->ลงชื่อออก
+                                            </a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                                @csrf
+                                            </form>
+                                        </li>
+                                    </ul>
                                 </li>
                             @endguest
-
                         </ul>
                     </div>
                 </div>
