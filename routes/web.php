@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ShopController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminController;
+
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ShopController::class, 'index'])->name('index');
 Route::get('/about', [ShopController::class, 'about'])->name('about');
@@ -17,8 +17,16 @@ Route::prefix('customer')->group(function () {
     Route::get('/inventory', [ShopController::class, 'inventory'])->name("inventory");
 });
 
+Route::middleware(['auth'])->group(function () {
+    // cart system
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'cart'])->name('cart');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+});
+
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
-    //product
+    // product management
     Route::get('/product/create', [AdminController::class, 'productCreate'])->name('productCreate');
     Route::get('/product/edit/{id}', [AdminController::class, 'productEdit'])->name('productEdit');
     Route::get('/product/list', [AdminController::class, 'productList'])->name('productList');
@@ -27,7 +35,7 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::get('/product/change/{id}', [AdminController::class, 'productToggle'])->name('productToggle');
     Route::post('/product/update/{id}', [AdminController::class, 'productUpdate'])->name('productUpdate');
     
-    //user
+    // user management
     Route::get('/users/list', [AdminController::class, 'userList'])->name('userList');
     Route::get('/users/edit/{id}', [AdminController::class, 'userEdit'])->name('userEdit');
     Route::post('/users/update/{id}', [AdminController::class, 'userUpdate'])->name('userUpdate');

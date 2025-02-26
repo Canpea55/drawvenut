@@ -28,6 +28,21 @@
         src: url('{{ public_path('fonts/NotoColorEmoji-Regular.tff') }}');
     }
 
+    .no-underline {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .anim {
+        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+        opacity: 0.9;
+    }
+    .anim:hover {
+        transform: translateY(-2px); /* Moves card up slightly */
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Adds shadow */
+        opacity: 1;
+    }
+
     @yield('style')
 </style>
 
@@ -55,7 +70,8 @@
     <div id="app">
         {{-- header navbar --}}
         <header>
-            <nav class="shadow navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
+            <!-- main navbar -->
+            <nav class="shadow-sm navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
                 <div class="container">
 
                     <a class="navbar-brand" href="{{ url('/') }}">
@@ -132,11 +148,12 @@
                     </div>
                 </div>
             </nav>
+            @yield('header')
         </header>
 
         {{-- content --}}
         <main>
-            <div class="container py-4">
+            <div class="container">
                 @yield('content')
             </div>
         </main>
@@ -144,13 +161,14 @@
         {{-- footer--}}
         <footer>
             <div class="container">
-                <div class="float-start">
+                <div class="float-start lead">
                     <a class="text-start nav-link" href="{{ route('about') }}">© 2024 Drawvenut. ขอสงวนลิขสิทธิ์</a>
                 </div>
                 <div class="float-end">
                     <a class="nav-link" href="#">กลับขึ้นข้างบนสุด</a>
                 </div>
             </div>
+            @yield('footer')
         </footer>
     </div>
 </body>

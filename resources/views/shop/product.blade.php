@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.shop')
 
 @section('style')
         .thumbnail-container {
@@ -109,14 +109,19 @@
                                 <a type="button" class="btn btn-success btn-lg" href="{{$product->download}}" download>ดาวน์โหลด</a>
                             @endif
                         @else
-                            <form action="{{ route('cart.add') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $product->id }}">
-                                <input type="hidden" name="name" value="{{ $product->name }}">
-                                <input type="hidden" name="price" value="{{ $product->price }}">
-                                <button type="submit" class="btn btn-primary btn-lg">เพิ่มใส่ตะกร้า</button>
-                            </form>
-                            <button type="button" class="btn btn-danger btn-lg">ซื้อเลย</button>
+                            @if ( (session('cart') && array_key_exists($product->id, session('cart')) ))
+                            @else
+                                <form action="{{ route('cart.add') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $product->id }}">
+                                    <input type="hidden" name="name" value="{{ $product->name }}">
+                                    <input type="hidden" name="description" value="{{ $product->description }}">
+                                    <input type="hidden" name="price" value="{{ $product->price }}">
+                                    <button type="submit" class="btn btn-primary btn-lg">เพิ่มใส่ตะกร้า</button>
+                                </form>
+                                <button type="button" class="btn btn-danger btn-lg">ซื้อเลย</button>    
+                            @endif
+                            
                             @if ($product->isDownloadable)
                                 <a type="button" class="btn btn-success btn-lg" href="{{$product->download}}" download>ดาวน์โหลด</a>
                             @endif
