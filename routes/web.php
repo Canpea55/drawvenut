@@ -13,11 +13,9 @@ Route::fallback(function () {return "404 not found"; });
 
 Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
 
-Route::prefix('customer')->group(function () {
-    Route::get('/inventory', [ShopController::class, 'inventory'])->name("inventory");
-});
-
 Route::middleware(['auth'])->group(function () {
+    Route::get('/inventory', [ShopController::class, 'inventory'])->name("inventory");
+
     // cart system
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'cart'])->name('cart');
