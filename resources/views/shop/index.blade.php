@@ -163,7 +163,7 @@
                                         </svg>
                                     @endif
                                     <div class="card-body">
-                                        <p class="card-text text-primary-emphasis">{{ $item->name }}</p>
+                                        <p class="card-text text-primary-emphasis">{{ Str::limit($item->name, 64) }}</p>
                                         <p class="card-text text-secondary">{{ Str::limit($item->description, 128) }}</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <!--<div class="btn-group">

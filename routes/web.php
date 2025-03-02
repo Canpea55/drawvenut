@@ -4,6 +4,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OrderController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'cart'])->name('cart');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+    // order system
+    Route::get('/orders', [OrderController::class, 'orders'])->name('orders');
+    Route::get('/order/{id}', [OrderController::class, 'order'])->name('order');
+    Route::post('/order/add', [OrderController::class, 'add'])->name('order.add');
+    Route::post('/order/remove', [OrderController::class, 'remove'])->name('order.remove');
+    Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 });
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {

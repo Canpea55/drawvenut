@@ -152,11 +152,13 @@
         </header>
 
         {{-- content --}}
+        
         <main>
-            <div class="container">
+            <div class="container my-4">
                 @yield('content')
             </div>
         </main>
+        
 
         {{-- footer--}}
         <footer>

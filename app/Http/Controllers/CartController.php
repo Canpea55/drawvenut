@@ -15,8 +15,7 @@ class CartController extends Controller
     }
 
     // Add item to cart
-    public function add(Request $request)
-    {
+    public function add(Request $request){
         $cart = session()->get('cart', []);
 
         $id = $request->id;
@@ -25,6 +24,7 @@ class CartController extends Controller
         } else {
             $cart[$id] = [
                 "name" => $request->name,
+                "image" => $request->image,
                 "price" => $request->price,
                 "description" => $request->description,
             ];
@@ -47,7 +47,8 @@ class CartController extends Controller
     public function clear()
     {
         session()->forget('cart');
-        return redirect()->back()->with('success', 'ตะกร้าว่างแล้ว!');
+        // return redirect()->back()->with('success', 'ตะกร้าว่างแล้ว!');
+        return redirect('/')->with('success', 'ตะกร้าว่างแล้ว!');
     }
 }
 
