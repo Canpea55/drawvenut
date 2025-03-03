@@ -155,7 +155,7 @@
                             <h1 class="text-info" style="margin-top: 0;">รอตรวจสอบบิล</h1>
                         </div>
 
-                        <button class="btn btn-info align-self-center" id="paymentToggler" onclick="paymentToggle()">อัปโหลดสลิปใหม่</button>
+                        <button class="btn btn-sm btn-info align-self-center" id="paymentToggler" onclick="paymentToggle()">อัปโหลดสลิปใหม่</button>
                     </div>
 
                     <div id="details" class="my-2">
@@ -188,71 +188,73 @@
             @endswitch
 
             <div id="payments" style="display: none;">
-                <!-- Payment Selector -->
-                <form>
-                    <label for="paymentMethod" class="form-label">เลือกวิธีชำระเงิน</label>
-                    <select class="form-select" id="paymentMethod" name="paymentMethod" onchange="togglePaymentForm()">
-                        <option value="qr">QR Promptpay</option>
-                        <option value="bank">โอนผ่านธนาคาร</option>
-                    </select>
-                </form>
                 <div class="row my-4">
-                    <!-- qr -->
-                    <div id="qrForm" class="payment-form">
-                        <div class="qrcodepay col-lg-12 my-2 text-center rounded">
-                            <div class="rounded" style="
-                                        background-color: #0e3d67;
-                                        height: 54px;
-                                        text-align: center;
-                                    ">
-                                    <img src="{{url('images/payment/ic_prompt_pay_banner@3x.png')}}"  style="
-                                        max-height: 100%; 
-                                        max-width: 100%; 
-                                        object-fit: contain;">
+                    @if ($order->status == "pending")
+                        <!-- Payment Selector -->
+                        <form class="my-2">
+                            <label for="paymentMethod" class="form-label">เลือกวิธีชำระเงิน</label>
+                            <select class="form-select" id="paymentMethod" name="paymentMethod" onchange="togglePaymentForm()">
+                                <option value="qr">QR Promptpay</option>
+                                <option value="bank">โอนผ่านธนาคาร</option>
+                            </select>
+                        </form>
+                        <!-- qr -->
+                        <div id="qrForm" class="payment-form">
+                            <div class="qrcodepay col-lg-12 my-2 text-center rounded">
+                                <div class="rounded" style="
+                                            background-color: #0e3d67;
+                                            height: 54px;
+                                            text-align: center;
+                                        ">
+                                        <img src="{{url('images/payment/ic_prompt_pay_banner@3x.png')}}"  style="
+                                            max-height: 100%; 
+                                            max-width: 100%; 
+                                            object-fit: contain;">
+                                </div>
+                                <img class="mt-4" src="{{url('images/payment/krupatQR.png')}}"  style="
+                                            max-height: 100%; 
+                                            max-width: 60%; 
+                                            object-fit: contain;">
+                                <p class="mt-4"><strong>ห้องสื่อสวย by ครูพัช</strong></p>
+                                <p><small><strong>Kru Pat Education Room</strong></small></p>
+                                <hr class="border-2 opacity-50" style="border-color: #0e3d67">
+                                <p class="mt-4">ชื่อบัญชี : สันต์ชัช อินต๊ะ</p>
+                                <p>รหัสร้านค้า : 014000006187660</p>
+                                <hr class="border-2 opacity-50" style="border-color: #0e3d67">
+                                <p>Accept all banks | รับเงินได้จากทุกธนาคาร</p>
+                                <p>กรุณากรองจำนวนเงินให้ตรงกับยอดรวมด้วยนะคะ</p>
+                                <hr class="border-5 opacity-100" style="border-color: #0e3d67">
                             </div>
-                            <img class="mt-4" src="{{url('images/payment/krupatQR.png')}}"  style="
-                                        max-height: 100%; 
-                                        max-width: 60%; 
-                                        object-fit: contain;">
-                            <p class="mt-4"><strong>ห้องสื่อสวย by ครูพัช</strong></p>
-                            <p><small><strong>Kru Pat Education Room</strong></small></p>
-                            <hr class="border-2 opacity-50" style="border-color: #0e3d67">
-                            <p class="mt-4">ชื่อบัญชี : สันต์ชัช อินต๊ะ</p>
-                            <p>รหัสร้านค้า : 014000006187660</p>
-                            <hr class="border-2 opacity-50" style="border-color: #0e3d67">
-                            <p>Accept all banks | รับเงินได้จากทุกธนาคาร</p>
-                            <p>กรุณากรองจำนวนเงินให้ตรงกับยอดรวมด้วยนะคะ</p>
-                            <hr class="border-5 opacity-100" style="border-color: #0e3d67">
                         </div>
-                    </div>
 
-                    <!-- bank -->
-                    <div id="bankForm" class="payment-form" style="display: none;">
-                        <div class="qrcodepay col-lg-12 my-2 text-center rounded">
-                            <div class="rounded" style="
-                                        background-color: #4e2a82;
-                                        height: 54px;
-                                        text-align: center;
-                                    ">
-                                    <img src="{{url('images/payment/scbLogo.jpg')}}"  style="
-                                        max-height: 100%; 
-                                        max-width: 100%; 
-                                        object-fit: contain;">
-                            </div>
+                        <!-- bank -->
+                        <div id="bankForm" class="payment-form" style="display: none;">
+                            <div class="qrcodepay col-lg-12 my-2 text-center rounded">
+                                <div class="rounded" style="
+                                            background-color: #4e2a82;
+                                            height: 54px;
+                                            text-align: center;
+                                        ">
+                                        <img src="{{url('images/payment/scbLogo.jpg')}}"  style="
+                                            max-height: 100%; 
+                                            max-width: 100%; 
+                                            object-fit: contain;">
+                                </div>
 
-                            <h1 class="my-3 d-flex justify-content-center align-items-start" style="gap: 8px;">
-                                <strong id="account-number">519-407217-1</strong>
-                                <button onclick="copyToClipboard()" class="btn p-0 btn-sm">
-                                    <img src="{{ asset('icons/clipboard-2-svgrepo-com.svg') }}" alt="Clipboard Icon" width="16">
-                                </button>
-                            </h1>
-                            <p><strong>ชื่อบัญชี : สันต์ชัช อินต๊ะ</strong></p>
-                            <hr class="border-2 opacity-50" style="border-color: #4e2a82">
-                            <p>กรุณากรองจำนวนเงินให้ตรงกับยอดรวมด้วยนะคะ</p>
-                            <p>เมื่อชำระเงินเรียบร้อยแล้วอัพโหลดสลิปโอนเงินได้เลยค่ะ</p>
-                            <hr class="border-5 opacity-100" style="border-color: #4e2a82">
-                        </div>                    
-                    </div>
+                                <h1 class="my-3 d-flex justify-content-center align-items-start" style="gap: 8px;">
+                                    <strong id="account-number">519-407217-1</strong>
+                                    <button onclick="copyToClipboard()" class="btn p-0 btn-sm">
+                                        <img src="{{ asset('icons/clipboard-2-svgrepo-com.svg') }}" alt="Clipboard Icon" width="16">
+                                    </button>
+                                </h1>
+                                <p><strong>ชื่อบัญชี : สันต์ชัช อินต๊ะ</strong></p>
+                                <hr class="border-2 opacity-50" style="border-color: #4e2a82">
+                                <p>กรุณากรองจำนวนเงินให้ตรงกับยอดรวมด้วยนะคะ</p>
+                                <p>เมื่อชำระเงินเรียบร้อยแล้วอัพโหลดสลิปโอนเงินได้เลยค่ะ</p>
+                                <hr class="border-5 opacity-100" style="border-color: #4e2a82">
+                            </div>                    
+                        </div>
+                    @endif
 
                     <div class="col-lg-12 my-4 align-self-center">
                         <form method="POST" action="checkout" enctype="multipart/form-data">
