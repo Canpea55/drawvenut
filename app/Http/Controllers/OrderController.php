@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\LibraryController;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Hamcrest\Number\OrderingComparison;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -45,9 +48,9 @@ class OrderController extends Controller
         return redirect(route('order',  $order->id));
     }
 
-    public function remove(Request $request)
+    public function cancel(Request $request)
     {
-        
+        //resson for cancel -> cancel
     }
 
     public function checkout(Request $request)
@@ -77,5 +80,45 @@ class OrderController extends Controller
         }
 
         return redirect()->back()->with('success', 'Receipt uploaded successfully!');
+    }
+
+    //--------------------------------------------admin--------------------------------------------
+    public function manage(Request $request)
+    {
+        $orders=Order::orderBy('id', 'desc')->paginate(10, ['*'], 'orders');
+        $pending=Order::where('status', 'pending')->orderBy('id', 'desc')->paginate(10, ['*'], 'pending');
+        $submitted=Order::where('status', 'submitted')->orderBy('created_at', 'asc')->paginate(4, ['*'], 'submitted');
+        $success=Order::where('status', 'success')->orderBy('id', 'desc')->paginate(10, ['*'], 'success');
+        return view('admin.order.manage', compact(['orders', 'pending', 'submitted', 'success']));
+    }
+
+    public function approve(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $order = Order::findOrFail($request->id);
+            $orderItems = OrderItem::where('order_id', $request->id)->get();
+
+            $libraryController = new LibraryController(); // Create instance
+
+            foreach ($orderItems as $item) {
+                $libraryController->add($order->user_id, $item->product_id);
+            }
+
+            $order->status = 'success';
+            $order->save();
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Order approved successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+        }
+    }
+
+
+    public function remove(Request $request)
+    {
+        
     }
 }

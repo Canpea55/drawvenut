@@ -8,5 +8,5 @@
 @endsection
 
 @section('content')
-    <div class="d-flex main"> inventory </div>
+    <div class="d-flex main"> library </div>
 @endsection

@@ -217,12 +217,12 @@
                                             object-fit: contain;">
                                 <p class="mt-4"><strong>ห้องสื่อสวย by ครูพัช</strong></p>
                                 <p><small><strong>Kru Pat Education Room</strong></small></p>
-                                <hr class="border-2 opacity-50" style="border-color: #0e3d67">
+                                {{-- <hr class="border-2 opacity-50" style="border-color: #0e3d67">
                                 <p class="mt-4">ชื่อบัญชี : สันต์ชัช อินต๊ะ</p>
-                                <p>รหัสร้านค้า : 014000006187660</p>
+                                <p>รหัสร้านค้า : 014000006187660</p> --}}
                                 <hr class="border-2 opacity-50" style="border-color: #0e3d67">
                                 <p>Accept all banks | รับเงินได้จากทุกธนาคาร</p>
-                                <p>กรุณากรองจำนวนเงินให้ตรงกับยอดรวมด้วยนะคะ</p>
+                                <p class="text-danger">โปรดตรวจสอบยอดเงินทุกครั้งก่อนโอน ทางบริษัทไม่มีนโยบายคืนเงินทุกกรณี</p>
                                 <hr class="border-5 opacity-100" style="border-color: #0e3d67">
                             </div>
                         </div>
@@ -251,6 +251,7 @@
                                 <hr class="border-2 opacity-50" style="border-color: #4e2a82">
                                 <p>กรุณากรองจำนวนเงินให้ตรงกับยอดรวมด้วยนะคะ</p>
                                 <p>เมื่อชำระเงินเรียบร้อยแล้วอัพโหลดสลิปโอนเงินได้เลยค่ะ</p>
+                                <p class="text-danger">โปรดตรวจสอบยอดเงินทุกครั้งก่อนโอน ทางบริษัทไม่มีนโยบายคืนเงินทุกกรณี</p>
                                 <hr class="border-5 opacity-100" style="border-color: #4e2a82">
                             </div>                    
                         </div>

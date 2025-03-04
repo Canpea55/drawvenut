@@ -114,7 +114,7 @@
                             @else
                                 <!-- Customer -->
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('inventory') }}">คลัง</a>
+                                    <a class="nav-link" href="{{ route('library') }}">คลัง</a>
                                 </li>
 
                                 <li class="nav-item dropdown">
@@ -126,15 +126,15 @@
                                     <ul class="dropdown-menu">
                                         <!-- Administrator -->  
                                         @if (Auth::user()->isAdmin)
+                                            <li><a class="dropdown-item" href="{{ route('order.manage') }}">จัดการออร์เดอร์</a></li>
                                             <li><a class="dropdown-item" href="{{ route('productList') }}">จัดการสินค้า</a></li>
                                             <li><a class="dropdown-item" href="{{ route('userList') }}">จัดการผู้ใช้งาน</a></li>
-                                            <li>
-                                                <hr class="dropdown-divider">
-                                            </li>
+                                            <li><a class="dropdown-item" href="{{ route('library.manage') }}">จัดการคลัง</a></li>
+                                            <li><hr class="dropdown-divider"></li>
                                         @endif
                                         <li>
                                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                                                        document.getElementById('logout-form').submit();">
+                                                document.getElementById('logout-form').submit();">
                                                 <!--{{ __(key: 'Logout') }}-->ลงชื่อออก
                                             </a>
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

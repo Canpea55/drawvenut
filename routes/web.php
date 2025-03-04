@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
@@ -15,7 +16,7 @@ Route::fallback(function () {return "404 not found"; });
 Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/inventory', [ShopController::class, 'inventory'])->name("inventory");
+    Route::get('/library', [LibraryController::class, 'index'])->name("library");
 
     // cart system
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -27,11 +28,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders', [OrderController::class, 'orders'])->name('orders');
     Route::get('/order/{id}', [OrderController::class, 'order'])->name('order');
     Route::post('/order/add', [OrderController::class, 'add'])->name('order.add');
-    Route::post('/order/remove', [OrderController::class, 'remove'])->name('order.remove');
+    Route::post('/order/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
     Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 });
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
+    // order management
+    Route::get('/order/manage', [OrderController::class, 'manage'])->name('order.manage');
+    Route::post('/order/approve', [OrderController::class, 'approve'])->name('order.approve');
+    Route::post('/order/remove', [OrderController::class, 'remove'])->name('order.remove');
+    
+    // library management
+    Route::get('/library/manage', [LibraryController::class, 'manage'])->name('library.manage');
+
     // product management
     Route::get('/product/create', [AdminController::class, 'productCreate'])->name('productCreate');
     Route::get('/product/edit/{id}', [AdminController::class, 'productEdit'])->name('productEdit');
