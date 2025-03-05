@@ -23,8 +23,12 @@ tinymce.init({
     height: 500,
     menubar: true,
     promotion: false,
-    plugins: 'lists link image table code help wordcount', // Add plugins as needed
-    toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help', // Customize the toolbar
+    plugins: 'lists link image table code wordcount', // Add plugins as needed
+    toolbar1: 'undo redo | formatselect | bold italic backcolor link | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat ',
+    toolbar2: 'image | table code ',
+    image_class_list: [
+        { title: 'Responsive', value: 'img-fluid' }
+    ],
 });
 // .. After imports init TinyMCE ..
 window.addEventListener('DOMContentLoaded', () => {
