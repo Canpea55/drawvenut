@@ -109,10 +109,21 @@
     .card {
         transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
         opacity: 0.9;
+        will-change: transform, opacity, box-shadow;
     }
     .card:hover {
         transform: translateY(-5px); /* Moves card up slightly */
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Adds shadow */
+        opacity: 1;
+    }
+
+    .opBtn {
+        transition: transform 0.3s ease, opacity 0.5s ease;
+        opacity: 0.5;
+        will-change: transform, opacity, box-shadow;
+    }
+    .opBtn:hover {
+        transform: translateY(-5px);
         opacity: 1;
     }
 
@@ -148,11 +159,13 @@
                                 @auth
                                     @if (Auth::user()->isAdmin)
                                         <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%;">
-                                            <div class="btn-group">
-                                                {{-- <button type="button" class="btn btn-sm btn-primary">View</button> --}}
-                                                <a href="{{route('product.edit', $item->id)}}" type="button" class="btn btn-sm">
-                                                    <img src="{{ asset('icons/edit-3-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
+                                            <div class="btn-group gap-1">
+                                                <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn">
+                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Heart Icon" width="24">
                                                 </a>
+                                                {{-- <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn">
+                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Heart Icon" width="24">
+                                                </a> --}}
                                             </div>
                                         </div>
                                     @endif
