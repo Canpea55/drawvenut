@@ -39,7 +39,7 @@
 
         <div class="form-group py-2">
             <label for="description" class="py-2">คำอธิบายสินค้า</label>
-            <textarea name="description" class="form-control" cols="30" rows="5"></textarea>
+            <textarea id="tinymce" name="description" class="form-control" cols="30" rows="5"></textarea>
         </div>
 
         <div class="form-group py-2">
