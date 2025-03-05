@@ -136,7 +136,7 @@
 
     <section class="flex card">
         <div class="container p-4">
-            <p>{{ $product->description }}</p>
+            {!! $product->description !!}
         </div>
     </section>
 

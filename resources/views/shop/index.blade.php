@@ -145,32 +145,36 @@
                     @foreach ($products as $item)
                         <div class="col">
                             <div class="card shadow-sm">
+                                @auth
+                                    @if (Auth::user()->isAdmin)
+                                        <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%;">
+                                            <div class="btn-group">
+                                                {{-- <button type="button" class="btn btn-sm btn-primary">View</button> --}}
+                                                <a href="" type="button" class="btn btn-sm btn-warning">Edit</a>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endauth
                                 <a class="no-underline" href="{{route('product', $item->id) }}" >
                                     @php
                                         $images = json_decode($item->images, true);
                                         $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
                                     @endphp
                                     @if($image)
-                                        <img src="{{ Storage::url($image) }}" alt="Product Thumbnail" class="card-img-top"
-                                            style="width: 100%; height: 225px; object-fit: cover;">
+                                        <img src="{{ Storage::url($image) }}" alt="{{$item->name}}" class="card-img-top"
+                                            style="width: 100%; height: 225px; object-fit: contain;">
                                     @else
                                         <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
                                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
                                             preserveAspectRatio="xMidYMid slice" focusable="false">
-                                            <title>Placeholder</title>
+                                            <title>no image</title>
                                             <rect width="100%" height="100%" fill="#D09CC7" />
-                                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">No Image Available</text>
                                         </svg>
                                     @endif
-                                    <div class="card-body">
-                                        <p class="card-text text-primary-emphasis">{{ Str::limit($item->name, 64) }}</p>
-                                        <p class="card-text text-secondary">{{ Str::limit($item->description, 128) }}</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <!--<div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>-->
-                                            <p class="text-body-secondary text-end">{{ $item->price }} ฿</p>
+                                    <div class="card-body" >
+                                        <div class="d-flex justify-content-between align-items-center ">
+                                            <strong><p class="text-primary-emphasis">{{ Str::limit($item->name, 64) }}</p></strong>
+                                            <p class="text-body-secondary">{{ $item->price }} ฿</p>
                                         </div>
                                     </div>
                                 </a>
