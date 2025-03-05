@@ -162,7 +162,7 @@
                                     @endphp
                                     @if($image)
                                         <img src="{{ Storage::url($image) }}" alt="{{$item->name}}" class="card-img-top"
-                                            style="width: 100%; height: 225px; object-fit: contain;">
+                                            style="width: 100%; min-height: 225px; max-height: 400px; object-fit: contain;">
                                     @else
                                         <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
                                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
