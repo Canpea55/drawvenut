@@ -127,7 +127,7 @@
                                         <!-- Administrator -->  
                                         @if (Auth::user()->isAdmin)
                                             <li><a class="dropdown-item" href="{{ route('order.manage') }}">จัดการออร์เดอร์</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('productList') }}">จัดการสินค้า</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('products') }}">จัดการสินค้า</a></li>
                                             <li><a class="dropdown-item" href="{{ route('userList') }}">จัดการผู้ใช้งาน</a></li>
                                             <li><a class="dropdown-item" href="{{ route('library.manage') }}">จัดการคลัง</a></li>
                                             <li><hr class="dropdown-divider"></li>

@@ -3,7 +3,7 @@
 @section('title', 'แก้ไขสินค้า')
 
 @section('content')
-    <form method="POST" action="{{ route('productUpdate', $product->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group py-4 text-center">

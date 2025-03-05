@@ -5,7 +5,7 @@
 @section('content')
     <h1 class="my-4 text-center">จัดการสินค้า</h1>
 
-    <a class="btn btn-primary my-2" href="{{route("productCreate")}}">เพิ่มสินค้า</a>
+    <a class="btn btn-primary my-2" href="{{route("product.create")}}">เพิ่มสินค้า</a>
 
     @if (count($products) > 0)
         <table class="table table-bordered align-middle">
@@ -44,21 +44,21 @@
                         <td class="text-center">{{ Str::limit($item->description, 64) }}</td>
                         <td class="text-center">{{ $item->price }}</td>
                         <td class="text-center">
-                            <a href="{{ route('productDelete', $item->id) }}" class="btn btn-danger"
+                            <a href="{{ route('product.delete', $item->id) }}" class="btn btn-danger"
                                 onclick="return confirm('ลบ {{ $item->name }} ไหม?')">
                                 ลบ
                             </a>
 
-                            <a href="{{ route('productEdit', $item->id) }}" class="btn btn-warning">
+                            <a href="{{ route('product.edit', $item->id) }}" class="btn btn-warning">
                                 แก้ไข
                             </a>
 
                             @if ($item->isPublish)
-                                <a href="{{ route('productToggle', $item->id) }}" class="btn btn-success">
+                                <a href="{{ route('product.toggle', $item->id) }}" class="btn btn-success">
                                     เผยแพร่
                                 </a>
                             @else
-                                <a href="{{ route('productToggle', $item->id) }}" class="btn btn-secondary">
+                                <a href="{{ route('product.toggle', $item->id) }}" class="btn btn-secondary">
                                     ไม่เผยแพร่
                                 </a>
                             @endif

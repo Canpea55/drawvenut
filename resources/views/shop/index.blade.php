@@ -150,7 +150,7 @@
                                         <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%;">
                                             <div class="btn-group">
                                                 {{-- <button type="button" class="btn btn-sm btn-primary">View</button> --}}
-                                                <a href="" type="button" class="btn btn-sm">
+                                                <a href="{{route('product.edit', $item->id)}}" type="button" class="btn btn-sm">
                                                     <img src="{{ asset('icons/edit-3-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
                                                 </a>
                                             </div>

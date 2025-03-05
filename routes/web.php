@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
@@ -42,13 +43,13 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::get('/library/manage', [LibraryController::class, 'manage'])->name('library.manage');
 
     // product management
-    Route::get('/product/create', [AdminController::class, 'productCreate'])->name('productCreate');
-    Route::get('/product/edit/{id}', [AdminController::class, 'productEdit'])->name('productEdit');
-    Route::get('/product/list', [AdminController::class, 'productList'])->name('productList');
-    Route::post('/product/insert', [AdminController::class, 'productInsert'])->name('productInsert');
-    Route::get('/product/delete/{id}', [AdminController::class, 'productDelete'])->name('productDelete');
-    Route::get('/product/change/{id}', [AdminController::class, 'productToggle'])->name('productToggle');
-    Route::post('/product/update/{id}', [AdminController::class, 'productUpdate'])->name('productUpdate');
+    Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+    Route::get('/product/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
+    Route::get('/products', [ProductController::class, 'products'])->name('products');
+    Route::post('/product/add', [ProductController::class, 'add'])->name('product.add');
+    Route::get('/product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
+    Route::get('/product/change/{id}', [ProductController::class, 'toggle'])->name('product.toggle');
+    Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     
     // user management
     Route::get('/users/list', [AdminController::class, 'userList'])->name('userList');
