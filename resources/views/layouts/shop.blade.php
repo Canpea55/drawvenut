@@ -4,7 +4,7 @@
 
 @section('header')
 <!-- sub navbar -->
-<div class="container my-2">
+<div class="container my-3">
     <div class="d-flex flex-row-reverse align-items-center gap-2 me-1 align-middle">
         
         @if (auth()->check())

@@ -154,7 +154,7 @@
         {{-- content --}}
         
         <main>
-            <div class="container my-4">
+            <div class="container">
                 @yield('content')
             </div>
         </main>

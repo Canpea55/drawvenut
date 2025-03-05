@@ -150,7 +150,9 @@
                                         <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%;">
                                             <div class="btn-group">
                                                 {{-- <button type="button" class="btn btn-sm btn-primary">View</button> --}}
-                                                <a href="" type="button" class="btn btn-sm btn-warning">Edit</a>
+                                                <a href="" type="button" class="btn btn-sm">
+                                                    <img src="{{ asset('icons/edit-3-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
+                                                </a>
                                             </div>
                                         </div>
                                     @endif
@@ -172,9 +174,9 @@
                                         </svg>
                                     @endif
                                     <div class="card-body" >
-                                        <div class="d-flex justify-content-between align-items-center ">
-                                            <strong><p class="text-primary-emphasis">{{ Str::limit($item->name, 64) }}</p></strong>
-                                            <p class="text-body-secondary">{{ $item->price }} ฿</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="d-flex text-primary-emphasis align-items-center">{{ Str::limit($item->name, 64) }}</strong>
+                                            <p class="text-body-secondary m-0">{{ $item->price }} ฿</p>
                                         </div>
                                     </div>
                                 </a>
