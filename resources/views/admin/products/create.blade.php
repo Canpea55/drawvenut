@@ -3,7 +3,7 @@
 @section('title', 'ฟอร์มสินค้า')
 
 @section('content')
-    <form method="POST" action="insert" enctype="multipart/form-data">
+    <form method="POST" action="{{route('product.add')}}" enctype="multipart/form-data">
         @csrf
         
         <div class="form-group py-4 text-center">
@@ -25,7 +25,7 @@
         <div class="form-group py-2">
             <label for="price" class="py-2">ราคา</label>
             <div class="input-group">
-                <input type="number" name="price" class="form-control" placeholder="10">
+                <input type="number" name="price" class="form-control">
                 <div class="input-group-append">
                     <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">฿</span>
                 </div>
