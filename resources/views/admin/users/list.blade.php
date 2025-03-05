@@ -38,10 +38,10 @@
                         <td class="text-center">{{ $user->created_at }}</td>
                         <td class="text-center">{{ $user->updated_at }}</td>
                         <td class="text-center">
-                            <a href="{{ route('userEdit', $user->id) }}" class="btn btn-warning">
+                            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning">
                                 แก้ไข
                             </a>
-                            <a href="{{ route('userDelete', $user->id) }}" class="btn btn-danger"
+                            <a href="{{ route('user.delete', $user->id) }}" class="btn btn-danger"
                                 onclick="return confirm('ลบ \({{ $user->id }} : {{ $user->name }}\) ไหม?')">
                                 ลบ
                             </a>

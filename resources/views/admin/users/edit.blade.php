@@ -3,7 +3,7 @@
 @section('title', 'แก้ไขสินค้า')
 
 @section('content')
-    <form method="POST" action="{{ route('userUpdate', $user->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('user.update', $user->id) }}" enctype="multipart/form-data">
         @csrf
         <div class="form-group py-4 text-center">
             <h1 class="text"> แก้ไขรายละเอียดบัญชีผู้ใช้ </h1>

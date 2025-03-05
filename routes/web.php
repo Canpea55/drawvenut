@@ -8,6 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ShopController::class, 'index'])->name('index');
@@ -52,10 +53,10 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     
     // user management
-    Route::get('/users/list', [AdminController::class, 'userList'])->name('userList');
-    Route::get('/users/edit/{id}', [AdminController::class, 'userEdit'])->name('userEdit');
-    Route::post('/users/update/{id}', [AdminController::class, 'userUpdate'])->name('userUpdate');
-    Route::get('/users/delete/{id}', [AdminController::class, 'userDelete'])->name('userDelete');
+    Route::get('/users', [UserController::class, 'users'])->name('users');
+    Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/users/update/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::get('/users/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
 });
 
 Auth::routes();
