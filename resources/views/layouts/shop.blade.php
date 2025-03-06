@@ -9,7 +9,7 @@
         
         @if (auth()->check())
             @if (session('cart'))
-                <a class="anim no-underline fw-light bg-success-subtle rounded px-2 py-1" href="/cart">
+                <a class="anim no-underline fw-light bg-success-subtle rounded px-2 py-1" href="{{route('cart')}}">
                     <img src="{{ asset('icons/bag-svgrepo-com.svg') }}" alt="Cart Icon" width="24">
                     <span class="align-middle"> 
                         ตะกร้าสินค้า {{ "(" . count(session('cart')) . ")" }}

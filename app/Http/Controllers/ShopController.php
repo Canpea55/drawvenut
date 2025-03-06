@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Library;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -23,7 +24,14 @@ class ShopController extends Controller
     function product($id)
     {
         $product = Product::find($id);
-        return view('shop.product', compact('product'));
+        $library=Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+        $owned = false;
+        foreach($library as $item) {
+            if($item->product_id == $id) {
+                $owned = true;
+            }
+        }
+        return view('shop.product', compact(['product', 'owned']));
     }
 
     function inventory()

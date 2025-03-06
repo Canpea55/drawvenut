@@ -161,7 +161,7 @@
         
 
         {{-- footer--}}
-        <footer>
+        <footer class="mt-3">
             <div class="container">
                 <div class="float-start lead">
                     <a class="text-start nav-link" href="{{ route('about') }}">© 2024 Drawvenut. ขอสงวนลิขสิทธิ์</a>

@@ -188,8 +188,8 @@
                                     @endif
                                     <div class="card-body" >
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <strong class="d-flex text-primary-emphasis align-items-center">{{ Str::limit($item->name, 64) }}</strong>
-                                            <p class="text-body-secondary m-0">{{ $item->price }} ฿</p>
+                                            <strong class="d-flex text-primary-emphasis align-items-center" style="width: 85%">{{ $item->name }}</strong>
+                                            <strong class="text-success flex-shrink-0 m-0">{{ $item->price }} ฿</strong>
                                         </div>
                                     </div>
                                 </a>
