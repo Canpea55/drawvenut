@@ -17,12 +17,12 @@
                 </a>
             @endif
 
-            <a class="anim no-underline fw-light bg-danger-subtle rounded px-2 py-1" href="/cart">
+            {{-- <a class="anim no-underline fw-light bg-danger-subtle rounded px-2 py-1" href="/cart">
                 <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
                 <span class="align-middle"> 
                     สิ่งที่ถูกใจ (1)
                 </span>
-            </a>
+            </a> --}}
         @endif
 
     </div>

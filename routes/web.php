@@ -19,6 +19,7 @@ Route::get('/product/{id}', [ShopController::class, 'product'])->name('product')
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/library', [LibraryController::class, 'index'])->name("library");
+    Route::get('/library/product/{id}', [LibraryController::class, 'info'])->name('library.product.info');
 
     // cart system
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');

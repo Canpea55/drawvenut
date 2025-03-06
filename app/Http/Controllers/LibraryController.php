@@ -21,7 +21,20 @@ class LibraryController extends Controller
             }
         }
 
-        return view('shop.library', compact(['library', 'products']));
+        return view('shop.library.index', compact(['library', 'products']));
+    }
+
+    function info($product_id)
+    {
+        $product = Product::find($product_id);
+        $library=Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+        $owned = false;
+        foreach($library as $item) {
+            if($item->product_id == $product_id) {
+                $owned = true;
+            }
+        }
+        return view('shop.library.product-info', compact(['product', 'owned']));
     }
 
     public function manage(Request $request)
