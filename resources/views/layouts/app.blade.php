@@ -171,17 +171,20 @@
                     </div>
                 </div>
             </nav>
-            @yield('header')
+            <!-- sub navbar -->
+            <div class="container my-3">
+                <div class="d-flex flex-row-reverse align-items-center gap-2 me-1 align-middle">
+                    @yield('subnavbar')
+                </div>
+            </div>
         </header>
 
         {{-- content --}}
-        
         <main>
             <div class="container">
                 @yield('content')
             </div>
         </main>
-        
 
         {{-- footer--}}
         <footer class="mt-3">

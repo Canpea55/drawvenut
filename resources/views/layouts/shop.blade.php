@@ -2,11 +2,7 @@
 
 @section('title', 'เกี่ยวกับเรา')
 
-@section('header')
-<!-- sub navbar -->
-<div class="container my-3">
-    <div class="d-flex flex-row-reverse align-items-center gap-2 me-1 align-middle">
-        
+@section('subnavbar') 
         @if (auth()->check())
             @if (session('cart'))
                 <a class="anim no-underline fw-light bg-success-subtle rounded px-2 py-1" href="{{route('cart')}}">
@@ -24,9 +20,6 @@
                 </span>
             </a> --}}
         @endif
-
-    </div>
-</div>
 @endsection
 
 @section('content')
