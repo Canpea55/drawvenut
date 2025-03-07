@@ -10,7 +10,7 @@
     }
 @endsection
 
-@section('script')
+@section('head-script')
     <script>
         function setIframe(x) {
             var contentframe = document.getElementById("contentframe");

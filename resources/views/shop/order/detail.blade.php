@@ -12,7 +12,7 @@
     }
 @endsection
 
-@section('script')
+@section('head-script')
     <script>
         function togglePaymentForm() {
             let selectedMethod = document.getElementById("paymentMethod").value;

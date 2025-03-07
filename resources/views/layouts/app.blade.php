@@ -80,13 +80,11 @@
     <title>@yield('title') - {{ config('app.name') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    
 
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
-    @yield('script')
+    <!-- Head Scripts -->
+    @vite('node_modules/bootstrap/dist/css/bootstrap.min.css')
+    @yield('head-script')
 </head>
 
 <body>
@@ -200,5 +198,10 @@
         </footer>
     </div>
 </body>
+
+<!-- Foot Scripts -->
+@vite(['resources/sass/app.scss', 'resources/js/app.js'])
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
+@yield('foot-script')
 
 </html>

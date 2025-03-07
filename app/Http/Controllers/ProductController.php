@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Library;
 
 class ProductController extends Controller
 {
@@ -123,7 +124,8 @@ class ProductController extends Controller
         ];
 
         Product::find($id)->update($product);
-        return redirect(route('products'));
+        // return redirect(route('products'));
+        return redirect()->back()->with('success', 'Product updated successfully!');
     }
 
     function products(Request $request)
@@ -151,6 +153,13 @@ class ProductController extends Controller
     function edit($id)
     {
         $product = Product::find($id);
-        return view('admin/products/edit', compact('product'));
+        $library=Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+        $owned = false;
+        foreach($library as $item) {
+            if($item->product_id == $id) {
+                $owned = true;
+            }
+        }
+        return view('admin/products/edit', compact(['product', 'owned']));
     }
 }

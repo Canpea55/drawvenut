@@ -2,7 +2,7 @@
 
 @section('title', 'จัดการออร์เดอร์')
 
-@section('script')
+@section('head-script')
     <script>
         function getCookie(name) {
             let cookies = document.cookie.split("; ");

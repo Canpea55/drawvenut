@@ -2,106 +2,42 @@
 
 @section('title', 'แก้ไขสินค้า')
 
-@section('content')
-    <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
-        @csrf
-
-        <div class="form-group py-4 text-center">
-            <h1 class="text text-center"> แก้ไขรายละเอียดสินค้า </h1>
-        </div>
-
-        <div class="form-group py-2">
-            <label for="name" class="py-2">ชื่อสินค้า</label>
-            <input type="text" name="name" class="form-control" value="{{$product->name}}">
-        </div>
-        @error('name')
-            <div class="ms-2 p-2">
-                <span class="text text-danger">{{ $message }}</span>
-            </div>
-        @enderror
-
-        <div class="form-group py-2">
-            <label for="price" class="py-2">ราคา</label>
-            <div class="input-group">
-                <input type="number" name="price" class="form-control" value="{{$product->price}}">
-                <div class="input-group-append">
-                    <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">฿</span>
-                </div>
-            </div>
-        </div>
-        @error('price')
-            <div class="ms-2 p-2">
-                <span class="text text-danger">{{ $message }}</span>
-            </div>
-        @enderror
-
-        <div class="form-group py-2">
-            <label for="description" class="py-2">คำอธิบายสินค้า</label>
-            <textarea name="description" class="form-control" cols="30" rows="5">{{$product->description}}</textarea>
-        </div>
-
-        <div class="form-group py-2">
-            <div class="py-2">
-                <label for="download" class="py-2">ลิ้งค์ดาวห์โหลดสินค้า</label>
-                <input type="text" name="download" class="form-control" value="{{$product->download}}">
-            </div>
-
-            <div class="py-2">
-                <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
-                <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
-            </div>
-        </div>
-
-        <div class="form-group py-2">
-            <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
-            <label for="isBuyable" class="form-check-label">ซื้อได้?</label>
-        </div>
-
-        <div class="form-group py-2">
-            <input class="form-check-input" name="isPublish" type="checkbox" {{$product->isPublish ? 'checked' : ''}}>
-            <label for="isPublish" class="form-check-label">เผยแพร่?</label>
-        </div>
-
-        <div class="form-group py-2">
-            <label for="images[]" class="form-check-label">ภาพประกอบ</label><br>
-            <input 
-                type="file" 
-                name="images[]" 
-                accept="image/*" 
-                multiple 
-                onchange="previewImages(event)"
-            >
-            
-            <!-- Display existing and new images -->
-            <div id="preview-container" class="flex gap-2 mt-2 border p-2" style="display: flex; flex-wrap: wrap;">
-                @php
-                    $images = json_decode($product->images, true);
-                @endphp
-                @if (!empty($images))
-                    @foreach ($images as $image)
-                        <div class="image-wrapper" data-name="{{ $image }}" style="position: relative; display: inline-block; margin: 5px;">
-                            <img src="{{Storage::url($image)}}" width="100" class="rounded border">
-                            <button 
-                                style="position: absolute; top: 0px; right: 0px; background: white; color: white; border: none; cursor: pointer;" 
-                                type="button" 
-                                class="delete-btn">
-                                ❌
-                            </button>
-                        </div>
-                    @endforeach
-                @endif
-            </div>
-
-            <input type="hidden" name="image_order" id="image_order">
-        </div>
-
-        <div class="form-group py-2">
-            <input type="submit" value="บันทึก" class="btn btn-primary py-2">
-        </div>
-    </form>
-
+@section('foot-script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <script>
+        function updateImageOrder() {
+            const orderArray = [];
+            document.querySelectorAll("#preview-container .image-wrapper").forEach(wrapper => {
+                if (wrapper.dataset.id) {
+                    orderArray.push(`${wrapper.dataset.id}`);
+                } else if (wrapper.dataset.name) {
+                    orderArray.push(`${wrapper.dataset.name}`);
+                }
+            });
+            document.getElementById('image_order').value = JSON.stringify(orderArray);
+        }
+
+        function highlightThumbnail() {
+            const previewContainer = document.getElementById('preview-container');
+            const mainImageBorder = document.getElementById('mainImage-border');
+            const mainImage = document.getElementById('mainImage');
+            const imageWrappers = previewContainer.querySelectorAll('.image-wrapper');
+            if (imageWrappers.length > 0) {
+                imageWrappers.forEach(wrapper => {
+                    wrapper.querySelector('img').classList.remove('border-primary');
+                });
+                const firstImage = imageWrappers[0].querySelector('img');
+                firstImage.classList.add('border-primary');
+                mainImageBorder.classList.add('border-primary');
+                mainImage.style.display = 'block';
+                document.getElementById('mainImage').src = firstImage.src;
+            } else {
+                document.getElementById('mainImage').src = '';
+                mainImageBorder.classList.remove('border-primary');
+                mainImage.style.display = 'none';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Sortable for drag-and-drop
             new Sortable(document.getElementById('preview-container'), {
@@ -109,6 +45,7 @@
                 ghostClass: 'sortable-ghost',
                 onEnd: function () {
                     updateImageOrder();
+                    highlightThumbnail();
                 }
             });
 
@@ -118,11 +55,13 @@
                     const wrapper = e.target.closest('.image-wrapper');
                     wrapper.remove();
                     updateImageOrder();
+                    highlightThumbnail();
                 }
             });
 
-            // Initial order update
+            // Initial order update and highlight
             updateImageOrder();
+            highlightThumbnail();
         });
 
         function previewImages(event) {
@@ -159,19 +98,189 @@
                 };
                 reader.readAsDataURL(file);
             });
-            updateImageOrder();
-        }
-
-        function updateImageOrder() {
-            const orderArray = [];
-            document.querySelectorAll("#preview-container .image-wrapper").forEach(wrapper => {
-                if (wrapper.dataset.id) {
-                    orderArray.push(`${wrapper.dataset.id}`);
-                } else if (wrapper.dataset.name) {
-                    orderArray.push(`${wrapper.dataset.name}`);
-                }
-            });
-            document.getElementById('image_order').value = JSON.stringify(orderArray);
         }
     </script>
+@endsection
+
+@section('style')
+    .thumbnail-container {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 8px;
+    padding-bottom: 8px;
+    }
+
+    .thumbnail-container::-webkit-scrollbar {
+    height: 8px;
+    }
+    .thumbnail-container::-webkit-scrollbar-track {
+    background: transparent;
+    }
+    .thumbnail-container::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+    }
+
+    /* Default thumbnail size for larger screens */
+    .thumbnail-img {
+    width: 10%;
+    height: auto;
+    object-fit: contain;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease-in-out;
+    }
+    .thumbnail-img.active {
+    border-color: #007bff;
+    }
+
+    /* Increase thumbnail size for mobile devices */
+    @media (max-width: 767.98px) {
+        .thumbnail-img {
+        width: 15%;
+        }
+    }
+
+    picture {
+        height: 400px;
+        width: 100%;
+        aspect-ratio: 4 / 3; /* Adjust aspect ratio as needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
+    picture img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+@endsection
+
+@section('content')
+    <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
+        @csrf
+        <!-- Main Product Display -->
+        <section class="flex card mb-2">
+            <div class="container p-4">
+                <div class="row">
+                    <!-- Left Column: Main Image and Thumbnails -->
+                    <div class="col-12 col-lg-8 my-2">
+
+                        <!-- Main Image -->
+                        <label for="mainImage" class="form-check-label">ภาพปก</label>
+                        <picture id="mainImage-border" class="rounded border">
+                            <img id="mainImage" src="" alt="Product Image" width="100%" onerror="this.style.display='none'">
+                        </picture>
+
+                        <div class="form-group mt-2">
+                            <label for="images[]" class="form-check-label">ภาพประกอบ</label>
+                            
+                            <!-- Display existing and new images -->
+                            <div id="preview-container" class="flex gap-2 border p-2" style="display: flex; flex-wrap: wrap;">
+                                @php
+                                    $images = json_decode($product->images, true);
+                                @endphp
+                                @if (!empty($images))
+                                    @foreach ($images as $image)
+                                        <div class="image-wrapper" data-name="{{ $image }}" style="position: relative; display: inline-block;">
+                                            <img src="{{Storage::url($image)}}" width="100" class="rounded border">
+                                            <button 
+                                                style="position: absolute; top: 0px; right: 0px; background: white; color: white; border: none; cursor: pointer;" 
+                                                type="button" 
+                                                class="delete-btn">
+                                                ❌
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <input 
+                                class="form-control mt-2"
+                                type="file" 
+                                name="images[]" 
+                                accept="image/*" 
+                                multiple 
+                                onchange="previewImages(event);
+                                timeoutUpdateImageOrder = setTimeout(updateImageOrder, 10);
+                                timeoutHighlight = setTimeout(highlightThumbnail, 10);"
+                            >
+                
+                            <input type="hidden" name="image_order" id="image_order">
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Product Details -->
+                    <div class="col-12 col-lg-4 my-2 d-flex flex-column">
+
+                        <div class="form-group py-2">
+                            <label for="name" class="">ชื่อสินค้า</label>
+                            <input type="text" name="name" class="form-control" value="{{$product->name}}">
+                        </div>
+                        @error('name')
+                            <div class="ms-2 p-2">
+                                <span class="text text-danger">{{ $message }}</span>
+                            </div>
+                        @enderror
+                        
+                        <div class="form-group py-2">
+                            <label for="price" class="">ราคา</label>
+                            <div class="input-group">
+                                <input type="number" name="price" class="form-control" value="{{$product->price}}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">฿</span>
+                                </div>
+                            </div>
+                        </div>
+                        @error('price')
+                            <div class="ms-2 p-2">
+                                <span class="text text-danger">{{ $message }}</span>
+                            </div>
+                        @enderror
+
+                        {{-- fill empty space --}}
+                        <div class="flex-grow-1"></div>
+
+                        <div class="form-group py-2">
+                            <div class="py-2">
+                                <label for="download" class="">ลิ้งค์ดาวห์โหลดสินค้า</label>
+                                <input type="text" name="download" class="form-control" value="{{$product->download}}">
+                            </div>
+                
+                            <div class="py-2">
+                                <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
+                                <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group py-2">
+                            <div>
+                                <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
+                                <label for="isBuyable" class="form-check-label">ซื้อได้?</label>
+                            </div>
+                            <div>
+                                <input class="form-check-input" name="isPublish" type="checkbox" {{$product->isPublish ? 'checked' : ''}}>
+                                <label for="isPublish" class="form-check-label">เผยแพร่?</label>
+                            </div>
+                        </div> 
+                        
+                        <input type="submit" value="บันทึก" class="btn btn-primary mt-2">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="flex card p-4">
+            <div class="form-group">
+                <label for="description" class="">คำอธิบายสินค้า</label>
+                <textarea id="tinymce" name="description" class="form-control" cols="30" rows="5">
+                    {!!$product->description!!}
+                </textarea>
+            </div>
+        </section>
+
+    </form>
 @endsection

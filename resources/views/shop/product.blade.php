@@ -41,18 +41,19 @@
     }
 
     picture {
-    width: 100%;
-    aspect-ratio: 4 / 3; /* Adjust aspect ratio as needed */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f9fa;
+        height: 400px;
+        width: 100%;
+        aspect-ratio: 4 / 3; /* Adjust aspect ratio as needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
     }
 
     picture img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 
 @endsection

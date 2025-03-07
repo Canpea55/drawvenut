@@ -133,9 +133,6 @@
     ร้านค้า
 @endsection
 
-@section('script')
-@endsection
-
 @section('content')
 
     <div class="rounded position-relative overflow-hidden m-md-3 text-center bg-banner">
