@@ -33,6 +33,7 @@
         color: inherit;
     }
 
+    /* hover animation */
     .anim {
         transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
         opacity: 0.9;
@@ -42,6 +43,29 @@
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Adds shadow */
         opacity: 1;
     }
+
+
+    /* scroll bar */
+    ::-webkit-scrollbar{
+        width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track-piece{
+        background-color: #FFF;
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb{
+        background-color: #CBCBCB;
+        outline: 2px solid #FFF;
+        outline-offset: -2px;
+        border: .1px solid #B7B7B7;
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover{
+        background-color: #909090;
+    }   
 
     @yield('style')
 </style>
