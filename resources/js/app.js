@@ -1,6 +1,8 @@
 import './bootstrap';
 import * as bootstrap from 'bootstrap';
 
+import 'masonry-layout';
+
 import 'tinymce/tinymce';
 import 'tinymce/skins/ui/oxide/skin.min.css';
 import 'tinymce/icons/default/icons';
@@ -14,7 +16,6 @@ import 'tinymce/plugins/table';
 import 'tinymce/plugins/code';
 import 'tinymce/plugins/help';
 import 'tinymce/plugins/wordcount';
-
 
 tinymce.init({
     selector: 'textarea#tinymce', // Target the textarea with ID 'tinymce'

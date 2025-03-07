@@ -75,7 +75,7 @@
     <div class="d-md-none">
         <div class="album py-4 bg-body-tertiary">
             <div class="container">
-                <div class="row row-cols-1 row-cols-sm-2 g-3" data-masonry='{"percentPosition": true }'>
+                <div class="row row-cols-1 row-cols-sm-2 g-2" data-masonry='{"percentPosition": true }'>
                     @foreach ($products as $item)
                                     <div class="col">
                                         <div class="card shadow-sm">
@@ -111,10 +111,9 @@
                                                     </svg>
                                                 @endif
                                                 <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex justify-content-start align-items-center">
                                                         <strong class="d-flex text-primary-emphasis align-items-center"
                                                             style="width: 85%">{{ $item->name }}</strong>
-                                                        <strong class="text-success flex-shrink-0 m-0">{{ $item->price }} ฿</strong>
                                                     </div>
                                                 </div>
                                             </a>
