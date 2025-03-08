@@ -51,7 +51,9 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::post('/product/insert', [ProductController::class, 'insert'])->name('product.insert');
     Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::get('/product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
-    Route::get('/product/change/{id}', [ProductController::class, 'toggle'])->name('product.toggle');
+    Route::post('/product/toggle/isPublish/{id}', [ProductController::class, 'isPublish'])->name('product.toggle.publish');
+    Route::post('/product/toggle/isBuyable/{id}', [ProductController::class, 'isBuyable'])->name('product.toggle.buyable');
+    Route::post('/product/toggle/isDownloadable/{id}', [ProductController::class, 'isDownloadable'])->name('product.toggle.downloadable');
     
     // user management
     Route::get('/users', [UserController::class, 'users'])->name('users');

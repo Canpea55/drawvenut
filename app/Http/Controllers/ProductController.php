@@ -139,11 +139,29 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    function toggle($id)
+    function isPublish($id)
     {
         $product = Product::find($id);
         $data = [
             'isPublish' => !$product->isPublish
+        ];
+        Product::find($id)->update($data);
+        return redirect()->back();
+    }
+    function isBuyable($id)
+    {
+        $product = Product::find($id);
+        $data = [
+            'isBuyable' => !$product->isBuyable
+        ];
+        Product::find($id)->update($data);
+        return redirect()->back();
+    }
+    function isDownloadable($id)
+    {
+        $product = Product::find($id);
+        $data = [
+            'isDownloadable' => !$product->isDownloadable
         ];
         Product::find($id)->update($data);
         return redirect()->back();

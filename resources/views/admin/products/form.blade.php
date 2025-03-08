@@ -276,30 +276,48 @@
                 
                             <div class="py-2">
                                 @if (!empty($product))
-                                    <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
+                                    <label class="switch">
+                                        <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
+                                        <span class="slider"></span>
+                                    </label>
                                 @else
-                                    <input class="form-check-input" name="isDownloadable" type="checkbox">
+                                    <label class="switch">
+                                        <input class="form-check-input" name="isDownloadable" type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
                                 @endif
-                                <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
+                                <label for="isDownloadable" class="form-check-label align-top">ดาวน์โหลดได้?</label>
                             </div>
                         </div>
 
                         <div class="form-group py-2">
                             <div>
                                 @if (!empty($product))
-                                    <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
+                                    <label class="switch">
+                                        <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
+                                        <span class="slider"></span>
+                                    </label>
                                 @else
-                                    <input class="form-check-input" name="isBuyable" type="checkbox">
+                                    <label class="switch">
+                                        <input class="form-check-input" name="isBuyable" type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
                                 @endif
-                                <label for="isBuyable" class="form-check-label">ซื้อได้?</label>
+                                <label for="isBuyable" class="form-check-label align-top">ซื้อได้?</label>
                             </div>
                             <div>
                                 @if (!empty($product))
-                                    <input class="form-check-input" name="isPublish" type="checkbox" {{$product->isPublish ? 'checked' : ''}}>
+                                    <label class="switch">
+                                        <input class="form-check-input" name="isPublish" type="checkbox" {{$product->isPublish ? 'checked' : ''}}>
+                                        <span class="slider"></span>
+                                    </label>
                                 @else
-                                    <input class="form-check-input" name="isPublish" type="checkbox">
+                                    <label class="switch">
+                                        <input class="form-check-input" name="isPublish" type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
                                 @endif
-                                <label for="isPublish" class="form-check-label">เผยแพร่?</label>
+                                <label for="isPublish" class="form-check-label align-top">เผยแพร่?</label>
                             </div>
                         </div> 
                         
