@@ -202,8 +202,24 @@
                 </div>
             </nav>
             <!-- sub navbar -->
-            <div class="container my-3 d-flex justify-content-between">
+            <div class="container my-3 d-flex justify-content-between">                
                 <div class="d-flex align-items-center gap-2 ms-1 align-middle">
+                    @auth
+                        @if (Auth::user()->isAdmin)
+                            <a class="opBtn no-underline px-2 py-1" href="{{route("order.manage")}}" title="จัดการออร์เดอร์">
+                                <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="Add Icon" width="24">
+                            </a>
+                            <a class="opBtn no-underline px-2 py-1" href="{{route("product.manage")}}" title="จัดการสินค้า">
+                                <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Add Icon" width="24">
+                            </a>
+                            <a class="opBtn no-underline px-2 py-1" href="{{route("users")}}" title="จัดการผู้ใช้งาน">
+                                <img src="{{ asset('icons/oval-interface/3users.svg') }}" alt="Add Icon" width="24">
+                            </a>
+                            <a class="opBtn no-underline px-2 py-1" href="{{route("library.manage")}}" title="จัดการคลัง">
+                                <img src="{{ asset('icons/oval-interface/grid-aspect-ratio.svg') }}" alt="Add Icon" width="24">
+                            </a>
+                        @endif
+                    @endauth
                     @yield(section: 'subnavbar-left')
                 </div>
                 <div class="d-flex align-items-center gap-2 me-1 align-middle">
