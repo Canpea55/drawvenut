@@ -1,34 +1,57 @@
 <style>
     .thumbnail-container {
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-    gap: 8px;
-    padding-bottom: 8px;
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 8px;
+        padding-bottom: 8px;
     }
 
     .thumbnail-container::-webkit-scrollbar {
-    height: 8px;
+        height: 8px;
     }
     .thumbnail-container::-webkit-scrollbar-track {
-    background: transparent;
+        background: transparent;
     }
     .thumbnail-container::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 4px;
+        background-color: #ccc;
+        border-radius: 4px;
     }
 
     /* Default thumbnail size for larger screens */
     .thumbnail-img {
-    width: 10%;
-    height: auto;
-    object-fit: contain;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: border-color 0.3s ease-in-out;
+        width: 10%;
+        height: auto;
+        object-fit: contain;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.3s ease-in-out;
     }
     .thumbnail-img.active {
-    border-color: #007bff;
+        border-color: #007bff;
+    }
+    
+    /* Increase thumbnail size for mobile devices */
+    @media (max-width: 767.98px) {
+        .thumbnail-img {
+        width: 15%;
+        }
+    }
+
+    picture {
+        height: 400px;
+        width: 100%;
+        aspect-ratio: 4 / 3; /* Adjust aspect ratio as needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
+    picture img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 
     .banner-image {
@@ -121,6 +144,26 @@
         
         <div class="container p-4">
             {!! $product->description !!}
+            @php
+                $images = json_decode($product->images, true);
+            @endphp
+            @if(is_array($images) && count($images) > 0)
+                @php
+                    $defaultImage = $images[0];
+                @endphp
+                <!-- Main Image -->
+                <picture class="mt-4">
+                    <img id="mainImage" src="{{ Storage::url($defaultImage) }}" alt="Product Image" width="100%"
+                        class="rounded border">
+                </picture>
+                <!-- Horizontal Thumbnail Container -->
+                <div class="thumbnail-container mt-2">
+                    @foreach($images as $img)
+                        <img src="{{ Storage::url($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img"
+                            data-image="{{ Storage::url($img) }}">
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 

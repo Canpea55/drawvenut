@@ -205,8 +205,8 @@
                                 accept="image/*" 
                                 multiple 
                                 onchange="previewImages(event);
-                                timeoutUpdateImageOrder = setTimeout(updateImageOrder, 10);
-                                timeoutHighlight = setTimeout(highlightThumbnail, 10);"
+                                timeoutUpdateImageOrder = setTimeout(updateImageOrder, 100);
+                                timeoutHighlight = setTimeout(highlightThumbnail, 100);"
                             >
                 
                             <input type="hidden" name="image_order" id="image_order">

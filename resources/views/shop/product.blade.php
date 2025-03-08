@@ -35,9 +35,9 @@
 
     /* Increase thumbnail size for mobile devices */
     @media (max-width: 767.98px) {
-    .thumbnail-img {
-    width: 15%;
-    }
+        .thumbnail-img {
+        width: 15%;
+        }
     }
 
     picture {
