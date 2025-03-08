@@ -3,17 +3,22 @@
 @section('title', 'จัดการสินค้า')
 
 @section('subnavbar-left')
+    <div class="d-flex" style="height: 100%;">
+        <div class="vr"></div>
+    </div>
     <a class="opBtn no-underline px-2 py-1" href="{{route("product.add")}}" title="เพิ่มสินค้า">
         <img src="{{ asset('icons/oval-interface/circle-add.svg') }}" alt="Add Icon" width="24">
-        <span for="addProduct" class="fw-light">เพิ่มสินค้า</span>
+        {{-- <span for="addProduct" class="fw-light">เพิ่มสินค้า</span> --}}
     </a>
 @endsection
 
 @section('content')
-    <h1 class="my-4">จัดการสินค้าทั้งหมด</h1>
+    <div class="py-4">
+        <h1 class="">จัดการสินค้าทั้งหมด</h1>
+    </div>
 
     @if (count($products) > 0)
-        <div class="album py-4 bg-body-tertiary">
+        <div class="album bg-body-tertiary">
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-3" data-masonry='{"percentPosition": true }'>
                     @foreach ($products as $item)

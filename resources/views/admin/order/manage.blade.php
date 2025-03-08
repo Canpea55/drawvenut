@@ -95,7 +95,10 @@
 @section('content')
 
     @if (count($orders) > 0)
-        <h1 class="text-info-emphasis">รอตรวจสอบบิล</h1>
+        <div class="py-4">
+            <h1 class="text-info-emphasis">รอตรวจสอบบิล</h1>
+        </div>
+        
         <div class="row row-cols-1 row-cols-md-2 g-3" data-masonry='{"percentPosition": true }'>
             @if ($submitted->isNotEmpty())
                 @foreach ($submitted as $item)

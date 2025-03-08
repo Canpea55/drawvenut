@@ -3,7 +3,9 @@
 @section('title', 'จัดการคลัง')
 
 @section('content')
-    <h1 class="my-4 text-center">จัดการคลัง</h1>
+    <div class="py-4">
+        <h1 class="text">จัดการคลัง</h1>
+    </div>
 
     @if (count($library) > 0)
         <table class="table table-bordered align-middle">

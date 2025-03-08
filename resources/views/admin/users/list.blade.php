@@ -3,7 +3,7 @@
 @section('title', 'จัดการผู้ใช้งาน')
 
 @section('content')
-    <div class="py-4 text-center">
+    <div class="py-4">
         <h1 class="text">จัดการผู้ใช้งาน</h1>
     </div>
 
