@@ -88,7 +88,12 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- title -->
     <title>@yield('title') - {{ config('app.name') }}</title>
+
+    <!-- Styles -->
+    <link href="{{ asset('css/common.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/voxybun-toggle.css') }}" rel="stylesheet">
 
     <!-- Fonts -->
     
@@ -160,22 +165,22 @@
                                         @if (Auth::user()->isAdmin)
                                             <li>
                                                 <a class="dropdown-item anim" href="{{ route('order.manage') }}">
-                                                    📋 จัดการออร์เดอร์
+                                                    <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="Add Icon" width="16"> จัดการออร์เดอร์
                                                 </a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item anim" href="{{ route('product.manage') }}">
-                                                    📦 จัดการสินค้า
+                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Add Icon" width="16"> จัดการสินค้า
                                                 </a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item anim" href="{{ route('users') }}">
-                                                    👥 จัดการผู้ใช้งาน
+                                                    <img src="{{ asset('icons/oval-interface/3users.svg') }}" alt="Add Icon" width="16"> จัดการผู้ใช้งาน
                                                 </a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item anim" href="{{ route('library.manage') }}">
-                                                    🧰 จัดการคลัง
+                                                    <img src="{{ asset('icons/oval-interface/grid-aspect-ratio.svg') }}" alt="Add Icon" width="16"> จัดการคลัง
                                                 </a>
                                             </li>
                                             <li><hr class="dropdown-divider"></li>
@@ -183,7 +188,7 @@
                                         <li>
                                             <a class="dropdown-item anim" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();">
-                                                <!--{{ __(key: 'Logout') }}-->ลงชื่อออก
+                                                <img src="{{ asset('icons/oval-interface/power.svg') }}" alt="Add Icon" width="16"> ลงชื่อออก
                                             </a>
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                                 @csrf
