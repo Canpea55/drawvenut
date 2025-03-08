@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'เกี่ยวกับเรา')
+@section('title', 'ตระกร้าสินค้า')
 
 @section('style')
 @endsection

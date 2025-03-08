@@ -56,7 +56,7 @@
     @if(count($products) > 0)
         <!-- This div is visible on large screens (PC) but hidden on small screens (phones) -->
         <div class="d-none d-md-block">
-            <div class="row g-4 my-0">
+            <div class="row g-4">
                 <div class="col-md-5 col-lg-4">
                     <ul class="list-group product-menu" style="height: 80%">
                         @foreach($products as $item)
@@ -114,12 +114,9 @@
                                                         <div class="d-flex justify-content-between align-items-start"
                                                             style="position: absolute; right: 3%; top: 4%;">
                                                             <div class="btn-group gap-1">
-                                                                <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn">
+                                                                <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
                                                                     <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Heart Icon" width="24">
                                                                 </a>
-                                                                {{-- <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn">
-                                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Heart Icon" width="24">
-                                                                </a> --}}
                                                             </div>
                                                         </div>
                                                     @endif
