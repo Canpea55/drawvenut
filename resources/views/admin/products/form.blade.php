@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'แก้ไขสินค้า')
+@section('title')
+    @if (empty($product))
+        เพิ่มสินค้า
+    @else
+        แก้ไขสินค้า
+    @endif
+@endsection
 
 @section('foot-script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
@@ -160,7 +166,11 @@
 @endsection
 
 @section('content')
-    <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
+    @if (empty($product))
+        <form method="POST" action="{{ route('product.insert')}}" enctype="multipart/form-data">
+    @else
+        <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
+    @endif
         @csrf
         <!-- Main Product Display -->
         <section class="flex card mb-2">
@@ -180,21 +190,23 @@
                             
                             <!-- Display existing and new images -->
                             <div id="preview-container" class="flex gap-2 border p-2" style="display: flex; flex-wrap: wrap;">
-                                @php
-                                    $images = json_decode($product->images, true);
-                                @endphp
-                                @if (!empty($images))
-                                    @foreach ($images as $image)
-                                        <div class="image-wrapper" data-name="{{ $image }}" style="position: relative; display: inline-block;">
-                                            <img src="{{Storage::url($image)}}" width="100" class="rounded border">
-                                            <button 
-                                                style="position: absolute; top: 0px; right: 0px; background: white; color: white; border: none; cursor: pointer;" 
-                                                type="button" 
-                                                class="delete-btn">
-                                                ❌
-                                            </button>
-                                        </div>
-                                    @endforeach
+                                @if (!empty($product))
+                                    @php
+                                        $images = json_decode($product->images, true);
+                                    @endphp
+                                    @if (!empty($images))
+                                        @foreach ($images as $image)
+                                            <div class="image-wrapper" data-name="{{ $image }}" style="position: relative; display: inline-block;">
+                                                <img src="{{Storage::url($image)}}" width="100" class="rounded border">
+                                                <button 
+                                                    style="position: absolute; top: 0px; right: 0px; background: white; color: white; border: none; cursor: pointer;" 
+                                                    type="button" 
+                                                    class="delete-btn">
+                                                    ❌
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 @endif
                             </div>
 
@@ -218,7 +230,11 @@
 
                         <div class="form-group py-2">
                             <label for="name" class="">ชื่อสินค้า</label>
-                            <input type="text" name="name" class="form-control" value="{{$product->name}}">
+                            @if (!empty($product))
+                                <input type="text" name="name" class="form-control" value="{{$product->name}}">
+                            @else
+                                <input type="text" name="name" class="form-control">
+                            @endif
                         </div>
                         @error('name')
                             <div class="ms-2 p-2">
@@ -229,7 +245,11 @@
                         <div class="form-group py-2">
                             <label for="price" class="">ราคา</label>
                             <div class="input-group">
-                                <input type="number" name="price" class="form-control" value="{{$product->price}}">
+                                @if (!empty($product))
+                                    <input type="number" name="price" class="form-control" value="{{$product->price}}">
+                                @else
+                                    <input type="number" name="price" class="form-control">
+                                @endif
                                 <div class="input-group-append">
                                     <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">฿</span>
                                 </div>
@@ -247,27 +267,47 @@
                         <div class="form-group py-2">
                             <div class="py-2">
                                 <label for="download" class="">ลิ้งค์ดาวห์โหลดสินค้า</label>
-                                <input type="text" name="download" class="form-control" value="{{$product->download}}">
+                                @if (!empty($product))
+                                    <input type="text" name="download" class="form-control" value="{{$product->download}}">
+                                @else
+                                    <input type="text" name="download" class="form-control">
+                                @endif
                             </div>
                 
                             <div class="py-2">
-                                <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
+                                @if (!empty($product))
+                                    <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
+                                @else
+                                    <input class="form-check-input" name="isDownloadable" type="checkbox">
+                                @endif
                                 <label for="isDownloadable" class="form-check-label">ดาวน์โหลดได้?</label>
                             </div>
                         </div>
 
                         <div class="form-group py-2">
                             <div>
-                                <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
+                                @if (!empty($product))
+                                    <input class="form-check-input" name="isBuyable" type="checkbox" {{$product->isBuyable ? 'checked' : ''}}>
+                                @else
+                                    <input class="form-check-input" name="isBuyable" type="checkbox">
+                                @endif
                                 <label for="isBuyable" class="form-check-label">ซื้อได้?</label>
                             </div>
                             <div>
-                                <input class="form-check-input" name="isPublish" type="checkbox" {{$product->isPublish ? 'checked' : ''}}>
+                                @if (!empty($product))
+                                    <input class="form-check-input" name="isPublish" type="checkbox" {{$product->isPublish ? 'checked' : ''}}>
+                                @else
+                                    <input class="form-check-input" name="isPublish" type="checkbox">
+                                @endif
                                 <label for="isPublish" class="form-check-label">เผยแพร่?</label>
                             </div>
                         </div> 
                         
-                        <input type="submit" value="บันทึก" class="btn btn-primary mt-2">
+                        @if (!empty($product))
+                            <input type="submit" value="อัพเดตสินค้า" class="btn btn-primary mt-2">
+                        @else
+                            <input type="submit" value="เพิ่มสินค้าใหม่" class="btn btn-primary mt-2">
+                        @endif
                     </div>
                 </div>
             </div>
@@ -277,7 +317,9 @@
             <div class="form-group">
                 <label for="description" class="">คำอธิบายสินค้า</label>
                 <textarea id="tinymce" name="description" class="form-control" cols="30" rows="5">
-                    {!!$product->description!!}
+                    @if (!empty($product))
+                        {!!$product->description!!}
+                    @endif
                 </textarea>
             </div>
         </section>

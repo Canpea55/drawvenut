@@ -117,16 +117,6 @@
         opacity: 1;
     }
 
-    .opBtn {
-        transition: transform 0.3s ease, opacity 0.5s ease;
-        opacity: 0.5;
-        will-change: transform, opacity, box-shadow;
-    }
-    .opBtn:hover {
-        transform: translateY(-5px);
-        opacity: 1;
-    }
-
 @endsection
 
 @section('title')

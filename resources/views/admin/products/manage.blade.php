@@ -2,10 +2,14 @@
 
 @section('title', 'จัดการสินค้า')
 
+@section('subnavbar-left')
+    <a class="opBtn no-underline px-2 py-1" href="{{route("product.add")}}" title="เพิ่มสินค้า">
+        <img src="{{ asset('icons/oval-interface/circle-add.svg') }}" alt="Add Icon" width="24">
+    </a>
+@endsection
+
 @section('content')
     <h1 class="my-4 text-center">จัดการสินค้า</h1>
-
-    <a class="btn btn-primary my-2" href="{{route("product.create")}}">เพิ่มสินค้า</a>
 
     @if (count($products) > 0)
         <table class="table table-bordered align-middle">

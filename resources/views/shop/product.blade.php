@@ -107,14 +107,18 @@
                     <div class="d-flex gap-2">
                         @if ($owned)
                             @if ($product->isDownloadable)
-                                <a type="button" class="btn btn-success btn-lg" href="{{$product->download}}" download>ดาวน์โหลด</a>
+                                <a class="btn btn-success btn-lg " href="{{ $product->download }}" download>ดาวน์โหลด</a>
+                            @else
+                                <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true">ดาวน์โหลด</a>
                             @endif
                         @else
                             @if ($product->price <= 0) 
                                 @if ($product->isDownloadable)
-                                    <a type="button" class="btn btn-success btn-lg" href="{{$product->download}}" download>ดาวน์โหลด</a>
-                                    <a type="button" class="btn btn-primary btn-lg" href="#">เพิ่มไปยังคลัง</a>
+                                    <a class="btn btn-success btn-lg " href="{{ $product->download }}" download>ดาวน์โหลด</a>
+                                @else
+                                    <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true">ดาวน์โหลด</a>
                                 @endif
+                                <a type="button" class="btn btn-primary btn-lg" href="#">เพิ่มไปยังคลัง</a>
                             @else
                                 @if (session('cart'))
                                     @if (array_key_exists($product->id, session('cart')))

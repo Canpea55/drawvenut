@@ -9,12 +9,12 @@ use App\Models\Library;
 
 class ProductController extends Controller
 {
-    function create()
+    function add()
     {
-        return view('admin/products/create');
+        return view('admin/products/form');
     }
 
-    function add(Request $request)
+    function insert(Request $request)
     {
         $request->validate(
             [
@@ -61,10 +61,10 @@ class ProductController extends Controller
             'download' => $request->download,
         ]);
 
-        if(!$request->input("createMultiple")) {
-            return redirect(route('products'))->with('success', 'Product added successfully!');
+        if($request->input("createMultiple")) {
+            return redirect(route('product.add'))->with('success', 'Product added successfully!');
         }
-        return redirect(route('product.create'))->with('success', 'Product added successfully!');
+        return redirect(route('product.manage'))->with('success', 'Product added successfully!');
     }
 
     function update(Request $request, $id)
@@ -124,14 +124,13 @@ class ProductController extends Controller
         ];
 
         Product::find($id)->update($product);
-        // return redirect(route('products'));
         return redirect()->back()->with('success', 'Product updated successfully!');
     }
 
-    function products(Request $request)
+    function manage(Request $request)
     {
         $products=Product::orderBy('id', 'desc')->paginate(10);
-        return view('/admin/products/list', compact('products'));
+        return view('/admin/products/manage', compact('products'));
     }
 
     function delete($id)
@@ -160,6 +159,6 @@ class ProductController extends Controller
                 $owned = true;
             }
         }
-        return view('admin/products/edit', compact(['product', 'owned']));
+        return view('admin/products/form', compact(['product', 'owned']));
     }
 }

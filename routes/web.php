@@ -45,13 +45,13 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::get('/library/manage', [LibraryController::class, 'manage'])->name('library.manage');
 
     // product management
-    Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+    Route::get('/product/add', [ProductController::class, 'add'])->name('product.add');
     Route::get('/product/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
-    Route::get('/products', [ProductController::class, 'products'])->name('products');
-    Route::post('/product/add', [ProductController::class, 'add'])->name('product.add');
+    Route::get('/product/manage', [ProductController::class, 'manage'])->name('product.manage');
+    Route::post('/product/insert', [ProductController::class, 'insert'])->name('product.insert');
+    Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::get('/product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('/product/change/{id}', [ProductController::class, 'toggle'])->name('product.toggle');
-    Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     
     // user management
     Route::get('/users', [UserController::class, 'users'])->name('users');

@@ -67,6 +67,17 @@
         background-color: #909090;
     }   
 
+    /* btn */
+    .opBtn {
+        transition: transform 0.3s ease, opacity 0.5s ease;
+        opacity: 0.5;
+        will-change: transform, opacity, box-shadow;
+    }
+    .opBtn:hover {
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+
     @yield('style')
 </style>
 
@@ -147,14 +158,30 @@
                                     <ul class="dropdown-menu">
                                         <!-- Administrator -->  
                                         @if (Auth::user()->isAdmin)
-                                            <li><a class="dropdown-item" href="{{ route('order.manage') }}">จัดการออร์เดอร์</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('products') }}">จัดการสินค้า</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('users') }}">จัดการผู้ใช้งาน</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('library.manage') }}">จัดการคลัง</a></li>
+                                            <li>
+                                                <a class="dropdown-item anim" href="{{ route('order.manage') }}">
+                                                    📋 จัดการออร์เดอร์
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item anim" href="{{ route('product.manage') }}">
+                                                    📦 จัดการสินค้า
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item anim" href="{{ route('users') }}">
+                                                    👥 จัดการผู้ใช้งาน
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item anim" href="{{ route('library.manage') }}">
+                                                    🧰 จัดการคลัง
+                                                </a>
+                                            </li>
                                             <li><hr class="dropdown-divider"></li>
                                         @endif
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                            <a class="dropdown-item anim" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();">
                                                 <!--{{ __(key: 'Logout') }}-->ลงชื่อออก
                                             </a>
@@ -170,9 +197,12 @@
                 </div>
             </nav>
             <!-- sub navbar -->
-            <div class="container my-3">
-                <div class="d-flex flex-row-reverse align-items-center gap-2 me-1 align-middle">
-                    @yield('subnavbar')
+            <div class="container my-3 d-flex justify-content-between">
+                <div class="d-flex align-items-center gap-2 ms-1 align-middle">
+                    @yield(section: 'subnavbar-left')
+                </div>
+                <div class="d-flex align-items-center gap-2 me-1 align-middle">
+                    @yield('subnavbar-right')
                 </div>
             </div>
         </header>

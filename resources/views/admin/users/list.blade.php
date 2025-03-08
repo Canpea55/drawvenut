@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'จัดการสินค้า')
+@section('title', 'จัดการผู้ใช้งาน')
 
 @section('content')
     <div class="py-4 text-center">
