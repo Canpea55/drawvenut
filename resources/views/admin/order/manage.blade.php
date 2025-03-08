@@ -172,8 +172,8 @@
             </div>
         </div>
 
-        <div class="table-responsive-lg">
-            <div id="all" class="row order-filter" style="display: block">
+        <div class="table-responsive">
+            <div id="all" class="row order-filter mx-2" style="display: block">
                 <table class="table table-bordered align-middle">
                     <thead class="text-center">
                         <tr>
