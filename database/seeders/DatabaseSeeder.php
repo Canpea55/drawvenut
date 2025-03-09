@@ -19,6 +19,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'root@mail.com',
             'isAdmin' => 1,
         ]);
+        User::factory()->create([
+            'name' => 'steve',
+            'email' => 'steve@mail.com',
+            'isAdmin' => 0,
+        ]);
 
         Product::factory(count: 20)->create();
     }

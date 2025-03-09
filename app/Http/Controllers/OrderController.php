@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\LibraryController;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrderCancelation;
 use Hamcrest\Number\OrderingComparison;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,11 +57,6 @@ class OrderController extends Controller
         return redirect(route('order',  $order->id));
     }
 
-    public function cancel(Request $request)
-    {
-        //resson for cancel -> cancel
-    }
-
     public function checkout(Request $request)
     {
         $id = $request->input("id");
@@ -88,6 +84,33 @@ class OrderController extends Controller
         }
 
         return redirect()->back()->with('success', 'Receipt uploaded successfully!');
+    }
+
+    public function cancel(Request $request){
+        
+        $id = $request->order_id;
+        $order = Order::findOrFail($id);
+        $canceller = auth()->id();
+        $reason = $request->reason;
+        if($order->status == "pending"){
+            $cancelation = OrderCancelation::create([
+                'order_id' => $id,
+                'user_id' => $canceller,
+                'reason' => $reason,
+                'status' => 'approved',
+            ]);
+            $order->status = "cancelled";
+            $order->save();
+            return redirect()->back()->with('success', 'Order cancelled successfully!');
+        } else {
+            OrderCancelation::create([
+                'order_id' => $id,
+                'user_id' => $canceller,
+                'reason' => $reason,
+                'status' => 'pending',
+            ]);
+            return redirect()->back()->with('success', 'Order cancelled successfully!');
+        }
     }
 
     //--------------------------------------------admin--------------------------------------------
