@@ -136,7 +136,7 @@
 
     @if (count($products) > 0)
         
-        <div class="album py-4 bg-body-tertiary">
+        <div class="album py-4">
             <h2 class="mx-3 py-1">สินค้าใหม่</h2>
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" data-masonry='{"percentPosition": true }'>
