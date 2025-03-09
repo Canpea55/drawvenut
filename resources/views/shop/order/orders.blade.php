@@ -118,11 +118,6 @@
                                     </li>
                                 </ul>
                             </div>
-
-                            <!-- Order Duration -->
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
-                            </div>
                         </div>
 
                         <div class="col-auto d-none d-lg-block">
