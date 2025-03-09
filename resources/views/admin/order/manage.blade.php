@@ -126,7 +126,7 @@
                                 @if ($item->receipt)
                                     {{-- with image --}}
                                     <img 
-                                        width="200" height="250"
+                                        width="200" height="auto"
                                         src="{{ Storage::url($item->receipt) }}" 
                                         alt="Product Thumbnail" 
                                         class="card-img-top"
@@ -134,7 +134,7 @@
                                     >
                                 @else
                                     {{-- no image --}}
-                                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img"
+                                    <svg class="bd-placeholder-img" width="200" height="auto" xmlns="http://www.w3.org/2000/svg" role="img"
                                         aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
                                         <rect width="100%" height="100%" fill="#d09cc7" />
                                     </svg>

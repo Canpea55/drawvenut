@@ -104,7 +104,9 @@
                 </div>
             </div>
         </div>
-        {{ $products->links() }}
+        <div class="pt-4">
+            {{ $products->links() }}
+        </div>
     @else
         <div class="text text-center">ไม่มีสินค้าในระบบ</div>
     @endif
