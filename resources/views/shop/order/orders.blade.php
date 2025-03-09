@@ -46,6 +46,11 @@
                                             <h1 class="text-success" style="margin-top: 0;">ส่งสินค้าเรียบร้อย</h1>
                                         </div>
                                         @break
+                                    @case("cancelled")
+                                        <div>
+                                            <h1 class="text-danger" style="margin-top: 0;">ยกเลิกคำสั่งซื้อแล้ว</h1>
+                                        </div>
+                                        @break
                                     @default
                                         <div>
                                             <h1 class="text-danger" style="margin-top: 0;">มีปัญหาที่ระบบ โปรดแจ้งเจ้าหน้าที่</h1>
