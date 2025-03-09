@@ -100,6 +100,7 @@
 
     <!-- Head Scripts -->
     @vite('node_modules/bootstrap/dist/css/bootstrap.min.css')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     @yield('head-script')
 </head>
 
