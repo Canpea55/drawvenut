@@ -86,12 +86,6 @@
     </script>
 @endsection
 
-@section('style')
-    .underline-none {
-        text-decoration: none;
-    }
-@endsection
-
 @section('content')
 
     @if (count($orders) > 0)
@@ -105,7 +99,7 @@
                 <div class="col-md-6">
                     <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
-                            <a class="underline-none" href="{{route('order', [$item->id])}}">
+                            <a class="no-underline" href="{{route('order', [$item->id])}}">
                                 <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
                                 <h3 class="mb-0">฿{{$item->total}}</h3>
                                 <div class="mb-1 text-body-secondary">{{ convertTimezone($item->created_at)  }}</div>
@@ -265,6 +259,6 @@
             </div>
         </div>
     @else
-        <div class="text text-center">ไม่มีของในคลังใดๆ</div>
+        <div class="text text-center">ยังไม่มีคำสั่งซื้อใดๆ</div>
     @endif
 @endsection

@@ -162,6 +162,12 @@
 
                                     <ul class="dropdown-menu">
                                         <!-- Administrator -->  
+                                        <li>
+                                            <a class="dropdown-item anim" href="{{ route('orders') }}">
+                                                <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="Add Icon" width="16"> คำสั่งซื้อของฉัน
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
                                         @if (Auth::user()->isAdmin)
                                             <li>
                                                 <a class="dropdown-item anim" href="{{ route('order.manage') }}">

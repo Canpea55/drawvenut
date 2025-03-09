@@ -13,9 +13,17 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
-    public function orders($user_id)
+    public function orders()
     {
-        
+        if(auth()){
+            $orders = Order::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+            $orderItems = collect();
+            foreach ($orders as $order) {
+                $items = OrderItem::where('order_id', $order->id)->get();
+                $orderItems = $orderItems->merge($items);
+            }
+            return view('shop.order.orders', compact('orders', 'orderItems'));
+        }
     }
 
     public function order($order_id)
