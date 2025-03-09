@@ -14,8 +14,11 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            // const urlParams = new URLSearchParams(window.location.search);
-            // const firstParam = Array.from(urlParams.keys())[0];
+            var $grid = $('.grid').masonry({
+                itemSelector: '.grid-item',
+            });
+            $grid.masonry();
+
             let savedFilter = getCookie("orderFilter");
 
             if(savedFilter)
@@ -84,57 +87,93 @@
             }
         }
     </script>
+
+    <script> 
+        function showCancelForm(order_id) {
+            document.getElementById("cancelForm" + order_id).style.display = "block";
+            var $grid = $('.grid').masonry({
+                itemSelector: '.grid-item',
+            });
+            $grid.masonry();
+        }
+
+        function updateReason(order_id) {
+
+            if(document.getElementById("cancelReason" + order_id).value === "อื่นๆ : ") {
+                document.getElementById("ectReason" + order_id).style.display = "block";
+                document.getElementById("cancelForm" + order_id).reason.value = document.getElementById("cancelReason" + order_id).value + document.getElementById("ectReason" + order_id).value;
+            } else {
+                document.getElementById("ectReason" + order_id).style.display = "none";
+                document.getElementById("cancelForm" + order_id).reason.value = document.getElementById("cancelReason" + order_id).value;
+            }
+            var $grid = $('.grid').masonry({
+                itemSelector: '.grid-item',
+            });
+            $grid.masonry();
+        }
+    </script>
 @endsection
 
 @section('content')
+
 
     @if (count($orders) > 0)
         <div class="py-4">
             <h1 class="text-info-emphasis">รอตรวจสอบบิล</h1>
         </div>
         
-        <div class="row row-cols-1 row-cols-md-2 g-3" data-masonry='{"percentPosition": true }'>
+        <div class="grid row row-cols-1 row-cols-md-2 g-3">
             @if ($submitted->isNotEmpty())
                 @foreach ($submitted as $item)
-                <div class="col-md-6">
+                <div class="grid-item col-md-6">
                     <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
                             <a class="no-underline" href="{{route('order', [$item->id])}}">
                                 <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
                                 <h3 class="mb-0">฿{{$item->total}}</h3>
                                 <div class="mb-1 text-body-secondary">{{ convertTimezone($item->created_at)  }}</div>
+                                <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
                             </a>
                             <p class="card-text mb-auto"></p>
+                            <form id="approveForm" method="POST" action="{{ route('order.approve') }}" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="id" value="{{$item->id}}">
+                            </form>
+                            <div style="height: 100px;"></div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <form method="POST" action="{{ route('order.approve') }}" enctype="multipart/form-data">
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{$item->id}}">
-                                        <input 
-                                            type="submit"
-                                            value="อนุมัติ"
-                                            class="btn btn-lg btn-success"
-                                            onclick="return confirm('ยืนยันว่าตรวจสอบเรียบร้อยแล้วอนุมัติออร์เดอร์ที่ {{ $item->id }} ยอดรวม ฿{{$item->total}} ไหม?')"
-                                        >
-                                    </form>
+                                    <button form="approveForm" type="submit" class="btn btn-lg btn-success" onclick="return confirm('ยืนยันว่าตรวจสอบเรียบร้อยแล้วอนุมัติออร์เดอร์ที่ {{ $item->id }} ยอดรวม ฿{{$item->total}} ไหม?')">อนุมัติ</button>
+                                    <button id="cancel" class="btn btn-danger btn-lg" onclick="showCancelForm({{$item->id}}); updateReason({{$item->id}}); return false;">ยกเลิกคำสั่งซื้อ</button>
                                 </div>
-                                <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
                             </div>
+                            <form id="cancelForm{{$item->id}}" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="order_id" value="{{$item->id}}">
+                                <input type="hidden" name="reason" value="">
+                                <select class="form-select mt-2" id="cancelReason{{$item->id}}" onchange="updateReason({{$item->id}})">
+                                    <option value="ไม่ชำระเงินในเวลาที่กำหนด">ไม่ชำระเงินในเวลาที่กำหนด</option>
+                                    <option value="การชำระเงินล้มเหลว">การชำระเงินล้มเหลว</option>
+                                    <option value="หลอกลวง">หลอกลวง</option>
+                                    <option value="อื่นๆ : ">อื่นๆ</option>
+                                </select>
+                                <textarea type="text" class="form-control mt-2" id="ectReason{{$item->id}}" style="display: none;" placeholder="กรุณากรอกเหตุผล" onchange="updateReason({{$item->id}})"></textarea>
+                                <button class="btn btn-danger btn-sm mt-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้')">ยืนยัน</button>
+                            </form>
                         </div>
                         <div class="col-auto d-none d-lg-block">
                             <a class="underline-none" href="{{route('order', [$item->id])}}">
                                 @if ($item->receipt)
                                     {{-- with image --}}
                                     <img 
-                                        width="200" height="auto"
+                                        width="200" height="100%"
                                         src="{{ Storage::url($item->receipt) }}" 
                                         alt="Product Thumbnail" 
                                         class="card-img-top"
-                                        style="width: 200px; height: 250px; object-fit: cover;"
+                                        style="width: 200px; height: 100%; object-fit: cover;"
                                     >
                                 @else
                                     {{-- no image --}}
-                                    <svg class="bd-placeholder-img" width="200" height="auto" xmlns="http://www.w3.org/2000/svg" role="img"
+                                    <svg class="bd-placeholder-img" width="200" height="100%" xmlns="http://www.w3.org/2000/svg" role="img"
                                         aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
                                         <rect width="100%" height="100%" fill="#d09cc7" />
                                     </svg>

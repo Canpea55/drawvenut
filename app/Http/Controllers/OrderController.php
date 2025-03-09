@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LibraryController;
+use App\Http\Middleware\IsAdmin;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderCancelation;
@@ -11,6 +12,7 @@ use Hamcrest\Number\OrderingComparison;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -92,7 +94,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
         $canceller = auth()->id();
         $reason = $request->reason;
-        if($order->status == "pending"){
+        if($order->status == "pending" || Auth::user()->isAdmin){
             $cancelation = OrderCancelation::create([
                 'order_id' => $id,
                 'user_id' => $canceller,
@@ -109,7 +111,9 @@ class OrderController extends Controller
                 'reason' => $reason,
                 'status' => 'pending',
             ]);
-            return redirect()->back()->with('success', 'Order cancelled successfully!');
+            $order->status = "canceling";
+            $order->save();
+            return redirect()->back()->with('pending', 'Order cancelation submited!');
         }
     }
 

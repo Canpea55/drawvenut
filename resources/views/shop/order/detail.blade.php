@@ -89,6 +89,23 @@
             }
         }
     </script>
+
+    <script>
+        function showCancelForm() {
+                document.getElementById("cancel").style.display = "none";
+                document.getElementById("cancelForm").style.display = "block";
+        }
+
+        function updateReason() {
+            if(document.getElementById("cancelReason").value === "อื่นๆ : ") {
+                document.getElementById("ectReason").style.display = "block";
+                document.getElementById("cancelForm").reason.value = document.getElementById("cancelReason").value + document.getElementById("ectReason").value;
+            } else {
+                document.getElementById("ectReason").style.display = "none";
+                document.getElementById("cancelForm").reason.value = document.getElementById("cancelReason").value;
+            }
+        }
+    </script>
 @endsection
 
 @section('content')
@@ -163,8 +180,30 @@
                     </div>
 
                     <div id="details" class="my-2">
-                        <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
-                        <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
+                        <div class="text-center">
+                            <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
+                            <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mt-2">
+                        <form id="cancelForm" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;">
+                            @csrf
+                            <input type="hidden" name="order_id" value="{{$order->id}}">
+                            <input type="hidden" name="reason" value="">
+                            <label for="cancelReason" class="form-label">เลือกเหตุผลในการยกเลิก</label>
+                            <select class="form-select mb-2" id="cancelReason" onchange="updateReason()">
+                                <option value="ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว">ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว</option>
+                                <option value="ต้องการเลือกซื้อสินค้าเพิ่มเติม">ต้องการเลือกซื้อสินค้าเพิ่มเติม</option>
+                                <option value="อื่นๆ : ">อื่นๆ</option>
+                            </select>
+                            <textarea type="text" class="form-control" id="ectReason" style="display: none;" placeholder="กรุณากรอกเหตุผล" onchange="updateReason()"></textarea>
+                            
+                            <button class="w-100 btn btn-danger btn-lg my-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้ เมื่อกดยืนยันแล้วจะไม่สามารถถอนคำร้องได้นะคะ?!')">ยืนยัน</button>
+                        </form>
+                        <button id="cancel" class="w-100 btn btn-danger btn-lg my-2" style="display: block" onclick="showCancelForm(); updateReason(); return false;">ยกเลิกคำสั่งซื้อ</button>
                     </div>
                     @break
                 @case("success")
@@ -173,7 +212,18 @@
                         <h1 class="text-success" style="margin-top: 0;">ส่งสินค้าเรียบร้อย</h1>
                     </div>
 
-                    <div class="my-2">
+                    <div class="text-center my-2">
+                        <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
+                        <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
+                    </div>
+                    @break
+                @case("canceling")
+                    <div>
+                        <p class="text-danger-emphasis" style="margin-bottom: 0;">สถานะ</p>
+                        <h1 class="text-danger" style="margin-top: 0;">กำลังยกเลิก...</h1>
+                    </div>
+
+                    <div class="text-center my-2">
                         <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
                         <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
                     </div>
@@ -302,22 +352,6 @@
                             <button class="w-100 btn btn-danger btn-lg my-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้ เมื่อกดยืนยันแล้วจะไม่สามารถถอนคำร้องได้นะคะ?!')">ยืนยัน</button>
                         </form>
                         <button id="cancel" class="w-100 btn btn-danger btn-lg my-2" style="display: block" onclick="showCancelForm(); updateReason(); return false;">ยกเลิกคำสั่งซื้อ</button>
-                        <script>
-                            function showCancelForm() {
-                                    document.getElementById("cancel").style.display = "none";
-                                    document.getElementById("cancelForm").style.display = "block";
-                            }
-
-                            function updateReason() {
-                                if(document.getElementById("cancelReason").value === "อื่นๆ : ") {
-                                    document.getElementById("ectReason").style.display = "block";
-                                    document.getElementById("cancelForm").reason.value = document.getElementById("cancelReason").value + document.getElementById("ectReason").value;
-                                } else {
-                                    document.getElementById("ectReason").style.display = "none";
-                                    document.getElementById("cancelForm").reason.value = document.getElementById("cancelReason").value;
-                                }
-                            }
-                        </script>
                     </div>
                 </div>
             </div>

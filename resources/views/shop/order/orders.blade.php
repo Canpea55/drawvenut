@@ -16,9 +16,9 @@
             <h1 class="text-info-emphasis">คำสั่งซื้อของฉัน</h1>
         </div>
 
-        <div class="row row-cols-1 row-cols-md-2 g-3" data-masonry='{"percentPosition": true }'>
+        <div class="row row-cols-1 row-cols-md-3 g-3" data-masonry='{"percentPosition": true }'>
             @foreach ($orders as $item)
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="anim row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
 
@@ -44,6 +44,11 @@
                                     @case("success")
                                         <div class="d-flex justify-content-between">
                                             <h1 class="text-success" style="margin-top: 0;">ส่งสินค้าเรียบร้อย</h1>
+                                        </div>
+                                        @break
+                                    @case("canceling")
+                                        <div>
+                                            <h1 class="text-danger" style="margin-top: 0;">กำลังยกเลิก...</h1>
                                         </div>
                                         @break
                                     @case("cancelled")
@@ -124,15 +129,15 @@
                             <a class="underline-none" href="{{route('order', [$item->id])}}">
                                 @if ($item->receipt)
                                     {{-- with image --}}
-                                    <img width="200" height="100%" src="{{ Storage::url($item->receipt) }}" alt="Product Thumbnail"
-                                        class="card-img-top" style="width: 200px; height: 100%; object-fit: cover;">
+                                    {{-- <img width="200" height="100%" src="{{ Storage::url($item->receipt) }}" alt="Product Thumbnail"
+                                        class="card-img-top" style="width: 200px; height: 100%; object-fit: contain;"> --}}
                                 @else
                                     {{-- no image --}}
-                                    <svg class="bd-placeholder-img" width="200" height="" xmlns="http://www.w3.org/2000/svg"
+                                    {{-- <svg class="bd-placeholder-img" width="200" height="" xmlns="http://www.w3.org/2000/svg"
                                         role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
                                         focusable="false">
                                         <rect width="100%" height="100%" fill="#d09cc7" />
-                                    </svg>
+                                    </svg> --}}
                                 @endif
                             </a>
                         </div>
