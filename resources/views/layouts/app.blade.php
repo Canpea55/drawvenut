@@ -23,11 +23,6 @@
         min-height: 100vh;
     }
 
-    @font-face {
-        font-family: NotoColorEmoji-Regular;
-        src: url('{{ public_path('fonts/NotoColorEmoji-Regular.tff') }}');
-    }
-
     .no-underline {
         text-decoration: none;
         color: inherit;
@@ -108,7 +103,7 @@
         {{-- header navbar --}}
         <header>
             <!-- main navbar -->
-            <nav class="shadow-sm navbar navbar-expand-lg" data-bs-theme="white" style="background-color: #D09CC7">
+            <nav class="shadow-sm navbar navbar-expand-lg bg-primary bg-gradient" data-bs-theme="white" style="">
                 <div class="container">
 
                     <a class="navbar-brand" href="{{ url('/') }}">
@@ -123,38 +118,38 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <!-- Left Side Of Navbar -->
-                        <ul class="navbar-nav me-auto">
+                        <ul class="navbar-nav me-auto my-2">
 
                         </ul>
 
                         <!-- Right Side Of Navbar -->
-                        <ul class="navbar-nav ms-auto ">
+                        <ul class="navbar-nav ms-auto my-2">
                             
-                            <li class="nav-item">
+                            <li class="nav-item my-1 mx-1">
                                 <a class="nav-link" aria-current="page" href="/">ร้านค้า</a>
                             </li>
                             
                             <!-- Authentication Links -->
                             @guest
                                 @if (Route::has('login'))
-                                    <li class="nav-item">
+                                    <li class="nav-item my-1 mx-1">
                                         <a class="nav-link" href="{{ route('login') }}">เข้าสู่ระบบ</a>
                                     </li>
                                 @endif
 
                                 @if (Route::has('register'))
-                                    <li class="nav-item">
+                                    <li class="nav-item my-1 mx-1">
                                         <a class="btn btn-outline-success mx-2" type="button"
                                             href="{{ route('register') }}">สมัครสมาชิก</a>
                                     </li>
                                 @endif
                             @else
                                 <!-- Customer -->
-                                <li class="nav-item">
+                                <li class="nav-item my-1 mx-1">
                                     <a class="nav-link" href="{{ route('library') }}">คลัง</a>
                                 </li>
 
-                                <li class="nav-item dropdown">
+                                <li class="nav-item dropdown my-1 mx-1">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         {{ Auth::user()->name }}
