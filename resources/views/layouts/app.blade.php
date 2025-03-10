@@ -2,25 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <style type="text/css">
-    body {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    footer {
-        display: flex;
-        border-top: 1px solid rgba(0, 0, 0, .25);
-        justify-content: space-between;
-        padding: 2rem;
-
-        background-color: #D09CC7;
-        color: rgba(0, 0, 0, .8);
-        text-align: center;
-    }
-
     main {
-        min-height: 100vh;
+        min-height: 80vh;
     }
 
     .no-underline {
@@ -89,12 +72,10 @@
     <!-- Styles -->
     <link href="{{ asset('css/common.css') }}" rel="stylesheet">
     <link href="{{ asset('css/voxybun-toggle.css') }}" rel="stylesheet">
-
-    <!-- Fonts -->
-    
+    @vite('resources/sass/app.scss')
+    @vite('resources/js/app.js')
 
     <!-- Head Scripts -->
-    @vite('node_modules/bootstrap/dist/css/bootstrap.min.css')
     @yield('head-script')
 </head>
 
@@ -103,7 +84,7 @@
         {{-- header navbar --}}
         <header>
             <!-- main navbar -->
-            <nav class="shadow-sm navbar navbar-expand-lg bg-primary bg-gradient" data-bs-theme="white" style="">
+            <nav class="shadow-sm navbar navbar-expand-lg bg-primary bg-gradient" data-bs-theme="white">
                 <div class="container">
 
                     <a class="navbar-brand" href="{{ url('/') }}">
@@ -237,14 +218,10 @@
         </main>
 
         {{-- footer--}}
-        <footer class="mt-3">
-            <div class="container">
-                <div class="float-start lead">
-                    <a class="text-start nav-link" href="{{ route('about') }}">© 2024 Drawvenut. ขอสงวนลิขสิทธิ์</a>
-                </div>
-                <div class="float-end">
-                    <a class="nav-link" href="#">กลับขึ้นข้างบนสุด</a>
-                </div>
+        <footer class="mt-3 p-4 border-top bg-primary">
+            <div class="container align-items-center d-flex justify-content-between ">
+                <a class="no-underline" href="{{ route('about') }}">© 2024 Drawvenut. ขอสงวนลิขสิทธิ์</a>
+                <a class="no-underline" href="#">กลับขึ้นข้างบนสุด</a>
             </div>
             @yield('footer')
         </footer>
@@ -252,8 +229,6 @@
 </body>
 
 <!-- Foot Scripts -->
-@vite(['resources/sass/app.scss', 'resources/js/app.js'])
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
 @yield('foot-script')
 
 </html>
