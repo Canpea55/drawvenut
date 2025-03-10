@@ -125,7 +125,7 @@
         <div class="grid row row-cols-1 row-cols-md-2 g-3">
             @if ($submitted->isNotEmpty())
                 @foreach ($submitted as $item)
-                <div class="grid-item col-md-6">
+                <div class="grid-item col-md-6" onmouseover="updateReason({{$item->id}})">
                     <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
                             <a class="no-underline" href="{{route('order', [$item->id])}}">
