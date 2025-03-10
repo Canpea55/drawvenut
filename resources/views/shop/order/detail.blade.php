@@ -80,7 +80,7 @@
             if (x.style.display === "none") {
                 x.style.display = "block";
                 y.style.display = "none";
-                toggler.innerText = "อัปโหลดสลิปใหม่";
+                toggler.innerText = "อัปโหลดสลิปใหม่ / ยกเลิกคำสั่งซื้อ";
             } else {
                 x.style.display = "none";
                 y.style.display = "block";
@@ -176,7 +176,7 @@
                             <h1 class="text-info" style="margin-top: 0;">รอตรวจสอบบิล</h1>
                         </div>
 
-                        <button class="btn btn-sm btn-info align-self-center" id="paymentToggler" onclick="paymentToggle()">อัปโหลดสลิปใหม่</button>
+                        <button class="btn btn-sm btn-info align-self-center" id="paymentToggler" onclick="paymentToggle()">อัปโหลดสลิปใหม่ / ยกเลิกคำสั่งซื้อ</button>
                     </div>
 
                     <div id="details" class="my-2">
@@ -184,26 +184,6 @@
                             <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
                             <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
                         </div>
-                    </div>
-
-                    <hr class="my-4">
-
-                    <div class="mt-2">
-                        <form id="cancelForm" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;">
-                            @csrf
-                            <input type="hidden" name="order_id" value="{{$order->id}}">
-                            <input type="hidden" name="reason" value="">
-                            <label for="cancelReason" class="form-label">เลือกเหตุผลในการยกเลิก</label>
-                            <select class="form-select mb-2" id="cancelReason" onchange="updateReason()">
-                                <option value="ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว">ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว</option>
-                                <option value="ต้องการเลือกซื้อสินค้าเพิ่มเติม">ต้องการเลือกซื้อสินค้าเพิ่มเติม</option>
-                                <option value="อื่นๆ : ">อื่นๆ</option>
-                            </select>
-                            <textarea type="text" class="form-control" id="ectReason" style="display: none;" placeholder="กรุณากรอกเหตุผล" onchange="updateReason()"></textarea>
-                            
-                            <button class="w-100 btn btn-danger btn-lg my-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้ เมื่อกดยืนยันแล้วจะไม่สามารถถอนคำร้องได้นะคะ?!')">ยืนยัน</button>
-                        </form>
-                        <button id="cancel" class="w-100 btn btn-danger btn-lg my-2" style="display: block" onclick="showCancelForm(); updateReason(); return false;">ยกเลิกคำสั่งซื้อ</button>
                     </div>
                     @break
                 @case("success")
@@ -334,7 +314,7 @@
                                 <img id="preview" src="#" alt="Preview Image" style="max-width: 100%; height: auto; display: none; border-radius: 8px; border: 1px solid #ddd;">
                             </div>
 
-                            <button id="submit" class="w-100 btn btn-primary btn-lg my-2" type="submit">ยืนยันการชำระเงิน</button>
+                            <button id="submit" class="w-100 btn btn-success btn-lg my-2" type="submit">ยืนยันการชำระเงิน</button>
                         </form>
                         <hr>
                         <form id="cancelForm" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;">

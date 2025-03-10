@@ -80,7 +80,7 @@
                             @csrf
                             <input type="hidden" name="products" value="{{json_encode(session('cart'))}}">
                             <input type="hidden" name="total" value="{{ $total }}">
-                            <button type="submit" class="w-100 btn btn-primary btn-lg">ซื้อสินค้า</button>
+                            <button type="submit" class="w-100 btn btn-success btn-lg">ซื้อสินค้า</button>
                         </form>
                     </div>
                 </div>
