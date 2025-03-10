@@ -6,7 +6,10 @@ import $ from 'jquery';
 window.$ = jQuery;
 import jQueryBridget from 'jquery-bridget';
 
-import 'imagesloaded';
+// Import imagesLoaded and make it available globally
+import imagesLoaded from 'imagesloaded';
+window.imagesLoaded = imagesLoaded;
+
 import Masonry from 'masonry-layout';
 jQueryBridget( 'masonry', Masonry, $ );
 
