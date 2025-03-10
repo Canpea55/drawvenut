@@ -1,14 +1,14 @@
 import './bootstrap';
 import * as bootstrap from 'bootstrap';
 
-import Masonry from 'masonry-layout';
 import jQuery from 'jquery';
 import $ from 'jquery';
 window.$ = jQuery;
 import jQueryBridget from 'jquery-bridget';
+
+import 'imagesloaded';
+import Masonry from 'masonry-layout';
 jQueryBridget( 'masonry', Masonry, $ );
-
-
 
 import 'tinymce/tinymce';
 import 'tinymce/skins/ui/oxide/skin.min.css';

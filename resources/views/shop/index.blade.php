@@ -123,6 +123,24 @@
     ร้านค้า
 @endsection
 
+@section('foot-script')
+    <script type="module">
+        $(document).ready(function() {
+            var $grid = $('.grid').masonry({
+                itemSelector: '.grid-item',
+            });
+
+            // Layout Masonry after each image loads
+            $('.grid img').each(function() {
+                var $img = $(this);
+                imagesLoaded($img[0], function() {
+                    $grid.masonry('layout');
+                });
+            });
+        });
+    </script>
+@endsection
+
 @section('content')
 
     <div class="rounded position-relative overflow-hidden m-md-3 text-center bg-banner">
@@ -139,9 +157,9 @@
         <div class="album py-4">
             <h2 class="mx-3 py-1">สินค้าใหม่</h2>
             <div class="container">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" data-masonry='{"percentPosition": true }'>
+                <div class="grid row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                     @foreach ($products as $item)
-                        <div class="col">
+                        <div class="col grid-item">
                             <div class="card shadow-sm">
                                 @auth
                                     @if (Auth::user()->isAdmin)
@@ -156,8 +174,8 @@
                                 @endauth
                                 <a class="no-underline" href="{{route('product', $item->id) }}" >
                                     @php
-                                        $images = json_decode($item->images, true);
-                                        $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
+        $images = json_decode($item->images, true);
+        $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
                                     @endphp
                                     @if($image)
                                         <img src="{{ Storage::url($image) }}" alt="{{$item->name}}" class="card-img-top"
