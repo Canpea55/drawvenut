@@ -102,7 +102,7 @@
                         }
                     @endphp
                     <h2 class="fw-light">{{ $product->name }}</h2>
-                    <h1 class="fw-semibold">{{ $pricetag }}</h1>
+                    <h1 class="fw-semibold text-success">{{ $pricetag }}</h1>
                     <div class="flex-grow-1"></div>
                     <div class="d-flex gap-2">
                         @if ($owned)
