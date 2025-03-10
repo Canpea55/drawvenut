@@ -21,74 +21,35 @@
 
             let savedFilter = getCookie("orderFilter");
 
-            if(savedFilter)
-            {
-                document.querySelectorAll('.order-filter').forEach(form => {
-                    form.style.display = 'none';
-                });
-
-                switch(savedFilter){
-                    case 'orders':
-                        document.getElementById("filterLabel").innerText = "ทั้งหมด"
-                        document.getElementById("all").style.display = "block";
-                        document.getElementById("all").scrollIntoView();
-                        document.getElementById("orderFilter").value = "all";
-                        break;
-                    case 'pending':
-                        document.getElementById("filterLabel").innerText = "รอโอนเงิน"
-                        document.getElementById("pending").style.display = "block";
-                        document.getElementById("pending").scrollIntoView();
-                        document.getElementById("orderFilter").value = "pending";
-                        break;
-                    case 'success':
-                        document.getElementById("filterLabel").innerText = "เรียบร้อย"
-                        document.getElementById("success").style.display = "block";
-                        document.getElementById("success").scrollIntoView();
-                        document.getElementById("orderFilter").value = "success";
-                        break;                 
-                    default:
-                        document.getElementById("filterLabel").innerText = "ทั้งหมด"
-                        document.getElementById("all").style.display = "block";
-                }
-            } else {
-
+            if(savedFilter) {
+                document.getElementById("orderFilter").value = savedFilter;
+                changeOrderFilter();
             }
         });
-    </script>
-    <script>
+
         function changeOrderFilter() {
             let selectedFilter = document.getElementById("orderFilter").value;
 
             document.cookie = `orderFilter=${selectedFilter}; path=/; max-age=${60 * 60}`;
 
-            document.querySelectorAll('.order-filter').forEach(form => {
-                form.style.display = 'none';
+            document.querySelectorAll('.order-filter-row').forEach(row => {
+                row.style.display = 'none';
             });
 
-            switch(selectedFilter){
-                case 'all':
-                    document.getElementById("filterLabel").innerText = "ทั้งหมด"
-                    document.getElementById("all").style.display = "block";
-                    document.getElementById("all").scrollIntoView();
-                    break;
-                case 'pending':
-                    document.getElementById("filterLabel").innerText = "รอโอนเงิน"
-                    document.getElementById("pending").style.display = "block";
-                    document.getElementById("pending").scrollIntoView();
-                    break;
-                case 'success':
-                    document.getElementById("filterLabel").innerText = "เรียบร้อย"
-                    document.getElementById("success").style.display = "block";
-                    document.getElementById("success").scrollIntoView();
-                    break;                 
-                default:
-                    document.getElementById("filterLabel").innerText = "ทั้งหมด"
-                    document.getElementById("all").style.display = "block";
-            }
-        }
-    </script>
+            document.querySelectorAll(`.order-filter-row[data-status="${selectedFilter}"]`).forEach(row => {
+                row.style.display = 'table-row';
+            });
 
-    <script> 
+            let filterLabel = {
+                'all': 'ทั้งหมด',
+                'pending': 'รอโอนเงิน',
+                'success': 'เรียบร้อย',
+                'cancelled': 'ยกเลิกแล้ว'
+            };
+
+            document.getElementById("filterLabel").innerText = filterLabel[selectedFilter] || 'ทั้งหมด';
+        }
+
         function showCancelForm(order_id) {
             document.getElementById("cancelForm" + order_id).style.display = "block";
             var $grid = $('.grid').masonry({
@@ -98,7 +59,6 @@
         }
 
         function updateReason(order_id) {
-
             if(document.getElementById("cancelReason" + order_id).value === "อื่นๆ : ") {
                 document.getElementById("ectReason" + order_id).style.display = "block";
                 document.getElementById("cancelForm" + order_id).reason.value = document.getElementById("cancelReason" + order_id).value + document.getElementById("ectReason" + order_id).value;
@@ -115,11 +75,9 @@
 @endsection
 
 @section('content')
-
-
     @if (count($orders) > 0)
-        <div class="py-4">
-            <h1 class="text-info-emphasis">รอตรวจสอบบิล</h1>
+        <div class="pt-4">
+            <h1 class="text-info-emphasis">รอตรวจสอบ</h1>
         </div>
         
         <div class="grid row row-cols-1 row-cols-md-2 g-3">
@@ -184,32 +142,33 @@
                 </div>
                 @endforeach
             @else
-                <p class="">
+                <div class="grid-item col-md-6">
                     ไม่มีออร์เดอร์ที่ต้องตรวจ
-                </p>
+                </div>
             @endif
         </div>
         {{ $submitted->links() }}
 
         <!-- Filters -->
-        <div class="d-flex justify-content-between mt-5">
-            <div class="align-self-center">
-                <h1 id="filterLabel">ทั้งหมด</h1>
+        <div class="row mt-5">
+            <div class="d-flex justify-content-between">
+                <div class="align-self-center">
+                    <h1 id="filterLabel">ทั้งหมด</h1>
+                </div>
+    
+                <div class="align-self-center">
+                    <form>
+                        <select class="form-select" id="orderFilter" name="orderFilter" onchange="changeOrderFilter()">
+                            <option value="all">ทั้งหมด</option>
+                            <option value="pending">รอโอนเงิน</option>
+                            <option value="success">สำเร็จ</option>
+                            <option value="cancelled">ยกเลิกแล้ว</option>
+                        </select>
+                    </form>
+                </div>
             </div>
-
-            <div class="align-self-center">
-                <form>
-                    <select class="form-select" id="orderFilter" name="orderFilter" onchange="changeOrderFilter()">
-                        <option value="all">ทั้งหมด</option>
-                        <option value="pending">รอโอนเงิน</option>
-                        <option value="success">สำเร็จ</option>
-                    </select>
-                </form>
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <div id="all" class="row order-filter mx-2" style="display: block">
+    
+            <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead class="text-center">
                         <tr>
@@ -220,11 +179,11 @@
                             <th scope="col">receipt</th>
                             <th scope="col">created_at</th>
                             <th scope="col">updated_at</th>
-                        </th>
+                        </tr>
                     </thead>
                     <tbody>
                         @foreach ($orders as $item)
-                        <tr>
+                        <tr class="order-filter-row" data-status="{{ $item->status }}">
                             <td class="text-center"><a href="{{route('order', [$item->id])}}">{{ $item->id }}</a></td>
                             <td class="text-center">{{ $item->user_id }}</td>
                             <td class="text-center">{{ $item->total }}</td>
@@ -237,64 +196,6 @@
                     </tbody>
                 </table>
                 {{ $orders->links() }}
-            </div>
-            <div id="pending" class="row order-filter" style="display: none">
-                <table class="table table-bordered align-middle">
-                    <thead class="text-center">
-                        <tr>
-                            <th scope="col">id</th>
-                            <th scope="col">user_id</th>
-                            <th scope="col">total</th>
-                            <th scope="col">status</th>
-                            <th scope="col">receipt</th>
-                            <th scope="col">created_at</th>
-                            <th scope="col">updated_at</th>
-                        </th>
-                    </thead>
-                    <tbody>
-                        @foreach ($pending as $item)
-                        <tr>
-                            <td class="text-center"><a href="{{route('order', [$item->id])}}">{{ $item->id }}</a></td>
-                            <td class="text-center">{{ $item->user_id }}</td>
-                            <td class="text-center">{{ $item->total }}</td>
-                            <td class="text-center">{{ $item->status }}</td>
-                            <td class="text-center">{{ $item->receipt }}</td>
-                            <td class="text-center">{{ convertTimezone($item->created_at) }}</td>
-                            <td class="text-center">{{ convertTimezone($item->updated_at) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                {{ $pending->links() }}
-            </div>
-            <div id="success" class="row order-filter" style="display: none">
-                <table class="table table-bordered align-middle">
-                    <thead class="text-center">
-                        <tr>
-                            <th scope="col">id</th>
-                            <th scope="col">user_id</th>
-                            <th scope="col">total</th>
-                            <th scope="col">status</th>
-                            <th scope="col">receipt</th>
-                            <th scope="col">created_at</th>
-                            <th scope="col">updated_at</th>
-                        </th>
-                    </thead>
-                    <tbody>
-                        @foreach ($success as $item)
-                        <tr>
-                            <td class="text-center"><a href="{{route('order', [$item->id])}}">{{ $item->id }}</a></td>
-                            <td class="text-center">{{ $item->user_id }}</td>
-                            <td class="text-center">{{ $item->total }}</td>
-                            <td class="text-center">{{ $item->status }}</td>
-                            <td class="text-center">{{ $item->receipt }}</td>
-                            <td class="text-center">{{ convertTimezone($item->created_at) }}</td>
-                            <td class="text-center">{{ convertTimezone($item->updated_at) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                {{ $success->links() }}
             </div>
         </div>
     @else

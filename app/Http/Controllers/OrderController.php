@@ -124,7 +124,12 @@ class OrderController extends Controller
         $pending=Order::where('status', 'pending')->orderBy('id', 'desc')->paginate(10, ['*'], 'pending');
         $submitted=Order::where('status', 'submitted')->orderBy('created_at', 'asc')->paginate(4, ['*'], 'submitted');
         $success=Order::where('status', 'success')->orderBy('id', 'desc')->paginate(10, ['*'], 'success');
-        return view('admin.order.manage', compact(['orders', 'pending', 'submitted', 'success']));
+        $canceling=Order::where('status', 'canceling')->orderBy('id', 'desc')->paginate(10, ['*'], 'canceling');
+        $cancelled=Order::where('status', 'cancelled')->orderBy('id', 'desc')->paginate(10, ['*'], 'cancelled');
+
+        $cancelDetail = OrderCancelation::orderBy('id', 'desc')->get();
+
+        return view('admin.order.manage', compact(['orders', 'pending', 'submitted', 'success'], ['canceling','cancelled','cancelDetail']));
     }
 
     public function approve(Request $request)
