@@ -18,6 +18,51 @@
 
 @section('head-script')
     <script>
+        function showCancelForm() {
+                document.getElementById("cancel").style.display = "none";
+                document.getElementById("cancelForm").style.display = "block";
+        }
+
+        function updateReason() {
+            const cancelForm = document.getElementById("cancelForm");
+            const cancelReason = document.getElementById("cancelReason");
+            const ectReason = document.getElementById("ectReason");
+            const bankAddress = document.getElementById("bankAddress");
+            const bankAddressNameTH = document.getElementById("bankAddressNameTH");
+            const bankAddressNameEN = document.getElementById("bankAddressNameEN");
+            const bank = document.getElementById("bank");
+            const etcBank = document.getElementById("etcBank");
+
+            // Toggle additional reason field
+            ectReason.style.display = (cancelReason.value === "อื่นๆ : ") ? "block" : "none";
+
+            // Handle bank refund case
+            if (bankAddress) {
+                // Toggle other bank field
+                etcBank.style.display = (bank.value === "ธนาคารอื่นๆ : ") ? "block" : "none";
+
+                // Format refund message
+                const refundDetails = [
+                    "เหตุผลที่ยกเลิกคือ",
+                    cancelReason.value + ectReason.value,
+                    "\nโดยคืนเงินไปที่",
+                    bank.value + etcBank.value,
+                    "ชื่อบัญชีธนาคาร : " + bankAddressNameTH.value + " (" + bankAddressNameEN.value + ")",
+                    "เลขบัญชีธนาคาร : " + bankAddress.value
+                ].join("\n");
+
+                cancelForm.reason.value = refundDetails;
+            } else {
+                // Format cancellation message
+                cancelForm.reason.value = [
+                    "เหตุผลที่ยกเลิกคือ",
+                    cancelReason.value + ectReason.value
+                ].join("\n");
+            }
+        }
+    </script>
+    
+    <script>
         function togglePaymentForm() {
             let selectedMethod = document.getElementById("paymentMethod").value;
 
@@ -80,32 +125,18 @@
             if (x.style.display === "none") {
                 x.style.display = "block";
                 y.style.display = "none";
-                toggler.innerText = "อัปโหลดสลิปใหม่ / ยกเลิกคำสั่งซื้อ";
+                toggler.innerText = "ส่งสลิปใหม่ / ยกเลิกและคืนเงิน";
             } else {
                 x.style.display = "none";
                 y.style.display = "block";
-                toggler.innerText = "ยกเลิกอัปโหลดสลิป";
+                toggler.innerText = "กลับ";
                 submit.innerText = "อัปโหลดสลิปใหม่";
             }
         }
     </script>
 
-    <script>
-        function showCancelForm() {
-                document.getElementById("cancel").style.display = "none";
-                document.getElementById("cancelForm").style.display = "block";
-        }
+    
 
-        function updateReason() {
-            if(document.getElementById("cancelReason").value === "อื่นๆ : ") {
-                document.getElementById("ectReason").style.display = "block";
-                document.getElementById("cancelForm").reason.value = document.getElementById("cancelReason").value + document.getElementById("ectReason").value;
-            } else {
-                document.getElementById("ectReason").style.display = "none";
-                document.getElementById("cancelForm").reason.value = document.getElementById("cancelReason").value;
-            }
-        }
-    </script>
 @endsection
 
 @section('content')
@@ -170,48 +201,152 @@
                     <h1>การชำระค่าสินค้า</h1>
                     @break
                 @case("submitted")
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <p class="text-info-emphasis" style="margin-bottom: 0;">สถานะ</p>
                             <h1 class="text-info" style="margin-top: 0;">รอตรวจสอบบิล</h1>
                         </div>
-
-                        <button class="btn btn-sm btn-info align-self-center" id="paymentToggler" onclick="paymentToggle()">อัปโหลดสลิปใหม่ / ยกเลิกคำสั่งซื้อ</button>
+                        <div class="text-end">
+                            <div class="mb-1 text-body-secondary">
+                                {{ convertTimezone($order->created_at) }}
+                                <small class="text-body-secondary">({{ calculateDuration($item->updated_at, now()) }}ที่แล้ว)</small>
+                            </div>
+                            
+                            <button class="btn btn-sm btn-info" id="paymentToggler" onclick="paymentToggle()">ส่งสลิปใหม่ / ยกเลิกและคืนเงิน</button>
+                        </div>
                     </div>
 
                     <div id="details" class="my-2">
-                        <div class="text-center">
-                            <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
-                            <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
+                        <div class="row">
+                            <div class="col-12 col-md-6 p-4">
+                                <h4>สลิปที่อัปโหลดไว้</h4>
+                                <img class="img-fluid" 
+                                src="{{ asset('storage/' . $order->receipt) }}" 
+                                alt="Receipt"
+                                style="height: auto; width: 100%;">
+                            </div>
                         </div>
                     </div>
                     @break
                 @case("success")
-                    <div>
-                        <p class="text-success-emphasis" style="margin-bottom: 0;">สถานะ</p>
-                        <h1 class="text-success" style="margin-top: 0;">ส่งสินค้าเรียบร้อย</h1>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-success-emphasis" style="margin-bottom: 0;">สถานะ</p>
+                            <h1 class="text-success" style="margin-top: 0;">ส่งสินค้าเรียบร้อย</h1>
+                        </div>
+                        <div class="text-end">
+                            <div class="mb-1 text-body-secondary">{{ convertTimezone($order->created_at) }}</div>
+                            <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
+                        </div>
                     </div>
 
-                    <div class="text-center my-2">
-                        <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
-                        <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
-                    </div>
-                    @break
-                @case("canceling")
-                    <div>
-                        <p class="text-danger-emphasis" style="margin-bottom: 0;">สถานะ</p>
-                        <h1 class="text-danger" style="margin-top: 0;">กำลังยกเลิก...</h1>
-                    </div>
-
-                    <div class="text-center my-2">
-                        <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
-                        <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
+                    <div class="row my-2">
+                        <div class="col-12 col-md-6 p-4">
+                            <h4>สลิปที่อัปโหลดไว้</h4>
+                            <img class="img-fluid" 
+                            src="{{ asset('storage/' . $order->receipt) }}" 
+                            alt="Receipt"
+                            style="height: auto; width: 100%;">
+                        </div>
                     </div>
                     @break
                 @case("cancelled")
-                    <div>
-                        <p class="text-danger-emphasis" style="margin-bottom: 0;">สถานะ</p>
-                        <h1 class="text-danger" style="margin-top: 0;">ยกเลิกคำสั่งซื้อแล้ว</h1>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-danger-emphasis" style="margin-bottom: 0;">สถานะ</p>
+                            <h1 class="text-danger" style="margin-top: 0;">ยกเลิกคำสั่งซื้อแล้ว</h1>
+                        </div>
+                        <div class="text-end">
+                            <div class="mb-1 text-body-secondary">{{ convertTimezone($order->created_at) }}</div>
+                            <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
+                        </div>
+                    </div>
+
+                    <hr>
+                        <p>{!!nl2br($cancelDetail->reason)!!}</p>
+                    @break
+                @case("canceling")
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-danger-emphasis" style="margin-bottom: 0;">สถานะ</p>
+                            <h1 class="text-warning" style="margin-top: 0;">กำลังตรวจสอบเพื่อคืนเงินและยกเลิก...</h1>
+                        </div>
+                        <div class="text-end">
+                            <div class="mb-1 text-body-secondary">{{ convertTimezone($order->created_at) }}</div>
+                            <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
+                        </div>
+                    </div>
+
+                    <hr>
+                        <p>{!!nl2br($cancelDetail->reason)!!}</p>
+                    <hr>
+
+                    <div class="row my-2">
+                        <div class="col-12 col-md-6 p-4">
+                            <h4>สลิปที่อัปโหลดไว้</h4>
+                            <img class="img-fluid" 
+                            src="{{ asset('storage/' . $order->receipt) }}" 
+                            alt="Receipt"
+                            style="height: auto; width: 100%;">
+                        </div>
+                    </div>
+                    @break
+                @case("refund")
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-start">
+                            <p class="text-danger-emphasis" style="margin-bottom: 0;">สถานะ</p>
+                            <h1 class="text-success" style="margin-top: 0;">คืนเงินสำเร็จ</h1>
+                        </div>
+                        <div class="text-end">
+                            <div class="mb-1 text-body-secondary">{{ convertTimezone($order->created_at) }}</div>
+                            <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
+                        </div>
+                    </div>
+
+                    <hr>
+                        <p>{!!nl2br($cancelDetail->reason)!!}</p>
+                    <hr>
+
+                    <div class="row my-2">
+                        <div class="col-12 col-md-6 p-4">
+                            <h4>สลิปที่อัปโหลดไว้</h4>
+                            <img class="img-fluid" 
+                            src="{{ asset('storage/' . $order->receipt) }}" 
+                            alt="Receipt"
+                            style="height: auto; width: 100%;">
+                        </div>
+                        <div class="col-12 col-md-6 p-4">
+                            <h4>หลักฐานการคืนเงิน</h4>
+                            <img class="img-fluid" 
+                            src="{{ asset('storage/' . $cancelDetail->refundslip) }}" 
+                            alt="Refund">
+                        </div>
+                    </div>
+                    @break
+                @case("not-refund")
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-danger-emphasis" style="margin-bottom: 0;">สถานะ</p>
+                            <h1 class="text-danger" style="margin-top: 0;">ยกเลิกคำสั่งซื้อและไม่ขอคืนเงิน</h1>
+                        </div>
+                        <div class="text-end">
+                            <div class="mb-1 text-body-secondary">{{ convertTimezone($order->created_at) }}</div>
+                            <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
+                        </div>
+                    </div>
+
+                    <hr>
+                        <p>{!!nl2br($cancelDetail->reason)!!}</p>
+                    <hr>
+
+                    <div class="row my-2">
+                        <div class="col-12 col-md-6 p-4">
+                            <h4>สลิปที่อัปโหลดไว้</h4>
+                            <img class="img-fluid" 
+                            src="{{ asset('storage/' . $order->receipt) }}" 
+                            alt="Receipt"
+                            style="height: auto; width: 100%;">
+                        </div>
                     </div>
                     @break
                 @default
@@ -305,9 +440,14 @@
                             <label for="receipt" class="form-label">อัปโหลดสลิป</label>
                             <input type="file" class="form-control" name="receipt" id="receipt" accept="image/*" onchange="previewImage(event)">
                             @error('receipt')
-                                <div class="ms-2 p-2">
+                                <div class="ms-2 p-2" id="error-section">
                                     <span class="text text-danger">{{ $message }}</span>
                                 </div>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        document.getElementById('error-section').scrollIntoView();
+                                    });
+                                </script>
                             @enderror
 
                             <div class="my-2 text-center">
@@ -317,21 +457,65 @@
                             <button id="submit" class="w-100 btn btn-success btn-lg my-2" type="submit">ยืนยันการชำระเงิน</button>
                         </form>
                         <hr>
-                        <form id="cancelForm" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;">
-                            @csrf
-                            <input type="hidden" name="order_id" value="{{$order->id}}">
-                            <input type="hidden" name="reason" value="">
-                            <label for="cancelReason" class="form-label">เลือกเหตุผลในการยกเลิก</label>
-                            <select class="form-select mb-2" id="cancelReason" onchange="updateReason()">
-                                <option value="ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว">ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว</option>
-                                <option value="ต้องการเลือกซื้อสินค้าเพิ่มเติม">ต้องการเลือกซื้อสินค้าเพิ่มเติม</option>
-                                <option value="อื่นๆ : ">อื่นๆ</option>
-                            </select>
-                            <textarea type="text" class="form-control" id="ectReason" style="display: none;" placeholder="กรุณากรอกเหตุผล" onchange="updateReason()"></textarea>
-                            
-                            <button class="w-100 btn btn-danger btn-lg my-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้ เมื่อกดยืนยันแล้วจะไม่สามารถถอนคำร้องได้นะคะ?!')">ยืนยัน</button>
-                        </form>
-                        <button id="cancel" class="w-100 btn btn-danger btn-lg my-2" style="display: block" onclick="showCancelForm(); updateReason(); return false;">ยกเลิกคำสั่งซื้อ</button>
+                        @if($order->status == 'pending')
+                            <form id="cancelForm" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="order_id" value="{{$order->id}}">
+                                <input type="hidden" name="reason" value="">
+                                <label for="cancelReason" class="form-label">เลือกเหตุผลในการยกเลิก</label>
+                                <select class="form-select mb-2" id="cancelReason" onchange="updateReason()">
+                                    <option value="ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว">ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว</option>
+                                    <option value="ต้องการเลือกซื้อสินค้าเพิ่มเติม">ต้องการเลือกซื้อสินค้าเพิ่มเติม</option>
+                                    <option value="อื่นๆ : ">อื่นๆ</option>
+                                </select>
+                                <textarea type="text" class="form-control" id="ectReason" placeholder="เหตุผล" onchange="updateReason()"></textarea>                                
+                                <button class="w-100 btn btn-danger btn-lg my-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้ เมื่อกดยืนยันแล้วจะไม่สามารถถอนคำร้องได้นะคะ?!')">ยืนยัน</button>
+                            </form>
+                            <button id="cancel" class="w-100 btn btn-danger btn-lg my-2" style="display: block" onclick="showCancelForm(); updateReason(); return false;">ยกเลิกคำสั่งซื้อ</button>
+                        @else
+                            <form id="cancelForm" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="order_id" value="{{$order->id}}">
+                                <input type="hidden" name="reason" value="">
+                                <label for="cancelReason" class="form-label">เลือกเหตุผลในการยกเลิก</label>
+                                <select class="form-select mb-2" id="cancelReason" onchange="updateReason()">
+                                    <option value="ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว">ไม่ต้องการสินค้า/บริการดังกล่าวแล้ว</option>
+                                    <option value="ต้องการเลือกซื้อสินค้าเพิ่มเติม">ต้องการเลือกซื้อสินค้าเพิ่มเติม</option>
+                                    <option value="อื่นๆ : ">อื่นๆ</option>
+                                </select>
+                                <textarea type="text" class="form-control" id="ectReason" placeholder="เหตุผล" onchange="updateReason()"></textarea>
+
+                                <label for="bank" class="form-label mt-2">ธนาคาร</label>
+                                <select class="form-select mb-2" id="bank" onchange="updateReason()">
+                                    <option value="ธนาคารกรุงเทพ จำกัด (มหาชน)">ธนาคารกรุงเทพ จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารกรุงไทย จำกัด (มหาชน)">ธนาคารกรุงไทย จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารกรุงศรีอยุธยา จำกัด (มหาชน)">ธนาคารกรุงศรีอยุธยา จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารกสิกรไทย จำกัด (มหาชน)">ธนาคารกสิกรไทย จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารเกียรตินาคินภัทร จำกัด (มหาชน)">ธนาคารเกียรตินาคินภัทร จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารซีไอเอ็มบี ไทย จำกัด (มหาชน)">ธนาคารซีไอเอ็มบี ไทย จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารทหารไทยธนชาต จำกัด (มหาชน)">ธนาคารทหารไทยธนชาต จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารทิสโก้ จำกัด (มหาชน)">ธนาคารทิสโก้ จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารไทยเครดิต จำกัด (มหาชน)">ธนาคารไทยเครดิต จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารไทยพาณิชย์ จำกัด (มหาชน)">ธนาคารไทยพาณิชย์ จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารยูโอบี จำกัด (มหาชน)">ธนาคารยูโอบี จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารแลนด์ แอนด์ เฮ้าส์ จำกัด (มหาชน)">ธนาคารแลนด์ แอนด์ เฮ้าส์ จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย) จำกัด (มหาชน)">ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย) จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารไอซีบีซี (ไทย) จำกัด (มหาชน)">ธนาคารไอซีบีซี (ไทย) จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารแห่งประเทศจีน (ไทย) จำกัด (มหาชน)">ธนาคารแห่งประเทศจีน (ไทย) จำกัด (มหาชน)</option>
+                                    <option value="ธนาคารอื่นๆ : ">อื่นๆ</option>
+                                </select>
+                                <input type="text" class="form-control" id="etcBank" placeholder="ชื่อธนาคาร" onchange="updateReason()"></input>
+
+                                <label for="bankAddress" class="form-label mt-2">บัญชีธนาคารที่ต้องการให้คืนเงินกลับ</label>
+                                <input type="text" class="form-control mb-1" id="bankAddressNameTH" placeholder="ชื่อบัญชีธนาคารภาษาไทย" onchange="updateReason()"></input>
+                                <input type="text" class="form-control mb-1" id="bankAddressNameEN" placeholder="ชื่อบัญชีธนาคารภาษาอังกฤษ" onchange="updateReason()"></input>
+                                <input type="text" class="form-control mb-1" id="bankAddress" placeholder="เลขบัญชีธนาคาร" onchange="updateReason()"></input>
+                                <small class="text-danger">*ได้โปรดกรอกให้ครบทุกช่องนะคะ จะได้คืนเงินได้ถูกต้องสมบูรณ์</small>
+                                
+                                <button class="w-100 btn btn-danger btn-lg my-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้ เมื่อกดยืนยันแล้วจะไม่สามารถถอนคำร้องได้นะคะ?!')">ยืนยัน</button>
+                            </form>
+                            <button id="cancel" class="w-100 btn btn-danger btn-lg my-2" style="display: block" onclick="showCancelForm(); updateReason(); return false;">ยกเลิกคำสั่งซื้อและขอคืนเงิน</button>
+                        @endif
                     </div>
                 </div>
             </div>

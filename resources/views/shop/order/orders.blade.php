@@ -48,12 +48,22 @@
                                         @break
                                     @case("canceling")
                                         <div>
-                                            <h1 class="text-danger" style="margin-top: 0;">กำลังยกเลิก...</h1>
+                                            <h1 class="text-warning" style="margin-top: 0;">กำลังตรวจสอบเพื่อคืนเงินและยกเลิก...</h1>
                                         </div>
                                         @break
                                     @case("cancelled")
                                         <div>
                                             <h1 class="text-danger" style="margin-top: 0;">ยกเลิกคำสั่งซื้อแล้ว</h1>
+                                        </div>
+                                        @break
+                                    @case("refund")
+                                        <div>
+                                            <h1 class="text-success" style="margin-top: 0;">คืนเงินสำเร็จ</h1>
+                                        </div>
+                                        @break
+                                    @case("not-refund")
+                                        <div>
+                                            <h1 class="text-danger" style="margin-top: 0;">ยกเลิกคำสั่งซื้อและไม่ขอคืนเงิน</h1>
                                         </div>
                                         @break
                                     @default

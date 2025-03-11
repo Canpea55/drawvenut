@@ -29,29 +29,47 @@
 
         function changeOrderFilter() {
             let selectedFilter = document.getElementById("orderFilter").value;
+            document.getElementById("datatable").scrollIntoView();
 
-            document.cookie = `orderFilter=${selectedFilter}; path=/; max-age=${60 * 60}`;
+            document.cookie = `orderFilter=${selectedFilter}; path=/; max-age=${60}`;
 
             document.querySelectorAll('.order-filter-row').forEach(row => {
                 row.style.display = 'none';
             });
 
-            document.querySelectorAll(`.order-filter-row[data-status="${selectedFilter}"]`).forEach(row => {
-                row.style.display = 'table-row';
-            });
+            if(selectedFilter == 'all'){
+                document.querySelectorAll('.order-filter-row').forEach(row => {
+                    row.style.display = 'table-row';
+                });
+            } else {
+                document.querySelectorAll(`.order-filter-row[data-status="${selectedFilter}"]`).forEach(row => {
+                    row.style.display = 'table-row';
+                });
+            }
 
             let filterLabel = {
                 'all': 'ทั้งหมด',
                 'pending': 'รอโอนเงิน',
                 'success': 'เรียบร้อย',
-                'cancelled': 'ยกเลิกแล้ว'
+                'canceling': 'ขอยกเลิก',
+                'cancelled': 'ยกเลิกแล้ว',
+                'refund': 'คืนเงินแล้ว',
+                'not-refund': 'ไม่คืนเงิน',
             };
 
             document.getElementById("filterLabel").innerText = filterLabel[selectedFilter] || 'ทั้งหมด';
         }
 
         function showCancelForm(order_id) {
-            document.getElementById("cancelForm" + order_id).style.display = "block";
+            let cancelform = document.getElementById("cancelForm" + order_id);
+            switch(document.getElementById("cancelForm" + order_id).style.display){
+                case 'none' : 
+                cancelform.style.display = "block";
+                break;
+                case ' block' :
+                cancelform.style.display = "none";
+                break;
+            }
             var $grid = $('.grid').masonry({
                 itemSelector: '.grid-item',
             });
@@ -72,34 +90,102 @@
             $grid.masonry();
         }
     </script>
+    <script type="module">
+        var $grid = $('.grid').masonry({
+                itemSelector: '.grid-item',
+        });
+        // Layout Masonry after each image loads
+        $('.grid img').each(function() {
+                var $img = $(this);
+                imagesLoaded($img[0], function() {
+                    $grid.masonry('layout');
+                });
+        });
+    </script>
+
+    <script>
+        function previewImage(event, order_id) {
+            const input = event.target;
+            const preview = document.getElementById("preview" + order_id);
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+    <script>
+        function confirmCancel(order_id){
+            var confirmMessage = '';
+            let refundingop = document.getElementById("refunding" + order_id).value;
+            switch(refundingop) {
+                case "refund" : 
+                    confirmMessage = 'ดำเนินการยกเลิกรายการที่ ' + order_id + ' โดยคืนเงินไปยังผู้ใช้แล้ว'
+                    break;
+                case "notRefund" : 
+                    confirmMessage = 'ดำเนินการยกเลิกรายการที่ ' + order_id + ' โดยไม่คืนเงินไปยังผู้ใช้ โดยเหตุผลว่า \n\"' + document.getElementById('notRefund' + order_id).value + "\"";
+                    break;
+                default: confirmMessage = 'ดำเนินการยกเลิกรายการที่' + order_id + ' โดยคืนเงินไปยังผู้ใช้';
+            }
+            return confirm(confirmMessage);
+        }
+
+        function updateRefund(order_id){
+            let refundingop = document.getElementById("refunding" + order_id).value;
+            switch(refundingop) {
+                case "refund" : 
+                    document.getElementById('notRefund' + order_id).style.display = "none";
+                    document.getElementById('refundslip' + order_id).style.display = "block";
+                    document.getElementById('refundForm' + order_id).reason.value = document.getElementById('refundForm'+order_id).submitter_reason.value;
+                    document.getElementById('refundForm' + order_id).status.value = "refund";
+                    break;
+                case "notRefund" : 
+                    document.getElementById('notRefund' + order_id).style.display = "block";
+                    document.getElementById('refundslip' + order_id).style.display = "none";
+                    document.getElementById('refundForm' + order_id).reason.value = document.getElementById('refundForm'+order_id).submitter_reason.value + "\n\n[เหตุผลที่ไม่คืนเงินจากผู้ตรวจ]\n" + document.getElementById('notRefund' + order_id).value;
+                    document.getElementById('refundForm' + order_id).status.value = "not-refund";
+                    break;
+            }
+            updateLayout();
+        }
+        function updateLayout(){
+            var $grid = $('.grid').masonry({
+                itemSelector: '.grid-item',
+            });
+            $grid.masonry();
+        }
+    </script>
 @endsection
 
 @section('content')
     @if (count($orders) > 0)
-        <div class="pt-4">
-            <h1 class="text-info-emphasis">รอตรวจสอบ</h1>
-        </div>
-        
-        <div class="grid row row-cols-1 row-cols-md-2 g-3">
-            @if ($submitted->isNotEmpty())
+    <div class="pt-4">
+        <h1 class="text-info-emphasis">รอตรวจสอบ</h1>
+    </div>
+        <div class="grid row row-cols-1 row-cols-md-3 g-3">
+            @if ($submitted->isNotEmpty() || $canceling->isNotEmpty())
                 @foreach ($submitted as $item)
-                <div class="grid-item col-md-6" onmouseover="updateReason({{$item->id}})">
+                <div class="grid-item col-md-4" onmouseover="updateReason({{$item->id}})">
                     <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                        <div class="col p-4 d-flex flex-column position-static">
-                            <a class="no-underline" href="{{route('order', [$item->id])}}">
-                                <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
-                                <h3 class="mb-0">฿{{$item->total}}</h3>
-                                <div class="mb-1 text-body-secondary">{{ convertTimezone($item->created_at)  }}</div>
-                                <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
-                            </a>
-                            <p class="card-text mb-auto"></p>
-                            <form id="approveForm" method="POST" action="{{ route('order.approve') }}" enctype="multipart/form-data">
-                                @csrf
-                                <input type="hidden" name="id" value="{{$item->id}}">
-                            </form>
-                            <div style="height: 100px;"></div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
+                        <div class="anim col p-4 d-flex flex-column position-static">
+                                <a class="no-underline" href="{{route('order', [$item->id])}}">
+                                    <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
+                                    <h3 class="mb-0">฿{{$item->total}}</h3>
+                                    <div class="mb-1 text-body-secondary">{{ convertTimezone($item->created_at)  }}</div>
+                                    <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
+                                </a>
+                                <p class="card-text mb-auto"></p>
+                                <form id="approveForm" method="POST" action="{{ route('order.approve') }}" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{$item->id}}">
+                                </form>
+                            <div class="d-flex justify-content-between align-items-center pt-4">
+                                <div class="btn-group w-100">
                                     <button form="approveForm" type="submit" class="btn btn-lg btn-success" onclick="return confirm('ยืนยันว่าตรวจสอบเรียบร้อยแล้วอนุมัติออร์เดอร์ที่ {{ $item->id }} ยอดรวม ฿{{$item->total}} ไหม?')">อนุมัติ</button>
                                     <button id="cancel" class="btn btn-danger btn-lg" onclick="showCancelForm({{$item->id}}); updateReason({{$item->id}}); return false;">ยกเลิกคำสั่งซื้อ</button>
                                 </div>
@@ -118,28 +204,65 @@
                                 <button class="btn btn-danger btn-sm mt-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้')">ยืนยัน</button>
                             </form>
                         </div>
-                        <div class="col-auto d-none d-lg-block">
-                            <a class="underline-none" href="{{route('order', [$item->id])}}">
-                                @if ($item->receipt)
-                                    {{-- with image --}}
-                                    <img 
-                                        width="200" height="100%"
-                                        src="{{ Storage::url($item->receipt) }}" 
-                                        alt="Product Thumbnail" 
-                                        class="card-img-top"
-                                        style="width: 200px; height: 100%; object-fit: cover;"
-                                    >
-                                @else
-                                    {{-- no image --}}
-                                    <svg class="bd-placeholder-img" width="200" height="100%" xmlns="http://www.w3.org/2000/svg" role="img"
-                                        aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                        <rect width="100%" height="100%" fill="#d09cc7" />
-                                    </svg>
-                                @endif
-                            </a>
-                        </div>
                     </div>
                 </div>
+                @endforeach
+                @foreach ($canceling as $item)
+                    @php
+                        $reason = '';
+                        foreach($cancelDetail as $cDetail){
+                            if($cDetail->order_id == $item->id){
+                                $reason = $cDetail->reason;
+                            }
+                        }
+                    @endphp
+                    <div class="grid-item col-md-4" onmouseover="updateRefund({{$item->id}})">
+                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="anim col p-4 d-flex flex-column position-static">
+                                <a class="no-underline" href="{{route('order', [$item->id])}}">
+                                    <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
+                                    <h3 class="mb-0">฿{{$item->total}}</h3>
+                                </a>
+                                    <div class="mb-1 text-body-secondary">{{ convertTimezone($item->created_at)  }}</div>
+                                    <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
+                                    <p class="my-2">{!!nl2br($reason)!!}</p>
+                                <p class="card-text mb-auto"></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <form id="refundForm{{$item->id}}" method="POST" action="{{route(name: 'order.cancel')}}" enctype="multipart/form-data" style="display: none;">
+                                        @csrf
+                                        <input type="hidden" name="order_id" value="{{$item->id}}">
+                                        <input type="hidden" name="submitter_reason" value="{{$reason}}">
+                                        <input type="hidden" name="reason" value="">
+                                        <input type="hidden" name="status" value="">
+                                    </form>
+                                    <button id="cancelingBtn" 
+                                            form="refundForm{{$item->id}}"
+                                            class="btn btn-warning btn-lg mt-2 w-100" 
+                                            type="" 
+                                            onclick="return confirmCancel({{$item->id}});">ดำเนินการยกเลิก
+                                    </button>
+                                </div>
+                                <select class="form-select mt-2" id="refunding{{$item->id}}" onchange="updateRefund({{$item->id}})">
+                                    <option value="refund">คืนเงิน</option>
+                                    <option value="notRefund">ไม่คืนเงิน</option>
+                                </select>
+
+                                <div id="refundslip{{$item->id}}" class="card mt-2">
+                                    <input form="refundForm{{$item->id}}" title="สลิปโอนเงินคืน" type="file" class="form-control" name="refundslip" accept="image/*" onchange="previewImage(event, {{$item->id}})">
+                                    @error('receipt')
+                                        <div class="ms-2 p-2">
+                                            <span class="text text-danger">{{ $message }}</span>
+                                        </div>
+                                    @enderror
+                                    <div class="text-center">
+                                        <img class="mt-2" id="preview{{$item->id}}" src="#" alt="Preview Image" style="max-width: 100%; height: auto; display: none; border-radius: 8px; border: 1px solid #ddd;">
+                                    </div>
+                                </div>
+
+                                <textarea type="text" class="form-control mt-2" id="notRefund{{$item->id}}" style="display: none;" placeholder="กรุณากรอกเหตุผล" onchange="updateRefund({{$item->id}})"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
             @else
                 <div class="grid-item col-md-6">
@@ -162,14 +285,17 @@
                             <option value="all">ทั้งหมด</option>
                             <option value="pending">รอโอนเงิน</option>
                             <option value="success">สำเร็จ</option>
+                            <option value="canceling">ขอยกเลิก</option>
                             <option value="cancelled">ยกเลิกแล้ว</option>
+                            <option value="refund">คืนเงินแล้ว</option>
+                            <option value="not-refund">ไม่คืนเงิน</option>
                         </select>
                     </form>
                 </div>
             </div>
     
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table id="datatable" class="table table-bordered align-middle">
                     <thead class="text-center">
                         <tr>
                             <th scope="col">id</th>

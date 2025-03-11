@@ -123,7 +123,7 @@ class ProductController extends Controller
             'download' => $request->download,
         ];
 
-        Product::find($id)->update($product);
+        Product::find($id)?->update($product);
         return redirect()->back()->with('success', 'Product updated successfully!');
     }
 

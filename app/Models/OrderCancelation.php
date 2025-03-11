@@ -14,5 +14,6 @@ class OrderCancelation extends Model
         'user_id',
         'reason',
         'status',
+        'refundslip',
     ];
 }
