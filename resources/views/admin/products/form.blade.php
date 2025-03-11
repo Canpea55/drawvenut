@@ -286,7 +286,7 @@
                                         <span class="slider"></span>
                                     </label>
                                 @endif
-                                <label for="isDownloadable" class="form-check-label align-top">ดาวน์โหลดได้?</label>
+                                <label for="isDownloadable" class="form-check-label align-top">ดาวน์โหลดได้</label>
                             </div>
                         </div>
 
@@ -303,7 +303,7 @@
                                         <span class="slider"></span>
                                     </label>
                                 @endif
-                                <label for="isBuyable" class="form-check-label align-top">ซื้อได้?</label>
+                                <label for="isBuyable" class="form-check-label align-top">ซื้อได้</label>
                             </div>
                             <div>
                                 @if (!empty($product))
@@ -317,7 +317,7 @@
                                         <span class="slider"></span>
                                     </label>
                                 @endif
-                                <label for="isPublish" class="form-check-label align-top">เผยแพร่?</label>
+                                <label for="isPublish" class="form-check-label align-top">เผยแพร่</label>
                             </div>
                         </div> 
                         

@@ -73,7 +73,7 @@
                                                 <input type="checkbox" id="isDownloadable-{{ $item->id }}" name="isDownloadable" class="form-check-input" {{ $item->isDownloadable ? 'checked' : '' }} onchange="this.form.submit()">
                                                 <span class="slider"></span>
                                             </label>
-                                            <span for="isDownloadable-{{ $item->id }}" class="form-check-label align-top">ดาวน์โหลดได้?</span>
+                                            <span for="isDownloadable-{{ $item->id }}" class="form-check-label align-top">ดาวน์โหลดได้</span>
                                         </form>
                                     </div>
                                     <hr>
@@ -84,7 +84,7 @@
                                                 <input type="checkbox" id="isBuyable-{{ $item->id }}" name="isBuyable" class="form-check-input" {{ $item->isBuyable ? 'checked' : '' }} onchange="this.form.submit()">
                                                 <span class="slider"></span>
                                             </label>
-                                            <span for="isBuyable-{{ $item->id }}" class="form-check-label align-top">ซื้อได้?</span>
+                                            <span for="isBuyable-{{ $item->id }}" class="form-check-label align-top">ซื้อได้</span>
                                         </form>
                                     </div>
                                     <div class="d-flex justify-content-start align-items-center">
@@ -94,7 +94,7 @@
                                                 <input type="checkbox" id="isPublish-{{ $item->id }}" name="isPublish" class="form-check-input" {{ $item->isPublish ? 'checked' : '' }} onchange="this.form.submit()">
                                                 <span class="slider"></span>
                                             </label>
-                                            <span for="isPublish-{{ $item->id }}" class="form-check-label align-top">เผยแพร่?</span>
+                                            <span for="isPublish-{{ $item->id }}" class="form-check-label align-top">เผยแพร่</span>
                                         </form>
                                     </div>
                                 </div>
