@@ -109,14 +109,14 @@
                             @if ($product->isDownloadable)
                                 <a class="btn btn-success btn-lg " href="{{ $product->download }}" download>ดาวน์โหลด</a>
                             @else
-                                <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true">ดาวน์โหลด</a>
+                                <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถดาวน์โหลดได้ค่ะ">ดาวน์โหลด</a>
                             @endif
                         @else
                             @if ($product->price <= 0) 
                                 @if ($product->isDownloadable)
                                     <a class="btn btn-success btn-lg " href="{{ $product->download }}" download>ดาวน์โหลด</a>
                                 @else
-                                    <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true">ดาวน์โหลด</a>
+                                    <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถดาวน์โหลดได้ค่ะ">ดาวน์โหลด</a>
                                 @endif
                                 <a type="button" class="btn btn-primary btn-lg" href="#">เพิ่มไปยังคลัง</a>
                             @else
@@ -134,6 +134,8 @@
                                                 <input type="hidden" name="price" value="{{ $product->price }}">
                                                 <button type="submit" class="btn btn-primary btn-lg">เพิ่มใส่ตะกร้า</button>
                                             </form>
+                                        @else
+                                            <a class="btn btn-primary btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถซื้อได้ค่ะ">เพิ่มใส่ตะกร้า</a>
                                         @endif
                                     @endif
                                 @else
@@ -147,6 +149,8 @@
                                             <input type="hidden" name="price" value="{{ $product->price }}">
                                             <button type="submit" class="btn btn-primary btn-lg">เพิ่มใส่ตะกร้า</button>
                                         </form>
+                                    @else
+                                        <a class="btn btn-primary btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถซื้อได้ค่ะ">เพิ่มใส่ตะกร้า</a>
                                     @endif
                                 @endif
                             @endif
