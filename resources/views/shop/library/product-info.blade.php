@@ -75,16 +75,14 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- title -->
     <title>@yield('title') - {{ config('app.name') }}</title>
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <!-- Scripts -->
-    @vite('node_modules/bootstrap/dist/css/bootstrap.min.css')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js"></script>
-    @yield('script')
+    <!-- Styles -->
+    <link href="{{ asset('css/common.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/voxybun-toggle.css') }}" rel="stylesheet">
+    @vite('resources/sass/app.scss')
+    @vite('resources/js/app.js')
 </head>
 
 <body>
