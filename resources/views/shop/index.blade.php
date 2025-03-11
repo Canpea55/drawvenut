@@ -162,20 +162,31 @@
                         <div class="col grid-item">
                             <div class="card shadow-sm">
                                 @auth
-                                    @if (Auth::user()->isAdmin)
-                                        <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%;">
-                                            <div class="btn-group gap-1">
+                                <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%;">
+                                    <div class="btn-group gap-1">
+                                            @if (Auth::user()->isAdmin)
                                                 <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
-                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Heart Icon" width="24">
+                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
                                                 </a>
-                                            </div>
-                                        </div>
-                                    @endif
+                                            @endif
+                                            <form method="POST" action="{{route('favorite')}}" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{$item->id}}">
+                                                <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
+                                                    @if (isFavorited($item->id))
+                                                        <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
+                                                    @else
+                                                        <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
+                                                    @endif
+                                                </button>
+                                            </form>
+                                    </div>
+                                </div>
                                 @endauth
                                 <a class="no-underline" href="{{route('product', $item->id) }}" >
                                     @php
-        $images = json_decode($item->images, true);
-        $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
+                                        $images = json_decode($item->images, true);
+                                        $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
                                     @endphp
                                     @if($image)
                                         <img src="{{ Storage::url($image) }}" alt="{{$item->name}}" class="card-img-top"

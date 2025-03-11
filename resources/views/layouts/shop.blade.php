@@ -21,19 +21,21 @@
                 </a>
             @endif
 
-            <a class="anim no-underline fw-light bg-danger-subtle rounded px-2 py-1" href="/cart">
-                <!-- This div is visible on large screens (PC) but hidden on small screens (phones) -->
-                <div class="d-none d-md-block">
-                    <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
-                    <span class="align-middle"> 
-                        สิ่งที่ถูกใจ (1)
-                    </span>
-                </div>
-                <!-- This div is visible on small screens (phones) but hidden on larger screens -->
-                <div class="d-md-none">
-                    <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
-                </div>
-            </a>
+            @if(favoritesCount() > 0)
+                <a class="anim no-underline fw-light bg-danger-subtle rounded px-2 py-1" href="{{route('favorites')}}">
+                    <!-- This div is visible on large screens (PC) but hidden on small screens (phones) -->
+                    <div class="d-none d-md-block">
+                        <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
+                        <span class="align-middle"> 
+                            สิ่งที่ถูกใจ {{"(" . favoritesCount() . ")"}}
+                        </span>
+                    </div>
+                    <!-- This div is visible on small screens (phones) but hidden on larger screens -->
+                    <div class="d-md-none">
+                        <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
+                    </div>
+                </a>
+            @endif
         @endif
 @endsection
 

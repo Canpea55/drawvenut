@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\Favorite;
 
 if (!function_exists('calculateDuration')) {
     function calculateDuration($start, $end)
@@ -43,3 +44,25 @@ if (!function_exists('convertTimezone')) {
     }
 }
 
+if(!function_exists('favoritesCount')) {
+    function favoritesCount(){
+        $user_id = Auth::id();
+        if(!$user_id){
+            return 0;
+        }
+        return Favorite::where('user_id', $user_id)->count();
+    }
+}
+if(!function_exists('isFavorited')) {
+    function isFavorited($product_id){
+        $user_id = Auth::id();
+        $favorite = Favorite::where([
+            'user_id' => $user_id,
+            'product_id' => $product_id,
+        ])->first();
+        if($favorite){
+            return true;
+        }
+        return false;
+    }
+}
