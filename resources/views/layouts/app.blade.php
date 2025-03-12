@@ -137,7 +137,6 @@
                                     </a>
 
                                     <ul class="dropdown-menu">
-                                        <!-- Administrator -->  
                                         <li>
                                             <a class="dropdown-item anim" href="{{ route('orders') }}">
                                                 <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="Add Icon" width="16"> คำสั่งซื้อของฉัน
@@ -187,18 +186,24 @@
             <div class="container my-3 d-flex justify-content-between">                
                 <div class="d-flex align-items-center gap-2 ms-1 align-middle">
                     @auth
+                        <a class="opBtn no-underline px-2 py-1" href="{{route("orders")}}" title="คำสั่งซื้อของฉัน">
+                            <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="ordericon" width="24">
+                        </a>
                         @if (Auth::user()->isAdmin)
+                            <div class="d-flex" style="height: 100%;">
+                                <div class="vr"></div>
+                            </div>
                             <a class="opBtn no-underline px-2 py-1" href="{{route("order.manage")}}" title="จัดการออร์เดอร์">
-                                <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="Add Icon" width="24">
+                                <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="ordermangeicon" width="24">
                             </a>
                             <a class="opBtn no-underline px-2 py-1" href="{{route("product.manage")}}" title="จัดการสินค้า">
-                                <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Add Icon" width="24">
+                                <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="productmanageicon" width="24">
                             </a>
                             <a class="opBtn no-underline px-2 py-1" href="{{route("users")}}" title="จัดการผู้ใช้งาน">
-                                <img src="{{ asset('icons/oval-interface/3users.svg') }}" alt="Add Icon" width="24">
+                                <img src="{{ asset('icons/oval-interface/3users.svg') }}" alt="usermanageicon" width="24">
                             </a>
                             <a class="opBtn no-underline px-2 py-1" href="{{route("library.manage")}}" title="จัดการคลัง">
-                                <img src="{{ asset('icons/oval-interface/grid-aspect-ratio.svg') }}" alt="Add Icon" width="24">
+                                <img src="{{ asset('icons/oval-interface/grid-aspect-ratio.svg') }}" alt="librarymanageicon" width="24">
                             </a>
                         @endif
                     @endauth
