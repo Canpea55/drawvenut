@@ -56,6 +56,15 @@
         opacity: 1;
     }
 
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
     @yield('style')
 </style>
 
@@ -85,8 +94,34 @@
         <header>
             <!-- main navbar -->
             <nav class="shadow-sm navbar navbar-expand-lg bg-primary bg-gradient" data-bs-theme="white">
-                <div class="container">
+                <div class="position-absolute top-50 start-50 translate-middle">
+                    <form class="d-flex align-items-center gap-2 ms-1 align-middle d-none d-md-block" role="search" style="min-width: 30vw" action="{{route('cart.add')}}">
+                        <input class="form-control bg-primary-subtle text-primary-emphasis text-center" placeholder="" type="search" aria-label="Search">
+                        <div id="searchplaceholders" class="position-absolute top-50 start-50 translate-middle text-center unselectable">
+                            <div id="searchplaceholder1" class="d-none">🔎ใบงานวันแม่</div>
+                            <div id="searchplaceholder2" class="d-none">🔎สแตนดี้รูปหมา</div>
+                            <div id="searchplaceholder3" class="d-none">🔎รายงานวิจัยวิทยานิพล</div>
+                        </div>
+                    </form>
+                </div>
+                <script>
+                    let currentIndex = 1;
+                    const totalPlaceholders = 3;
+                    const input = document.querySelector('input[type="search"]');
 
+                    function updatePlaceholder() {
+                        const placeholder = document.getElementById(`searchplaceholder${currentIndex}`);
+                        input.placeholder = placeholder.textContent;
+                        currentIndex = currentIndex >= totalPlaceholders ? 1 : currentIndex + 1;
+                    }
+
+                    // Initial update
+                    updatePlaceholder();
+                    
+                    // Set interval for updates
+                    setInterval(updatePlaceholder, 3000);
+                </script>
+                <div class="container">
                     <a class="navbar-brand" href="{{ url('/') }}">
                         <img src="{{ url('images/logo-long.png') }}" alt="Logo" style="width:150px; height:48px;"
                             class="d-inline-block">
@@ -209,6 +244,7 @@
                     @endauth
                     @yield(section: 'subnavbar-left')
                 </div>
+                
                 <div class="d-flex align-items-center gap-2 me-1 align-middle">
                     @yield('subnavbar-right')
                 </div>
