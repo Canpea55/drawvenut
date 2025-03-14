@@ -16,7 +16,7 @@ Route::get('/', [ShopController::class, 'index'])->name('index');
 Route::get('/about', [ShopController::class, 'about'])->name('about');
 Route::fallback(function () {return "404 not found"; });
 
-Route::get('/live-search', [SearchController::class, 'liveSearch'])->name('live.search');
+Route::get('/search/live', [SearchController::class, 'live'])->name('search.live');
 
 Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
 

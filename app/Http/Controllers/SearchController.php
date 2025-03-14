@@ -7,7 +7,7 @@ use App\Models\Product;
 
 class SearchController extends Controller
 {
-    public function liveSearch(Request $request)
+    public function live(Request $request)
     {
         $query = $request->get('query');
 

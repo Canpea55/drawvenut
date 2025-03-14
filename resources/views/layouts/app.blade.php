@@ -275,7 +275,7 @@
             var query = $(this).val();
             if (query.length > 0) {
                 $.ajax({
-                    url: "{{ route('live.search') }}",
+                    url: "{{ route('search.live') }}",
                     method: "GET",
                     data: { query: query },
                     success: function (data) {
