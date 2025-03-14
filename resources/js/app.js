@@ -2,11 +2,10 @@ import './bootstrap';
 import * as bootstrap from 'bootstrap';
 
 import jQuery from 'jquery';
-import $ from 'jquery';
-window.$ = jQuery;
+window.$ = window.jQuery = jQuery;
+
 import jQueryBridget from 'jquery-bridget';
 
-// Import imagesLoaded and make it available globally
 import imagesLoaded from 'imagesloaded';
 window.imagesLoaded = imagesLoaded;
 

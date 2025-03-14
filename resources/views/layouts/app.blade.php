@@ -2,11 +2,21 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <style type="text/css">
+    header {
+        position: relative;
+        z-index: 1;
+    }
     main {
+        position: relative;
         min-height: 80vh;
+        z-index: 0;
+    }
+    footer {
+        z-index: 1;
     }
 
     .no-underline {
+        position: relative;
         text-decoration: none;
         color: inherit;
     }
@@ -85,6 +95,7 @@
     @vite('resources/js/app.js')
 
     <!-- Head Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     @yield('head-script')
 </head>
 
@@ -95,19 +106,49 @@
             <!-- main navbar -->
             <nav class="shadow-sm navbar navbar-expand-lg bg-primary bg-gradient" data-bs-theme="white">
                 <div class="position-absolute top-50 start-50 translate-middle">
-                    <form class="d-flex align-items-center gap-2 ms-1 align-middle d-none d-md-block" role="search" style="min-width: 30vw" action="{{route('cart.add')}}">
-                        <input class="form-control bg-primary-subtle text-primary-emphasis text-center" placeholder="" type="search" aria-label="Search">
+                    <div class="d-flex align-items-center gap-2 ms-1 align-middle d-none d-md-block position-relative" style="min-width: 30vw">
+                        <input class="form-control bg-primary-subtle text-primary-emphasis text-center" placeholder="" type="search" id="live-search" aria-label="Search">
                         <div id="searchplaceholders" class="position-absolute top-50 start-50 translate-middle text-center unselectable">
                             <div id="searchplaceholder1" class="d-none">🔎ใบงานวันแม่</div>
                             <div id="searchplaceholder2" class="d-none">🔎สแตนดี้รูปหมา</div>
                             <div id="searchplaceholder3" class="d-none">🔎รายงานวิจัยวิทยานิพล</div>
                         </div>
-                    </form>
+                        <ul id="search-results" class="list-group position-absolute w-100 mt-0" style="top: 100%; z-index: 1025;"></ul>
+                    </div>
                 </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#live-search').on('keyup blur', function () {
+                            var query = $(this).val();
+                            if (query.length > 0) {
+                                $.ajax({
+                                    url: "{{ route('live.search') }}",
+                                    method: "GET",
+                                    data: { query: query },
+                                    success: function (data) {
+                                        var results = '';
+                                        if (data.length > 0) {
+                                            $.each(data, function (index, product) {
+                                                results += '<a href="/product/' + product.id + '" class="list-group-item list-group-item-action list-group-item-primary">' + product.name + '</a>';
+                                            });
+                                        } else {
+                                            results = '<li class="list-group-item text-muted list-group-item-dark">ไม่พบเจอผลการค้นหาใดๆ</li>';
+                                        }
+                                        $('#search-results').html(results);
+                                    }
+                                });
+                            } else {
+                                $('#search-results').empty();
+                            }
+                        });
+                    });
+                </script>
+                
                 <script>
                     let currentIndex = 1;
                     const totalPlaceholders = 3;
                     const input = document.querySelector('input[type="search"]');
+                    let intervalId;
 
                     function updatePlaceholder() {
                         const placeholder = document.getElementById(`searchplaceholder${currentIndex}`);
@@ -115,11 +156,26 @@
                         currentIndex = currentIndex >= totalPlaceholders ? 1 : currentIndex + 1;
                     }
 
-                    // Initial update
-                    updatePlaceholder();
-                    
-                    // Set interval for updates
-                    setInterval(updatePlaceholder, 3000);
+                    function startPlaceholderCycle() {
+                        updatePlaceholder();
+                        intervalId = setInterval(updatePlaceholder, 3000);
+                    }
+
+                    // Initial start
+                    startPlaceholderCycle();
+
+                    // Stop on focus
+                    input.addEventListener('focus', () => {
+                        clearInterval(intervalId);
+                        input.placeholder = '';
+                    });
+
+                    // Restart on blur
+                    input.addEventListener('blur', () => {
+                        if (!input.value) {
+                            startPlaceholderCycle();
+                        }
+                    });
                 </script>
                 <div class="container">
                     <a class="navbar-brand" href="{{ url('/') }}">

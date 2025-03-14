@@ -3,6 +3,7 @@
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
+
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminController;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ShopController::class, 'index'])->name('index');
 Route::get('/about', [ShopController::class, 'about'])->name('about');
 Route::fallback(function () {return "404 not found"; });
+
+Route::get('/live-search', [SearchController::class, 'liveSearch'])->name('live.search');
 
 Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
 
