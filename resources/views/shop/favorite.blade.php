@@ -151,7 +151,7 @@
                         <div class="col grid-item">
                             <div class="card shadow-sm">
                                 @auth
-                                <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%;">
+                                <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
                                     <div class="btn-group gap-1">
                                             @if (Auth::user()->isAdmin)
                                                 <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
