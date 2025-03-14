@@ -26,7 +26,7 @@
                             <div class="card shadow-sm">
                                 @auth
                                     @if (Auth::user()->isAdmin)
-                                        <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%;">
+                                        <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
                                             <div class="btn-group gap-1">
                                                 <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
                                                     <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Heart Icon" width="24">

@@ -261,6 +261,11 @@
                             </div>
                         @enderror
 
+                        <div class="form-group py-2">
+                            <label for="tags">แท็ก (แยกแต่ละแท็กด้วย space นะ)</label>
+                            <textarea type="text" name="tags" class="form-control" placeholder="แท็ก1 แท็ก2 แท็ก3">@if(!empty($product) && $product->tags){{$product->tags->pluck('name')->implode(' ')}}@endif</textarea>
+                        </div>
+
                         {{-- fill empty space --}}
                         <div class="flex-grow-1"></div>
 

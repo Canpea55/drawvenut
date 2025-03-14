@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Library;
+use Spatie\Tags\HasTags;
 
 class ProductController extends Controller
 {
@@ -61,6 +62,12 @@ class ProductController extends Controller
             'download' => $request->download,
         ]);
 
+        if ($request->filled('tags')) {
+            // Split string by spaces (trim first to remove any extra whitespace)
+            $tags = preg_split('/\s+/', trim($request->input('tags')));
+            $product->syncTags($tags);
+        }
+
         if($request->input("createMultiple")) {
             return redirect(route('product.add'))->with('success', 'Product added successfully!');
         }
@@ -112,7 +119,7 @@ class ProductController extends Controller
             }
         }
 
-        $product = [
+        $productData = [
             'name'=>$request->name,
             'price'=>$request->price,
             'description'=> $request->description,
@@ -122,8 +129,16 @@ class ProductController extends Controller
             'isPublish' => $request->has('isPublish'),
             'download' => $request->download,
         ];
+        $product = Product::findOrFail($id);
+        $product->update($productData);
+        
+        if ($request->filled('tags')) {
+            $tags = preg_split('/\s+/', trim($request->input('tags')));
+            $product->syncTags($tags);
+        } else {
+            $product->syncTags([]); // remove all tags if no tag is provided
+        }
 
-        Product::find($id)?->update($product);
         return redirect()->back()->with('success', 'Product updated successfully!');
     }
 
