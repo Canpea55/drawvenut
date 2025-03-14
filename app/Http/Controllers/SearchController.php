@@ -11,10 +11,24 @@ class SearchController extends Controller
     {
         $query = $request->get('query');
 
-        // Use a simple LIKE query for live search and select specific fields
-        $products = Product::where(column: 'name', operator: 'LIKE', value: "%{$query}%")
-            ->select('id', 'name', 'price')
-            ->get();
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+            ->select('id', 'name', 'price', 'images')
+            ->take(3)  // This will limit to first 3 results
+            ->get()
+            ->map(function ($product) {
+                // Decode the JSON string to array
+                $images = json_decode($product->images);
+                
+                // Get the first image if available
+                $firstImage = !empty($images) ? asset('storage/' . $images[0]) : null;
+                
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'image' => $firstImage
+                ];
+            });
         
         return response()->json($products);
     }

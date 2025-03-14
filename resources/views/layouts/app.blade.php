@@ -116,67 +116,7 @@
                         <ul id="search-results" class="list-group position-absolute w-100 mt-0" style="top: 100%; z-index: 1025;"></ul>
                     </div>
                 </div>
-                <script>
-                    $(document).ready(function () {
-                        $('#live-search').on('keyup blur', function () {
-                            var query = $(this).val();
-                            if (query.length > 0) {
-                                $.ajax({
-                                    url: "{{ route('live.search') }}",
-                                    method: "GET",
-                                    data: { query: query },
-                                    success: function (data) {
-                                        var results = '';
-                                        if (data.length > 0) {
-                                            $.each(data, function (index, product) {
-                                                results += '<a href="/product/' + product.id + '" class="list-group-item list-group-item-action list-group-item-primary">' + product.name + '</a>';
-                                            });
-                                        } else {
-                                            results = '<li class="list-group-item text-muted list-group-item-dark">ไม่พบเจอผลการค้นหาใดๆ</li>';
-                                        }
-                                        $('#search-results').html(results);
-                                    }
-                                });
-                            } else {
-                                $('#search-results').empty();
-                            }
-                        });
-                    });
-                </script>
                 
-                <script>
-                    let currentIndex = 1;
-                    const totalPlaceholders = 3;
-                    const input = document.querySelector('input[type="search"]');
-                    let intervalId;
-
-                    function updatePlaceholder() {
-                        const placeholder = document.getElementById(`searchplaceholder${currentIndex}`);
-                        input.placeholder = placeholder.textContent;
-                        currentIndex = currentIndex >= totalPlaceholders ? 1 : currentIndex + 1;
-                    }
-
-                    function startPlaceholderCycle() {
-                        updatePlaceholder();
-                        intervalId = setInterval(updatePlaceholder, 3000);
-                    }
-
-                    // Initial start
-                    startPlaceholderCycle();
-
-                    // Stop on focus
-                    input.addEventListener('focus', () => {
-                        clearInterval(intervalId);
-                        input.placeholder = '';
-                    });
-
-                    // Restart on blur
-                    input.addEventListener('blur', () => {
-                        if (!input.value) {
-                            startPlaceholderCycle();
-                        }
-                    });
-                </script>
                 <div class="container">
                     <a class="navbar-brand" href="{{ url('/') }}">
                         <img src="{{ url('images/logo-long.png') }}" alt="Logo" style="width:150px; height:48px;"
@@ -327,5 +267,75 @@
 
 <!-- Foot Scripts -->
 @yield('foot-script')
+
+<script>
+    $(document).ready(function () {
+        $('#live-search').on('keyup blur', function () {
+            var results = '';
+            var query = $(this).val();
+            if (query.length > 0) {
+                $.ajax({
+                    url: "{{ route('live.search') }}",
+                    method: "GET",
+                    data: { query: query },
+                    success: function (data) {
+                        if (data.length > 0) {
+                            $.each(data, function (index, product) {
+                                results += `
+                                    <a href="/product/${product.id}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
+                                        ${product.image ? `<img src="${product.image}" alt="${product.name}" class="rounded flex-shrink-0 border border-primary" style="width: 50px; height: 100%; object-fit: cover;">` : ''}
+                                        <div >
+                                            <div>${product.name}</div>
+                                            <small class="text-success">฿${product.price}</small>
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                        } else {
+                            results = '<li class="list-group-item text-muted list-group-item-dark">ไม่พบเจอผลการค้นหาใดๆ</li>';
+                        }
+                        $('#search-results').html(results);
+                    }
+                });
+            } else {
+                $('#search-results').empty();
+            }
+        });
+    });
+</script>
+
+<script>
+    let currentIndex = 1;
+    const totalPlaceholders = 3;
+    const input = document.querySelector('input[type="search"]');
+    let intervalId;
+
+    function updatePlaceholder() {
+        const placeholder = document.getElementById(`searchplaceholder${currentIndex}`);
+        input.placeholder = placeholder.textContent;
+        currentIndex = currentIndex >= totalPlaceholders ? 1 : currentIndex + 1;
+    }
+
+    function startPlaceholderCycle() {
+        updatePlaceholder();
+        intervalId = setInterval(updatePlaceholder, 3000);
+    }
+
+    // Initial start
+    startPlaceholderCycle();
+
+    // Stop on focus
+    input.addEventListener('focus', () => {
+        clearInterval(intervalId);
+        input.placeholder = '';
+    });
+
+    // Restart on blur
+    input.addEventListener('blur', () => {
+        if (!input.value) {
+            startPlaceholderCycle();
+        }
+    });
+</script>
 
 </html>
