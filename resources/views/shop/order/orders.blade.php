@@ -19,7 +19,7 @@
         <div class="row row-cols-1 row-cols-md-3 g-3" data-masonry='{"percentPosition": true }'>
             @foreach ($orders as $item)
                 <div class="col-md-4">
-                    <div class="anim row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="animU row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
 
                             <!-- Order ID, Total, and Date -->

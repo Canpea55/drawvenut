@@ -32,12 +32,23 @@
     }
 
     /* hover animation */
-    .anim {
+    .animS {
         transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
         opacity: 0.9;
     }
-    .anim:hover {
-        transform: translateY(-2px); /* Moves card up slightly */
+    .animS:hover {
+        transform:scale(1.03, 1.03);
+        /* transform: translateY(-2px); Moves card up slightly */
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Adds shadow */
+        opacity: 1;
+    }
+
+    .animU {
+        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+        opacity: 0.9;
+    }
+    .animU:hover {
+        transform: translateY(-2px);
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Adds shadow */
         opacity: 1;
     }
@@ -187,36 +198,36 @@
 
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item anim" href="{{ route('orders') }}">
+                                            <a class="dropdown-item animU" href="{{ route('orders') }}">
                                                 <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="Add Icon" width="16"> คำสั่งซื้อของฉัน
                                             </a>
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         @if (Auth::user()->isAdmin)
                                             <li>
-                                                <a class="dropdown-item anim" href="{{ route('order.manage') }}">
+                                                <a class="dropdown-item animU" href="{{ route('order.manage') }}">
                                                     <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="Add Icon" width="16"> จัดการออร์เดอร์
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item anim" href="{{ route('product.manage') }}">
+                                                <a class="dropdown-item animU" href="{{ route('product.manage') }}">
                                                     <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="Add Icon" width="16"> จัดการสินค้า
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item anim" href="{{ route('users') }}">
+                                                <a class="dropdown-item animU" href="{{ route('users') }}">
                                                     <img src="{{ asset('icons/oval-interface/3users.svg') }}" alt="Add Icon" width="16"> จัดการผู้ใช้งาน
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item anim" href="{{ route('library.manage') }}">
+                                                <a class="dropdown-item animU" href="{{ route('library.manage') }}">
                                                     <img src="{{ asset('icons/oval-interface/grid-aspect-ratio.svg') }}" alt="Add Icon" width="16"> จัดการคลัง
                                                 </a>
                                             </li>
                                             <li><hr class="dropdown-divider"></li>
                                         @endif
                                         <li>
-                                            <a class="dropdown-item anim" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                            <a class="dropdown-item animU" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();">
                                                 <img src="{{ asset('icons/oval-interface/power.svg') }}" alt="Add Icon" width="16"> ลงชื่อออก
                                             </a>
@@ -288,7 +299,7 @@ $(document).ready(function () {
     const $input = $("#live-search");
     const $resultsList = $("#search-results");
 
-    // Handle keydown for navigation
+    // Handle keyboard navigation
     $input.on("keydown", function(e){
         let $results = $resultsList.find("a");
         let resultsCount = $results.length;
@@ -316,7 +327,14 @@ $(document).ready(function () {
                 window.location.href = $activeItem.attr("href");
             }
         }
-        // Do not reset activeIndex here; let it persist so that the AJAX callback can reapply it.
+    });
+
+    // Handle mouse hover
+    $resultsList.on("mouseenter", "a", function() {
+        let $results = $resultsList.find("a");
+        activeIndex = $results.index(this);
+        $results.removeClass("active");
+        $(this).addClass("active");
     });
 
     // Handle keyup/blur to trigger live search
@@ -336,7 +354,7 @@ $(document).ready(function () {
                         if (data.products && data.products.length > 0) {
                             $.each(data.products, function (i, product) {
                                 results += `
-                                    <a href="/product/${product.id}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <a href="/product/${product.id}" class="animS list-group-item list-group-item-action d-flex align-items-center gap-2">
                                         ${product.image ? `<img src="${product.image}" alt="${product.name}" class="rounded flex-shrink-0 border" style="width: 50px; height: 100%; object-fit: cover;">` : ''}
                                         <div>
                                             <div>${product.name}</div>
@@ -350,7 +368,7 @@ $(document).ready(function () {
                         if (data.tags && data.tags.length > 0) {
                             $.each(data.tags, function (i, tag) {
                                 results += `
-                                    <a href="${tag.url}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <a href="${tag.url}" class="animS list-group-item list-group-item-action d-flex align-items-center gap-2">
                                         <div>
                                             <div>${tag.name}</div>
                                         </div>
@@ -413,9 +431,9 @@ $(document).ready(function () {
 
     // Restart on blur
     input.addEventListener('blur', () => {
-        input.value = '';
-        startPlaceholderCycle();
-        $resultsList.empty();
+        if (!input.value) {
+            startPlaceholderCycle();
+        }
     });
 </script>
 

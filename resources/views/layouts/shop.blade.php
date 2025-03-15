@@ -6,7 +6,7 @@
 @section('subnavbar-right') 
         @if (auth()->check())
             @if (session('cart'))
-                <a class="anim no-underline fw-light bg-success-subtle rounded px-2 py-1" href="{{route('cart')}}">
+                <a class="animU no-underline fw-light bg-success-subtle rounded px-2 py-1" href="{{route('cart')}}">
                     <!-- This div is visible on large screens (PC) but hidden on small screens (phones) -->
                     <div class="d-none d-md-block">
                         <img src="{{ asset('icons/bag-svgrepo-com.svg') }}" alt="Cart Icon" width="24">
@@ -27,7 +27,7 @@
             @endif
 
             @if(favoritesCount() > 0)
-                <a class="anim no-underline fw-light bg-danger-subtle rounded px-2 py-1" href="{{route('favorites')}}">
+                <a class="animU no-underline fw-light bg-danger-subtle rounded px-2 py-1" href="{{route('favorites')}}">
                     <!-- This div is visible on large screens (PC) but hidden on small screens (phones) -->
                     <div class="d-none d-md-block">
                         <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">

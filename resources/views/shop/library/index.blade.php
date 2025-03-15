@@ -46,13 +46,13 @@
         $(document).ready(function(){
             $('#search-input').on('input', function(){
                 const query = $(this).val().toLowerCase().trim();
-                console.log('Search query:', query);
+                // console.log('Search query:', query);
 
                 // Select all product items and filter them
                 $('.product-menu .list-group-item').each(function(){
                     const $item = $(this);
                     const productName = $item.find('.flex-grow-1 h6').text().toLowerCase();
-                    console.log('Product:', productName, 'Contains query:', productName.includes(query));
+                    // console.log('Product:', productName, 'Contains query:', productName.includes(query));
                     
                     if (query === '' || productName.includes(query)) {
                         $item.css('display', '');  // Show the item
@@ -79,7 +79,7 @@
                         <!-- Search bar for filtering product list -->
                         <input type="text" id="search-input" class="form-control mb-3" placeholder="ค้นหาของในคลัง...">
                         @foreach($products as $item)
-                            <a id="{{$item->id}}" class="list-group-item anim no-underline stretched-link" href="#" onclick="setIframe({{$item->id}});return false;">
+                            <a id="{{$item->id}}" class="list-group-item anim no-underline stretched-link anim" href="#" onclick="setIframe({{$item->id}});return false;">
                                 <div class="d-flex align-items-center gap-3">
                                     <!-- Image Section -->
                                     @php

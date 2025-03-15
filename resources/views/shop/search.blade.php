@@ -155,35 +155,35 @@
         <p class="text-primary-emphasis ">📚 กลุ่มสาระการเรียนรู้</p>
         <div>
             <ul class="list-group">
-                <a href="{{route('search', ['keyword' => 'คณิต'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                <a href="{{route('search', ['keyword' => 'คณิต'])}}" class="animS list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
                     <div class="display-6">🔢</div>
                     <div>คณิตศาสตร์</div>
                 </a>
-                <a href="{{route('search', ['keyword' => 'วิทย์'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                <a href="{{route('search', ['keyword' => 'วิทย์'])}}" class="animS list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
                     <div class="display-6">🧪</div>
                     <div>วิทยาศาสตร์และเทคโนโลยี</div>
                 </a>
-                <a href="{{route('search', ['keyword' => 'ไทย'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                <a href="{{route('search', ['keyword' => 'ไทย'])}}" class="animS list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
                     <div class="display-6">🐘</div>
                     <div>ภาษาไทย</div>
                 </a>
-                <a href="{{route('search', ['keyword' => 'ภาษาต่างประเทศ'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                <a href="{{route('search', ['keyword' => 'ภาษาต่างประเทศ'])}}" class="animS list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
                     <div class="display-6">🌎</div>
                     <div>ภาษาต่างประเทศ</div>
                 </a>
-                <a href="{{route('search', ['keyword' => 'สังคม'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                <a href="{{route('search', ['keyword' => 'สังคม'])}}" class="animS list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
                     <div class="display-6">👨‍👨‍👧‍👦</div>
                     <div>สังคมศึกษา ศาสนาและวัฒนธรรม</div>
                 </a>
-                <a href="{{route('search', ['keyword' => 'สุขศึกษา'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                <a href="{{route('search', ['keyword' => 'สุขศึกษา'])}}" class="animS list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
                     <div class="display-6">⚽</div>
                     <div>สุขศึกษา พลศึกษา</div>
                 </a>
-                <a href="{{route('search', ['keyword' => 'ศิลปะ'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                <a href="{{route('search', ['keyword' => 'ศิลปะ'])}}" class="animS list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
                     <div class="display-6">🎨</div>
                     <div>ศิลปศึกษา</div>
                 </a>
-                <a href="{{route('search', ['keyword' => 'การงาน'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                <a href="{{route('search', ['keyword' => 'การงาน'])}}" class="animS list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
                     <div class="display-6">💼</div>
                     <div>การงานอาชีพ</div>
                 </a>

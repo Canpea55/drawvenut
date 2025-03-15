@@ -171,8 +171,8 @@
             @if ($submitted->isNotEmpty() || $canceling->isNotEmpty())
                 @foreach ($submitted as $item)
                 <div class="grid-item col-md-4" onmouseover="updateReason({{$item->id}})">
-                    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                        <div class="anim col p-4 d-flex flex-column position-static">
+                    <div class="animU row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col p-4 d-flex flex-column position-static">
                                 <a class="no-underline" href="{{route('order', [$item->id])}}">
                                     <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
                                     <h3 class="mb-0">฿{{$item->total}}</h3>
@@ -217,8 +217,8 @@
                         }
                     @endphp
                     <div class="grid-item col-md-4" onmouseover="updateRefund({{$item->id}})">
-                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                            <div class="anim col p-4 d-flex flex-column position-static">
+                        <div class="animU row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
                                 <a class="no-underline" href="{{route('order', [$item->id])}}">
                                     <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
                                     <h3 class="mb-0">฿{{$item->total}}</h3>
