@@ -60,35 +60,32 @@
                 <div class="col-md-5 col-lg-4">
                     <ul class="list-group product-menu" style="height: 80%">
                         @foreach($products as $item)
-                            <li id="{{$item->id}}" class="list-group-item d-flex align-items-center justify-content-between lh-sm anim">
+                            <a id="{{$item->id}}" class="list-group-item d-flex align-items-center justify-content-between lh-sm anim no-underline stretched-link" href="#" onclick="setIframe({{$item->id}});return false;">
                                 <div class="d-flex align-items-center gap-3">
                                     <!-- Image Section -->
-                                    <a class="no-underline stretched-link" href="#"
-                                        onclick="setIframe({{$item->id}});return false;">
-                                        @php
-                                            $defaultImage = null;
-                                            $images = json_decode($item->images, true);
-                                            if (is_array($images) && count($images) > 0) {
-                                                $defaultImage = $images[0];
-                                            }
-                                        @endphp
-                                        @if($defaultImage)
-                                            <img src="{{Storage::url($defaultImage)}}" alt="thumbnail"
-                                                class="rounded flex-shrink-0 card"
-                                                style="width: 50px; height: 50px; object-fit: cover;">
-                                        @else
-                                            <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
-                                                xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                                                preserveAspectRatio="xMidYMid slice" focusable="false">
-                                                <rect width="100%" height="100%" fill="#D09CC7" />
-                                            </svg>
-                                        @endif
-                                    </a>
+                                    @php
+                                        $defaultImage = null;
+                                        $images = json_decode($item->images, true);
+                                        if (is_array($images) && count($images) > 0) {
+                                            $defaultImage = $images[0];
+                                        }
+                                    @endphp
+                                    @if($defaultImage)
+                                        <img src="{{Storage::url($defaultImage)}}" alt="thumbnail"
+                                            class="rounded flex-shrink-0 card"
+                                            style="width: 50px; height: 50px; object-fit: cover;">
+                                    @else
+                                        <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
+                                            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                                            preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            <rect width="100%" height="100%" fill="#D09CC7" />
+                                        </svg>
+                                    @endif
                                     <div class="flex-grow-1">
                                         <h6 class="my-1">{{ Str::limit($item['name'], 24) }}</h6>
                                     </div>
                                 </div>
-                            </li>
+                            </a>
                         @endforeach
                     </ul>
                 </div>
