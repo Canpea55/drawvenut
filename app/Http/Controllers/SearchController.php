@@ -13,6 +13,7 @@ class SearchController extends Controller
         $query = $request->get('query');
 
         $products = Product::where('name', 'LIKE', "%{$query}%")
+            ->where('isPublish', true)
             ->select('id', 'name', 'price', 'images')
             ->take(3)
             ->get()
@@ -34,7 +35,7 @@ class SearchController extends Controller
                 return [
                     'id'   => $tag->id,
                     'name' => $tag->name,
-                    'url'  => route('search', ['tag' => $tag->name]),
+                    'url'  => route('search', ['keyword' => $tag->name]),
                 ];
             });
         
@@ -46,7 +47,36 @@ class SearchController extends Controller
 
     public function search(Request $request)
     {
-        // In your search view, you can check for a tag via $request->tag and query products accordingly.
-        return view('shop.search');
+        $keyword = $request->keyword;
+        $products = [];
+        
+        if ($keyword) {
+            $tagProducts = Product::whereHas('tags', function($query) use ($keyword) {
+            $query->where('name', $keyword);
+            })->where('isPublish', true)->get();
+            
+            $nameProducts = Product::where('name', 'LIKE', "%{$keyword}%")
+            ->where('isPublish', true)
+            ->get();
+            $products = $tagProducts->merge($nameProducts)->unique('id');
+            
+            $perPage = 16;
+            $page = request()->get('page', 1);
+            $products = new \Illuminate\Pagination\LengthAwarePaginator(
+            $products->forPage($page, $perPage),
+            $products->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url()]
+            );
+            if (!empty($products)) {
+            $products->appends(['keyword' => $keyword]);
+            }
+        }
+
+        return view('shop.search', [
+            'products' => $products,
+            'keyword' => $keyword
+        ]);
     }
 }

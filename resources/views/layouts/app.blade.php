@@ -107,7 +107,15 @@
             <nav class="shadow-sm navbar navbar-expand-lg bg-primary bg-gradient" data-bs-theme="white">
                 <div class="position-absolute top-50 start-50 translate-middle">
                     <div class="d-flex align-items-center gap-2 ms-1 align-middle d-none d-md-block position-relative" style="min-width: 30vw">
-                        <input class="form-control bg-primary-subtle text-primary-emphasis text-center" placeholder="" type="search" id="live-search" aria-label="Search">
+                        <form action="{{ route('search') }}" method="GET" class="w-100">
+                            <input class="form-control bg-primary-subtle text-primary-emphasis text-center" 
+                                placeholder="" 
+                                type="search" 
+                                id="live-search"
+                                name="keyword"
+                                aria-label="Search"
+                                onkeydown="if(event.key === 'Enter') this.form.submit();">
+                        </form>
                         <div id="searchplaceholders" class="position-absolute top-50 start-50 translate-middle text-center unselectable">
                             <div id="searchplaceholder1" class="d-none">🔎ใบงานวันแม่</div>
                             <div id="searchplaceholder2" class="d-none">🔎สแตนดี้รูปหมา</div>
