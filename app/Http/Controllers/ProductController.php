@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProductTags;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Library;
+use App\Models\Tag;
 use Spatie\Tags\HasTags;
 
 class ProductController extends Controller
@@ -19,15 +21,15 @@ class ProductController extends Controller
     {
         $request->validate(
             [
-                'name'=>'required',
-                'price'=>'required',
+                'name' => 'required',
+                'price' => 'required',
             ],
             [
-                'name.required'=>'กรุณาป้อนชื่อสินค้าก่อน',
-                'price.required'=>'กรุณาป้อนราคาด้วย (อย่างน้อย 0 บาท)',
+                'name.required' => 'กรุณาป้อนชื่อสินค้าก่อน',
+                'price.required' => 'กรุณาป้อนราคาด้วย (อย่างน้อย 0 บาท)',
             ]
         );
-      
+
         // Handle Image Upload
         $storedImages = [];
         if ($request->hasFile('images')) {
@@ -62,14 +64,25 @@ class ProductController extends Controller
             'download' => $request->download,
         ]);
 
+        // Custom Tag processing
         if ($request->filled('tags')) {
-            // Split string by spaces (trim first to remove any extra whitespace)
+            // Split the tags string by spaces
             $tags = preg_split('/\s+/', trim($request->input('tags')));
-            $product->syncTags($tags);
+            $tagIds = [];
+            foreach ($tags as $tagName) {
+                $tagName = trim($tagName);
+                if ($tagName) {
+                    // Find the tag by name or create it if it does not exist
+                    $tag = Tag::firstOrCreate(['name' => $tagName]);
+                    $tagIds[] = $tag->id;
+                }
+            }
+            // Sync tags (attach these tags to the product)
+            $product->tags()->sync($tagIds);
         }
 
         if($request->input("createMultiple")) {
-            return redirect(route('product.add'))->with('success', 'Product added successfully!');
+            return $this->add()->with('success', 'Product added successfully!');
         }
         return redirect(route('product.manage'))->with('success', 'Product added successfully!');
     }
@@ -132,11 +145,21 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->update($productData);
         
+        // Custom Tag processing for update
         if ($request->filled('tags')) {
             $tags = preg_split('/\s+/', trim($request->input('tags')));
-            $product->syncTags($tags);
+            $tagIds = [];
+            foreach ($tags as $tagName) {
+                $tagName = trim($tagName);
+                if ($tagName) {
+                    $tag = Tag::firstOrCreate(['name' => $tagName]);
+                    $tagIds[] = $tag->id;
+                }
+            }
+            $product->tags()->sync($tagIds);
         } else {
-            $product->syncTags([]); // remove all tags if no tag is provided
+            // Remove all tags if none are provided
+            $product->tags()->sync([]);
         }
 
         return redirect()->back()->with('success', 'Product updated successfully!');
@@ -185,13 +208,12 @@ class ProductController extends Controller
     function edit($id)
     {
         $product = Product::find($id);
-        $library=Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
-        $owned = false;
-        foreach($library as $item) {
-            if($item->product_id == $id) {
-                $owned = true;
-            }
-        }
-        return view('admin/products/form', compact(['product', 'owned']));
+        $tags = Tag::whereIn('id', function($query) use ($id) {
+            $query->select('tag_id')
+              ->from('products_tags')
+              ->where('product_id', $id);
+        })->pluck('name')->implode(' ');
+
+        return view('admin/products/form', compact(['product', 'tags']));
     }
 }

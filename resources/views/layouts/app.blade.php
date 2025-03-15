@@ -270,37 +270,60 @@
 
 <script>
     $(document).ready(function () {
+        let typingTimer; // Timer identifier
+        const typingDelay = 250;
+        
         $('#live-search').on('keyup blur', function () {
-            var results = '';
-            var query = $(this).val();
-            if (query.length > 0) {
-                $.ajax({
-                    url: "{{ route('search.live') }}",
-                    method: "GET",
-                    data: { query: query },
-                    success: function (data) {
-                        if (data.length > 0) {
-                            $.each(data, function (index, product) {
-                                results += `
-                                    <a href="/product/${product.id}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
-                                        ${product.image ? `<img src="${product.image}" alt="${product.name}" class="rounded flex-shrink-0 border border-primary" style="width: 50px; height: 100%; object-fit: cover;">` : ''}
-                                        <div >
-                                            <div>${product.name}</div>
-                                            <small class="text-success">฿${product.price}</small>
-                                        </div>
-                                    </a>
-                                `;
-                            });
-                        } else {
-                            results = '<li class="list-group-item text-muted list-group-item-dark">ไม่พบเจอผลการค้นหาใดๆ</li>';
+            clearTimeout(typingTimer);
+            const $input = $(this);
+            typingTimer = setTimeout(function() {
+                console.log('User stopped typing, execute search.');
+                var results = '';
+                var query = $input.val();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: "{{ route('search.live') }}",
+                        method: "GET",
+                        data: { query: query },
+                        success: function (data) {
+                            if(data.products || data.tags) {
+                                if (data.products.length > 0) {
+                                    $.each(data.products, function (i, product) {
+                                        results += `
+                                            <a href="/product/${product.id}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
+                                                ${product.image ? `<img src="${product.image}" alt="${product.name}" class="rounded flex-shrink-0 border border-primary" style="width: 50px; height: 100%; object-fit: cover;">` : ''}
+                                                <div >
+                                                    <div>${product.name}</div>
+                                                    <small class="text-success">฿${product.price}</small>
+                                                </div>
+                                            </a>
+                                        `;
+                                    });
+                                }
+                                // Process tag results after products
+                                if (data.tags.length > 0) {
+                                    $.each(data.tags, function (i, tag) {
+                                        results += `
+                                            <a href="${tag.url}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
+                                                <div>
+                                                    <div>${tag.name}</div>
+                                                </div>
+                                            </a>
+                                        `;
+                                    });
+                                }
+                                $('#search-results').html(results);
+                            } else {
+                                results = '<li class="list-group-item text-muted list-group-item-dark">ไม่พบเจอผลการค้นหาใดๆ</li>';
+                                $('#search-results').html(results);
+                            }
                         }
-                        $('#search-results').html(results);
-                    }
-                });
-            } else {
-                $('#search-results').empty();
-            }
-        });
+                    });
+                } else {
+                    $('#search-results').empty();
+                }
+            }, typingDelay);
+        });        
     });
 </script>
 

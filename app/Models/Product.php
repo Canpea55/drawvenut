@@ -4,12 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
-use Spatie\Tags\HasTags;
 
 class Product extends Model
 {
-    use HasFactory, HasTags, Searchable;
+    use HasFactory;
 
     protected $fillable = [
         'name',
@@ -21,4 +19,9 @@ class Product extends Model
         'isPublish',
         'download',
     ];
+
+    public function tags()
+    {
+        return $this->belongsToMany(\App\Models\Tag::class, 'products_tags', 'product_id', 'tag_id');
+    }
 }
