@@ -213,7 +213,7 @@
             </div>
         </div>
         <div class="text text-center">
-            <a href="{{route('search', ['keyword' => ''])}}" class="btn btn-lg btn-primary w-100">หาสินค้าหรือจ๊ะ?</a>
+            <a href="{{route('search', ['keyword' => ''])}}" class="btn btn-lg btn-primary w-100">ค้นหาสินค้าอื่นๆ กดตรงนี้เลยค่ะ?</a>
         </div>
         {{-- To search and all product --}}
     @else
