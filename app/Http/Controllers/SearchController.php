@@ -53,10 +53,11 @@ class SearchController extends Controller
         if ($keyword) {
             $tagProducts = Product::whereHas('tags', function($query) use ($keyword) {
             $query->where('name', $keyword);
-            })->where('isPublish', true)->get();
+            })->where('isPublish', true)->orderBy('id', 'desc')->get();
             
             $nameProducts = Product::where('name', 'LIKE', "%{$keyword}%")
             ->where('isPublish', true)
+            ->orderBy('id', 'desc')
             ->get();
             $products = $tagProducts->merge($nameProducts)->unique('id');
             
@@ -74,6 +75,7 @@ class SearchController extends Controller
             }
         } else {
             $products = Product::where('isPublish', true)
+                ->orderBy('id', 'desc')
                 ->paginate(16)
                 ->appends(request()->query());
         }
