@@ -17,6 +17,11 @@
                     <!-- This div is visible on small screens (phones) but hidden on larger screens -->
                     <div class="d-md-none">
                         <img src="{{ asset('icons/bag-svgrepo-com.svg') }}" alt="Cart Icon" width="24">
+                        <div class="position-relative d-inline-block">
+                            <span class="position-absolute translate-middle">
+                                {{ count(session('cart')) }}
+                            </span>
+                        </div>
                     </div>
                 </a>
             @endif
@@ -33,6 +38,11 @@
                     <!-- This div is visible on small screens (phones) but hidden on larger screens -->
                     <div class="d-md-none">
                         <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
+                        <div class="position-relative d-inline-block">
+                            <span class="position-absolute translate-middle">
+                                {{favoritesCount()}}
+                            </span>
+                        </div>
                     </div>
                 </a>
             @endif
