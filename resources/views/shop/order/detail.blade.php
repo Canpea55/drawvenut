@@ -140,7 +140,7 @@
 @endsection
 
 @section('content')
-    <div class="row g-3 my-0">
+    <div class="row my-0">
         {{-- order detail --}}     
         <div class="col-md-5 col-lg-4 order-md-last">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
