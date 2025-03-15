@@ -8,8 +8,172 @@
     @endif
 @endsection
 
-@section('foot-script')
+@section('head-script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script>
+        // Preload existing tags. This assumes that $product->tags is a collection.
+        // If there are no tags, it defaults to an empty array.
+        var preloadedTags = {!! json_encode(!empty($product) ? $product->tags->pluck('name') : []) !!};
+    </script>
+@endsection
+@section('foot-script')
+    <script>
+        $(document).ready(function(){
+            let tags = preloadedTags || [];
+            const $container = $('#tags-container');
+            const $input = $('#tag-input');
+            const $hidden = $('#tags-hidden');
+            let typingTimer;
+            const typingDelay = 150; // delay in ms for ajax call
+            let selectedIndex = -1; // tracks current selection in suggestion list
+
+            // Create suggestion container (if not already in HTML)
+            if($('#tag-suggestions').length === 0){
+                $container.append('<ul id="tag-suggestions" class="list-group position-absolute w-100 mt-0" style="top: 100%; left:0%; z-index: 9999;"></ul>');
+            }
+            const $suggestions = $('#tag-suggestions');
+
+            // Function to update the hidden field; tags saved as a space–separated string
+            function updateHidden(){
+                $hidden.val(tags.join(' '));
+            }
+
+            // Function to create and append a badge for a tag
+            function addBadge(tag) {
+                // Create a badge element with a delete button inside
+                const badge = $(`
+                    <span class="badge bg-primary me-1 tag-badge d-flex align-items-center gap-1">
+                        <div>${tag}</div>
+                        <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Remove"></button>
+                    </span>
+                `);
+                // When the delete button is clicked, remove the badge and update tags
+                badge.find('button').on('click', function(e) {
+                    e.stopPropagation();
+                    tags = tags.filter(t => t !== tag);
+                    badge.remove();
+                    updateHidden();
+                });
+                // Insert the badge before the input field
+                badge.insertBefore($input);
+            }
+
+            // Preload the badges for the existing tags
+            tags.forEach(tag => addBadge(tag));
+            updateHidden();
+
+            // Function to display suggestions
+            function showSuggestions(suggestions){
+                $suggestions.empty();
+                selectedIndex = -1; // reset selection
+
+                // Filter suggestions to remove those already added
+                suggestions = suggestions.filter(sTag => !tags.includes(sTag));
+
+                if(suggestions && suggestions.length){
+                    suggestions.forEach(function(sTag){
+                        const item = $(`<a href="#" class="list-group-item list-group-item-action">${sTag}</a>`);
+                        item.on('click', function(e){
+                            e.preventDefault();
+                            // Add suggestion as a tag if not already added
+                            if(!tags.includes(sTag)){
+                                tags.push(sTag);
+                                addBadge(sTag);
+                                updateHidden();
+                            }
+                            $suggestions.empty();
+                            $input.val('');
+                        });
+                        $suggestions.append(item);
+                    });
+                }
+            }
+
+            // Listen for keydown events on the input field for navigation
+            $input.on('keydown', function(e){
+                // Handle arrow keys for suggestion navigation
+                if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+                    e.preventDefault(); // prevent default cursor move
+                    let items = $suggestions.find('a');
+                    if(items.length){
+                        if(e.key === 'ArrowDown'){
+                            selectedIndex = (selectedIndex + 1) % items.length;
+                        } else if(e.key === 'ArrowUp'){
+                            selectedIndex = selectedIndex <= 0 ? items.length - 1 : selectedIndex - 1;
+                        }
+                        items.removeClass('active');
+                        $(items[selectedIndex]).addClass('active');
+                    }
+                    return; // exit keydown handler for these keys
+                }
+                // Handle Enter key to select the active suggestion if any
+                if(e.key === 'Enter'){
+                    let items = $suggestions.find('a');
+                    if(selectedIndex >= 0 && items.length > 0){
+                        e.preventDefault();
+                        $(items[selectedIndex]).trigger('click');
+                        selectedIndex = -1;
+                        return;
+                    }
+                }
+                // When space is pressed, convert the typed text into a badge
+                if(e.key === ' '){
+                    e.preventDefault(); // prevent the space character from being added
+                    let text = $input.val().trim();
+                    if(text){
+                        if(!tags.includes(text)){
+                            tags.push(text);
+                            addBadge(text);
+                        }
+                        $input.val(''); // clear the input field
+                        updateHidden();
+                        $suggestions.empty();
+                    }
+                }
+                // If input is empty and Backspace is pressed, remove the last badge
+                else if(e.key === 'Backspace'){
+                    if(!$input.val()){
+                        if(tags.length > 0){
+                            tags.pop();
+                            $container.find('.tag-badge').last().remove();
+                            updateHidden();
+                        }
+                    }
+                }
+            });
+
+            // Listen for keyup to trigger AJAX live search for tags
+            $input.on('keyup', function(e){
+                // Skip if space, backspace, arrow keys or enter because they're handled above
+                if(e.key === ' ' || e.key === 'Backspace' || e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter'){
+                    return;
+                }
+                clearTimeout(typingTimer);
+                let query = $input.val().trim();
+                if(query.length > 1){
+                    typingTimer = setTimeout(function(){
+                        // Adjust the URL/route as needed
+                        $.ajax({
+                            url: "{{ route('tags.search') }}",
+                            method: "GET",
+                            data: { query: query },
+                            success: function(response){
+                                // Expecting response like ['tag1', 'tag2', ...]
+                                showSuggestions(response);
+                            },
+                            error: function(xhr, status, error){
+                                console.error("Tag live search error:", error);
+                                $suggestions.empty();
+                            }
+                        });
+                    }, typingDelay);
+                }
+                else{
+                    $suggestions.empty();
+                }
+            });
+        });
+    </script>
     <script>
         function updateImageOrder() {
             const orderArray = [];
@@ -261,9 +425,13 @@
                             </div>
                         @enderror
 
+                        <!-- filepath: d:\Projects\mediaroom-reclone\mediaroom\resources\views\admin\products\form.blade.php -->
                         <div class="form-group py-2">
-                            <label for="tags">แท็ก (แยกแต่ละแท็กด้วย space นะ)</label>
-                            <textarea name="tags" class="form-control" placeholder="แท็ก1 แท็ก2 แท็ก3">@if(!empty($tags)){{$tags}}@endif</textarea>
+                            <label for="tags-input">แท็ก</label>
+                            <div id="tags-container" class="form-control position-relative" style="min-height: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
+                                <input id="tag-input" type="text" class="bg-transparent" style="border: none; outline: none; flex: 1;" placeholder="พิมพ์แท็กแล้วกด space">
+                            </div>
+                            <input type="hidden" name="tags" id="tags-hidden">
                         </div>
 
                         {{-- fill empty space --}}

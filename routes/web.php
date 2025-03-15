@@ -8,6 +8,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TagsController;
 
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,8 @@ Route::fallback(function () {return "404 not found"; });
 
 Route::get('/search/live', [SearchController::class, 'live'])->name('search.live');
 Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+Route::get('/tags/search', [TagsController::class, 'search'])->name('tags.search');
 
 Route::get('/product/{id}', [ShopController::class, 'product'])->name('product');
 
