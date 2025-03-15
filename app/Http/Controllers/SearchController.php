@@ -70,8 +70,12 @@ class SearchController extends Controller
             ['path' => request()->url()]
             );
             if (!empty($products)) {
-            $products->appends(['keyword' => $keyword]);
+            $products->appends(request()->query());
             }
+        } else {
+            $products = Product::where('isPublish', true)
+                ->paginate(16)
+                ->appends(request()->query());
         }
 
         return view('shop.search', [

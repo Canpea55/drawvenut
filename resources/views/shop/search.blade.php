@@ -142,7 +142,11 @@
 @endsection
 
 @section('content')
-<h2 class="mx-3 py-1">ค้นหา '{{$keyword}}'</h2>
+@if($keyword == '')
+    <h2 class="mx-3 py-1">สินค้าทั้งหมด</h2>
+@else
+    <h2 class="mx-3 py-1">ค้นหา '{{$keyword}}'</h2>
+@endif
 @if (count($products) > 0)
 <div class="album py-4">
     <div class="container">

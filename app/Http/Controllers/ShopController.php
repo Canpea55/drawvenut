@@ -10,7 +10,10 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $products = Product::orderByDesc('id')->where('isPublish', true)->paginate(9);
+        $products = Product::orderByDesc('id')
+        ->where('isPublish', true)
+        ->take(9)
+        ->get();
         return view('shop.index',compact('products'));
     }
 

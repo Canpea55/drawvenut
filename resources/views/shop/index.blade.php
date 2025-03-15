@@ -212,7 +212,10 @@
                 </div>
             </div>
         </div>
-        {{ $products->links() }}
+        <div class="text text-center">
+            <a href="{{route('search', ['keyword' => ''])}}" class="btn btn-lg btn-primary w-100">หาสินค้าหรือจ๊ะ?</a>
+        </div>
+        {{-- To search and all product --}}
     @else
         <div class="text text-center">ไม่มีสินค้าจะขายแล้วจ้า</div>
     @endif
