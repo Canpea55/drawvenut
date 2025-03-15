@@ -2,25 +2,22 @@
 
 @section('style')
     .no-underline {
-    text-decoration: none;
+        text-decoration: none;
     }
-
     .product-menu {
-    overflow-y: scroll;
+        overflow-y: scroll;
     }
-
     /* hover animation */
     .anim {
         transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease, background-color 0.3s ease;
         opacity: 0.8;
     }
     .anim:hover {
-        transform: translateY(-2px); /* Moves card up slightly */
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Adds shadow */
+        transform: translateY(-2px);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
         background-color: #D09CC7; 
         opacity: 1;
     }
-
     .selected {
     }    
 @endsection
@@ -30,21 +27,37 @@
         function setIframe(x) {
             const oldSelected = document.getElementsByClassName("selected");
             try {
-                for(let i = 0; i < oldSelected.length; i++) {
+                for (let i = 0; i < oldSelected.length; i++) {
                     oldSelected[i].style.backgroundColor = '';
                     oldSelected[i].classList.remove("selected");
                 }
-            }
-            catch(err) {
-            }
-
+            } catch(err) {}
             const selected = document.getElementById(x.toString());
             selected.style.backgroundColor = '#D09CC7';
             selected.classList.add("selected");
-
             const contentframe = document.getElementById("contentframe");
             contentframe.src = '/library/product/' + x;
         }
+
+        $(document).ready(function(){
+            $('#search-input').on('input', function(){
+                const query = $(this).val().toLowerCase().trim();
+                console.log('Search query:', query);
+
+                // Select all product items and filter them
+                $('.product-menu .list-group-item').each(function(){
+                    const $item = $(this);
+                    const productName = $item.find('.flex-grow-1 h6').text().toLowerCase();
+                    console.log('Product:', productName, 'Contains query:', productName.includes(query));
+                    
+                    if (query === '' || productName.includes(query)) {
+                        $item.css('display', '');  // Show the item
+                    } else {
+                        $item.css('display', 'none');  // Hide the item
+                    }
+                });
+            });
+        });
     </script>
 @endsection
 
@@ -57,10 +70,12 @@
         <!-- This div is visible on large screens (PC) but hidden on small screens (phones) -->
         <div class="d-none d-md-block">
             <div class="row g-4">
-                <div class="col-md-5 col-lg-4">
+                <div class="col-md-5 col-lg-4 ">
                     <ul class="list-group product-menu" style="height: 80%">
+                        <!-- Search bar for filtering product list -->
+                        <input type="text" id="search-input" class="form-control mb-3" placeholder="ค้นหาของในคลัง...">
                         @foreach($products as $item)
-                            <a id="{{$item->id}}" class="list-group-item d-flex align-items-center justify-content-between lh-sm anim no-underline stretched-link" href="#" onclick="setIframe({{$item->id}});return false;">
+                            <a id="{{$item->id}}" class="list-group-item anim no-underline stretched-link" href="#" onclick="setIframe({{$item->id}});return false;">
                                 <div class="d-flex align-items-center gap-3">
                                     <!-- Image Section -->
                                     @php
@@ -72,12 +87,12 @@
                                     @endphp
                                     @if($defaultImage)
                                         <img src="{{Storage::url($defaultImage)}}" alt="thumbnail"
-                                            class="rounded flex-shrink-0 card"
-                                            style="width: 50px; height: 50px; object-fit: cover;">
+                                             class="rounded flex-shrink-0 card"
+                                             style="width: 50px; height: 50px; object-fit: cover;">
                                     @else
                                         <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
-                                            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                                            preserveAspectRatio="xMidYMid slice" focusable="false">
+                                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                                             preserveAspectRatio="xMidYMid slice" focusable="false">
                                             <rect width="100%" height="100%" fill="#D09CC7" />
                                         </svg>
                                     @endif
@@ -91,9 +106,9 @@
                 </div>
 
                 <div class="col-md-7 col-lg-8">
-                    {{-- product data like in product page from shop --}}
+                    {{-- product data as an iframe --}}
                     <iframe id="contentframe" src="{{route('library.product.info', $products[0]->id)}}" width="100%"
-                    height="1000vh" style="border: none;"></iframe>
+                            height="1000vh" style="border: none;"></iframe>
                 </div>
             </div>
         </div>
