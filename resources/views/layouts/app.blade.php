@@ -377,6 +377,7 @@ $(document).ready(function () {
 <script>
     let currentIndex = 1;
     const totalPlaceholders = 3;
+    const $resultsList = $("#search-results");
     const input = document.querySelector('input[type="search"]');
     let intervalId;
 
@@ -402,9 +403,9 @@ $(document).ready(function () {
 
     // Restart on blur
     input.addEventListener('blur', () => {
-        if (!input.value) {
-            startPlaceholderCycle();
-        }
+        input.value = '';
+        startPlaceholderCycle();
+        $resultsList.empty();
     });
 </script>
 
