@@ -108,7 +108,7 @@
                 <div class="position-absolute top-50 start-50 translate-middle">
                     <div class="d-flex align-items-center gap-2 ms-1 align-middle d-none d-md-block position-relative" style="min-width: 30vw">
                         <form action="{{ route('search') }}" method="GET" class="w-100">
-                            <input class="form-control bg-primary-subtle text-primary-emphasis text-center" 
+                            <input class="form-control text-center" 
                                 placeholder="" 
                                 type="search" 
                                 id="live-search"
@@ -326,7 +326,7 @@ $(document).ready(function () {
                         if (data.products && data.products.length > 0) {
                             $.each(data.products, function (i, product) {
                                 results += `
-                                    <a href="/product/${product.id}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
+                                    <a href="/product/${product.id}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                                         ${product.image ? `<img src="${product.image}" alt="${product.name}" class="rounded flex-shrink-0 border" style="width: 50px; height: 100%; object-fit: cover;">` : ''}
                                         <div>
                                             <div>${product.name}</div>
@@ -340,7 +340,7 @@ $(document).ready(function () {
                         if (data.tags && data.tags.length > 0) {
                             $.each(data.tags, function (i, tag) {
                                 results += `
-                                    <a href="${tag.url}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
+                                    <a href="${tag.url}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                                         <div>
                                             <div>${tag.name}</div>
                                         </div>
