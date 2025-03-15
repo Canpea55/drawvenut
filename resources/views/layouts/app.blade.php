@@ -2,12 +2,22 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <style type="text/css">
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    #app {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
     header {
         position: relative;
         z-index: 1;
     }
     main {
         position: relative;
+        flex: 1;
         min-height: 80vh;
         z-index: 0;
     }
