@@ -9,16 +9,18 @@
     }
     /* hover animation */
     .anim {
-        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease, background-color 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease, background-color 0.3s ease, color 0.3s ease;
         opacity: 0.8;
     }
     .anim:hover {
         transform: translateY(-2px);
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
         background-color: #D09CC7; 
+        color: white;
         opacity: 1;
     }
     .selected {
+        
     }    
 @endsection
 
@@ -29,11 +31,13 @@
             try {
                 for (let i = 0; i < oldSelected.length; i++) {
                     oldSelected[i].style.backgroundColor = '';
+                    oldSelected[i].style.color = '';
                     oldSelected[i].classList.remove("selected");
                 }
             } catch(err) {}
             const selected = document.getElementById(x.toString());
             selected.style.backgroundColor = '#D09CC7';
+            selected.style.color = '#fff';
             selected.classList.add("selected");
             const contentframe = document.getElementById("contentframe");
             contentframe.src = '/library/product/' + x;
