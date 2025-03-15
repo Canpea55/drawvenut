@@ -139,74 +139,128 @@
             });
         });
     </script>
+    <script>
+        const initKeyword = '{{$keyword}}';
+        if(initKeyword){
+            document.getElementById('live-search').value = '{{$keyword}}';
+        } else {
+            document.getElementById('live-search').value = 'สินค้าทั้งหมดในร้าน';
+        }
+    </script>
 @endsection
 
 @section('content')
-@if($keyword == '')
-    <h2 class="mx-3 py-1">สินค้าทั้งหมด</h2>
-@else
-    <h2 class="mx-3 py-1">ค้นหา '{{$keyword}}'</h2>
-@endif
-@if (count($products) > 0)
-<div class="album py-4">
-    <div class="container">
-        <div class="grid row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-            @foreach ($products as $item)
-                <div class="col grid-item">
-                    <div class="card shadow-sm">
-                        @auth
-                        <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
-                            <div class="btn-group gap-1">
-                                    @if (Auth::user()->isAdmin)
-                                        <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
-                                            <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
-                                        </a>
-                                    @endif
-                                    <form method="POST" action="{{route('favorite')}}" enctype="multipart/form-data">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{$item->id}}">
-                                        <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
-                                            @if (isFavorited($item->id))
-                                                <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
-                                            @else
-                                                <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
+<div class="row g-3 my-3">
+    <div class="col-6 col-md-3 d-none d-md-block">
+        <p class="text-primary-emphasis ">📚 กลุ่มสาระการเรียนรู้</p>
+        <div>
+            <ul class="list-group">
+                <a href="{{route('search', ['keyword' => 'คณิต'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                    <div class="display-6">🔢</div>
+                    <div>คณิตศาสตร์</div>
+                </a>
+                <a href="{{route('search', ['keyword' => 'วิทย์'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                    <div class="display-6">🧪</div>
+                    <div>วิทยาศาสตร์และเทคโนโลยี</div>
+                </a>
+                <a href="{{route('search', ['keyword' => 'ไทย'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                    <div class="display-6">🐘</div>
+                    <div>ภาษาไทย</div>
+                </a>
+                <a href="{{route('search', ['keyword' => 'ภาษาต่างประเทศ'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                    <div class="display-6">🌎</div>
+                    <div>ภาษาต่างประเทศ</div>
+                </a>
+                <a href="{{route('search', ['keyword' => 'สังคม'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                    <div class="display-6">👨‍👨‍👧‍👦</div>
+                    <div>สังคมศึกษา ศาสนาและวัฒนธรรม</div>
+                </a>
+                <a href="{{route('search', ['keyword' => 'สุขศึกษา'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                    <div class="display-6">⚽</div>
+                    <div>สุขศึกษา พลศึกษา</div>
+                </a>
+                <a href="{{route('search', ['keyword' => 'ศิลปะ'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                    <div class="display-6">🎨</div>
+                    <div>ศิลปศึกษา</div>
+                </a>
+                <a href="{{route('search', ['keyword' => 'การงาน'])}}" class="anim list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-1">
+                    <div class="display-6">💼</div>
+                    <div>การงานอาชีพ</div>
+                </a>
+            </ul>  
+        </div>      
+    </div>
+    @if (count($products) > 0)
+        <div class="album col-12 col-md-9">
+            <div class="container">
+                <div class="grid row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3">
+                    @foreach ($products as $item)
+                        <div class="col grid-item">
+                            <div class="card shadow-sm">
+                                @auth
+                                <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
+                                    <div class="btn-group gap-1">
+                                            @if (Auth::user()->isAdmin)
+                                                <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
+                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
+                                                </a>
                                             @endif
-                                        </button>
-                                    </form>
+                                            <form method="POST" action="{{route('favorite')}}" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{$item->id}}">
+                                                <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
+                                                    @if (isFavorited($item->id))
+                                                        <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
+                                                    @else
+                                                        <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
+                                                    @endif
+                                                </button>
+                                            </form>
+                                    </div>
+                                </div>
+                                @endauth
+                                <a class="no-underline" href="{{route('product', $item->id) }}" >
+                                    @php
+                                        $images = json_decode($item->images, true);
+                                        $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
+                                    @endphp
+                                    @if($image)
+                                        <img src="{{ Storage::url($image) }}" alt="{{$item->name}}" class="card-img-top"
+                                            style="width: 100%; min-height: 225px; max-height: 400px; object-fit: contain;">
+                                    @else
+                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+                                            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                                            preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            <title>no image</title>
+                                            <rect width="100%" height="100%" fill="#D09CC7" />
+                                        </svg>
+                                    @endif
+                                    <div class="card-body" >
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="d-flex text-primary-emphasis align-items-center" style="width: 85%">{{ $item->name }}</strong>
+                                            <strong class="text-success flex-shrink-0 m-0">{{ $item->price }} ฿</strong>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-                        @endauth
-                        <a class="no-underline" href="{{route('product', $item->id) }}" >
-                            @php
-                                $images = json_decode($item->images, true);
-                                $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
-                            @endphp
-                            @if($image)
-                                <img src="{{ Storage::url($image) }}" alt="{{$item->name}}" class="card-img-top"
-                                    style="width: 100%; min-height: 225px; max-height: 400px; object-fit: contain;">
-                            @else
-                                <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
-                                    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                                    preserveAspectRatio="xMidYMid slice" focusable="false">
-                                    <title>no image</title>
-                                    <rect width="100%" height="100%" fill="#D09CC7" />
-                                </svg>
-                            @endif
-                            <div class="card-body" >
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <strong class="d-flex text-primary-emphasis align-items-center" style="width: 85%">{{ $item->name }}</strong>
-                                    <strong class="text-success flex-shrink-0 m-0">{{ $item->price }} ฿</strong>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                    @endforeach
                 </div>
-            @endforeach
+            </div>
         </div>
+    <div class="d-flex justify-content-center">
+        {{ $products->links() }}
     </div>
+    @else
+    <div class="album col-12 col-md-9 d-flex justify-content-center align-items-center">
+        <figure class="text-center">
+            <blockquote class="blockquote">
+              <p>ไม่พบเจอสินค้าใดๆที่ท่านได้ค้นหา</p>
+            </blockquote>
+            <figcaption>
+               <p><small>ขออภัยในความไม่สะดวกนะคะ</small></p>
+            </figcaption>
+          </figure>
+    @endif
 </div>
-{{ $products->links() }}
-@else
-<div class="text text-center">ไม่พบสิ่งที่ค้นหาค่ะ</div>
-@endif
 @endsection
