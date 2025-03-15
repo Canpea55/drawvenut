@@ -225,13 +225,7 @@
             <div class="container my-3 d-flex justify-content-between">                
                 <div class="d-flex align-items-center gap-2 ms-1 align-middle">
                     @auth
-                        <a class="opBtn no-underline px-2 py-1" href="{{route("orders")}}" title="คำสั่งซื้อของฉัน">
-                            <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="ordericon" width="24">
-                        </a>
                         @if (Auth::user()->isAdmin)
-                            <div class="d-flex" style="height: 100%;">
-                                <div class="vr"></div>
-                            </div>
                             <a class="opBtn no-underline px-2 py-1" href="{{route("order.manage")}}" title="จัดการออร์เดอร์">
                                 <img src="{{ asset('icons/oval-interface/square-sticker.svg') }}" alt="ordermangeicon" width="24">
                             </a>
