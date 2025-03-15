@@ -271,62 +271,107 @@
 @yield('foot-script')
 
 <script>
-    $(document).ready(function () {
-        let typingTimer; // Timer identifier
-        const typingDelay = 250;
-        
-        $('#live-search').on('keyup blur', function () {
-            clearTimeout(typingTimer);
-            const $input = $(this);
-            typingTimer = setTimeout(function() {
-                console.log('User stopped typing, execute search.');
-                var results = '';
-                var query = $input.val();
-                if (query.length > 0) {
-                    $.ajax({
-                        url: "{{ route('search.live') }}",
-                        method: "GET",
-                        data: { query: query },
-                        success: function (data) {
-                            if(data.products || data.tags) {
-                                if (data.products.length > 0) {
-                                    $.each(data.products, function (i, product) {
-                                        results += `
-                                            <a href="/product/${product.id}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
-                                                ${product.image ? `<img src="${product.image}" alt="${product.name}" class="rounded flex-shrink-0 border border-primary" style="width: 50px; height: 100%; object-fit: cover;">` : ''}
-                                                <div >
-                                                    <div>${product.name}</div>
-                                                    <small class="text-success">฿${product.price}</small>
-                                                </div>
-                                            </a>
-                                        `;
-                                    });
-                                }
-                                // Process tag results after products
-                                if (data.tags.length > 0) {
-                                    $.each(data.tags, function (i, tag) {
-                                        results += `
-                                            <a href="${tag.url}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
-                                                <div>
-                                                    <div>${tag.name}</div>
-                                                </div>
-                                            </a>
-                                        `;
-                                    });
-                                }
-                                $('#search-results').html(results);
-                            } else {
-                                results = '<li class="list-group-item text-muted list-group-item-dark">ไม่พบเจอผลการค้นหาใดๆ</li>';
-                                $('#search-results').html(results);
-                            }
-                        }
-                    });
-                } else {
-                    $('#search-results').empty();
-                }
-            }, typingDelay);
-        });        
+$(document).ready(function () {
+    let activeIndex = -1;
+    let typingTimer;
+    const typingDelay = 250;
+    const $input = $("#live-search");
+    const $resultsList = $("#search-results");
+
+    // Handle keydown for navigation
+    $input.on("keydown", function(e){
+        let $results = $resultsList.find("a");
+        let resultsCount = $results.length;
+
+        if(e.key === "ArrowDown"){
+            e.preventDefault();
+            if(resultsCount > 0){
+                activeIndex = (activeIndex + 1) % resultsCount;
+                $results.removeClass("active");
+                $results.eq(activeIndex).addClass("active");
+            }
+        }
+        else if(e.key === "ArrowUp"){
+            e.preventDefault();
+            if(resultsCount > 0){
+                activeIndex = activeIndex <= 0 ? resultsCount - 1 : activeIndex - 1;
+                $results.removeClass("active");
+                $results.eq(activeIndex).addClass("active");
+            }
+        }
+        else if(e.key === "Enter"){
+            let $activeItem = $results.filter(".active");
+            if($activeItem.length){
+                e.preventDefault();
+                window.location.href = $activeItem.attr("href");
+            }
+        }
+        // Do not reset activeIndex here; let it persist so that the AJAX callback can reapply it.
     });
+
+    // Handle keyup/blur to trigger live search
+    $input.on("keyup blur", function () {
+        clearTimeout(typingTimer);
+        let query = $input.val().trim();
+
+        typingTimer = setTimeout(function(){
+            if(query.length > 0){
+                $.ajax({
+                    url: "{{ route('search.live') }}",
+                    method: "GET",
+                    data: { query: query },
+                    success: function (data) {
+                        let results = '';
+                        // Build product suggestions if present
+                        if (data.products && data.products.length > 0) {
+                            $.each(data.products, function (i, product) {
+                                results += `
+                                    <a href="/product/${product.id}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
+                                        ${product.image ? `<img src="${product.image}" alt="${product.name}" class="rounded flex-shrink-0 border" style="width: 50px; height: 100%; object-fit: cover;">` : ''}
+                                        <div>
+                                            <div>${product.name}</div>
+                                            <small class="text-success">฿${product.price}</small>
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                        }
+                        // Append tag suggestions if present
+                        if (data.tags && data.tags.length > 0) {
+                            $.each(data.tags, function (i, tag) {
+                                results += `
+                                    <a href="${tag.url}" class="list-group-item list-group-item-action list-group-item-primary d-flex align-items-center gap-2">
+                                        <div>
+                                            <div>${tag.name}</div>
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                        }
+
+                        // Update results list
+                        $resultsList.html(results);
+
+                        // If activeIndex is still valid, reapply the active class
+                        let $newResults = $resultsList.find("a");
+                        if(activeIndex >= 0 && activeIndex < $newResults.length) {
+                            $newResults.removeClass("active");
+                            $newResults.eq(activeIndex).addClass("active");
+                        } else {
+                            activeIndex = -1; // Reset if no valid selection exists
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        console.error("Live search error:", error);
+                        $resultsList.empty();
+                    }
+                });
+            } else {
+                $resultsList.empty();
+            }
+        }, typingDelay);
+    });
+});
 </script>
 
 <script>
