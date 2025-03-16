@@ -66,12 +66,18 @@ class LibraryController extends Controller
         $exist = Favorite::where(['user_id' => $user_id, 'product_id' => $product_id])->first();
         if($exist) {
             $exist->delete();
+            if($request->ajax()){
+                return response()->json(['favorite' => 'removed']);
+            }
             return redirect()->back()->with('favorite', 'removed');
         } else {
             Favorite::create([
                 'user_id' => $user_id,
                 'product_id' => $product_id,
             ]);
+            if($request->ajax()){
+                return response()->json(['favorite' => 'added']);
+            }
             return redirect()->back()->with('favorite', 'added');
         }
     }

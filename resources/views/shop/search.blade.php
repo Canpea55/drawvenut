@@ -139,12 +139,73 @@
             });
         });
     </script>
+    
     <script>
         const initKeyword = '{{$keyword}}';
         if(initKeyword){
             document.getElementById('live-search').value = '{{$keyword}}';
         } else {
             document.getElementById('live-search').value = 'สินค้าทั้งหมดในร้าน';
+        }
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $('.favorite-form').on('submit', function(e){
+                e.preventDefault();
+                var form = $(this);
+                var btnImage = form.find('img');
+                $.ajax({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    success: function(response){
+                        if(response.favorite === 'removed'){
+                            updateFavoritesCount(-1);
+                            btnImage.attr('src', '{{ asset("icons/oval-interface/heart.svg") }}');
+                        } else if(response.favorite === 'added'){
+                            updateFavoritesCount(1);
+                            btnImage.attr('src', '{{ asset("icons/oval-interface/heart-filled.svg") }}');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        console.error("Error in favorite toggle:", errorThrown);
+                    }
+                });
+            });
+            updateFavoritesCount(0);
+        });
+
+        var $countEl = $('#favorites-count');
+        var $countMobileEl = $('#favorites-count-mobile');
+        var $favoritesLink = $('#favorites-link');
+        const $currentCount = $countEl.length ? parseInt($countEl.text().replace(/[^\d]/g, '')) || 0 : 0;
+        var $newCount = $currentCount;
+
+        // Function to update the favorites count and toggle the favorites button visibility
+        function updateFavoritesCount(delta) {            
+            $newCount += delta;
+            if ($countEl.length || $countMobileEl.length) {                
+                if($newCount > 0){
+                    // Update the count for desktop view if it exists
+                    if ($countEl.length) {
+                        $countEl.text('สิ่งที่ถูกใจ (' + $newCount + ')');
+                    }
+                    // Update the mobile view count if exists
+                    if($countMobileEl.length) {
+                        $countMobileEl.text($newCount);
+                    }
+                    // Make sure the favorites button is visible if it exists
+                    if ($favoritesLink.length) {
+                        $favoritesLink.fadeIn(300);
+                    }
+                } else {
+                    // If count is 0 or lower, hide the favorites button if it exists
+                    if ($favoritesLink.length) {
+                        $favoritesLink.fadeOut(300);
+                    }
+                }
+            }
         }
     </script>
 @endsection
@@ -200,22 +261,28 @@
                                 @auth
                                 <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
                                     <div class="btn-group gap-1">
-                                            @if (Auth::user()->isAdmin)
-                                                <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
-                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
-                                                </a>
-                                            @endif
-                                            <form method="POST" action="{{route('favorite')}}" enctype="multipart/form-data">
-                                                @csrf
-                                                <input type="hidden" name="product_id" value="{{$item->id}}">
-                                                <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
-                                                    @if (isFavorited($item->id))
-                                                        <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
-                                                    @else
-                                                        <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
-                                                    @endif
-                                                </button>
-                                            </form>
+                                        @auth
+                                        <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
+                                            <div class="btn-group gap-1">
+                                                @if (Auth::user()->isAdmin)
+                                                    <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
+                                                        <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
+                                                    </a>
+                                                @endif
+                                                <form method="POST" action="{{ route('favorite') }}" class="favorite-form">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $item->id }}">
+                                                    <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
+                                                        @if (isFavorited($item->id))
+                                                            <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
+                                                        @else
+                                                            <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
+                                                        @endif
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        @endauth
                                     </div>
                                 </div>
                                 @endauth

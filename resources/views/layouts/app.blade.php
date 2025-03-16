@@ -79,7 +79,7 @@
     /* btn */
     .opBtn {
         transition: transform 0.3s ease, opacity 0.5s ease;
-        opacity: 0.5;
+        opacity: 1;
         will-change: transform, opacity, box-shadow;
     }
     .opBtn:hover {
