@@ -39,7 +39,5 @@ tinymce.init({
     image_class_list: [
         { title: 'Responsive', value: 'img-fluid' }
     ],
-});
-// .. After imports init TinyMCE ..
-window.addEventListener('DOMContentLoaded', () => {
+    license_key: 'gpl',
 });
