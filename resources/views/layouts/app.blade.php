@@ -427,6 +427,7 @@ $(document).ready(function () {
     input.addEventListener('focus', () => {
         clearInterval(intervalId);
         input.placeholder = '';
+        input.value = '';
     });
 
     // Restart on blur
