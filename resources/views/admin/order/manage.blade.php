@@ -167,10 +167,10 @@
     <div class="pt-4">
         <h1 class="text-info-emphasis">รอตรวจสอบ</h1>
     </div>
-        <div class="grid row row-cols-1 row-cols-md-3 g-3">
+        <div class="grid row row-cols-1 row-cols-md-2 row-cols-lg-3">
             @if ($submitted->isNotEmpty() || $canceling->isNotEmpty())
                 @foreach ($submitted as $item)
-                <div class="grid-item col-md-4" onmouseover="updateReason({{$item->id}})">
+                <div class="grid-item col-md-6" onmouseover="updateReason({{$item->id}})">
                     <div class="animU row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
                                 <a class="no-underline" href="{{route('order', [$item->id])}}">
