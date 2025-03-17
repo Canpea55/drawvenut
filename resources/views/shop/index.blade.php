@@ -124,22 +124,6 @@
 @endsection
 
 @section('foot-script')
-    <script type="module">
-        $(document).ready(function() {
-            var $grid = $('.grid').masonry({
-                itemSelector: '.grid-item',
-            });
-
-            // Layout Masonry after each image loads
-            $('.grid img').each(function() {
-                var $img = $(this);
-                imagesLoaded($img[0], function() {
-                    $grid.masonry('layout');
-                });
-            });
-        });
-    </script>
-
     <script>
         var $countEl;
         var $countMobileEl;

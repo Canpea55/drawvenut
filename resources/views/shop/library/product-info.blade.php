@@ -71,14 +71,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    
     <!-- title -->
     <title>@yield('title') - {{ config('app.name') }}</title>
-
+    
     <!-- Styles -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link href="{{ asset('css/common.css') }}" rel="stylesheet">
     <link href="{{ asset('css/voxybun-toggle.css') }}" rel="stylesheet">
     @vite('resources/sass/app.scss')
@@ -188,5 +189,3 @@
         });
     </script>
 </body>
-
-@vite(['resources/sass/app.scss', 'resources/js/app.js'])

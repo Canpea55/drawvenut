@@ -113,10 +113,10 @@
     <link href="{{ asset('css/common.css') }}" rel="stylesheet">
     <link href="{{ asset('css/voxybun-toggle.css') }}" rel="stylesheet">
     @vite('resources/sass/app.scss')
-    @vite('resources/js/app.js')
-
+    
     <!-- Head Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    @vite('resources/js/app.js')
     @yield('head-script')
 </head>
 

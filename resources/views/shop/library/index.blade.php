@@ -175,7 +175,6 @@
                 </div>
 
                 <div class="col-md-7 col-lg-8">
-                    {{-- product data as an iframe --}}
                     <iframe id="contentframe" src="{{route('library.product.info', $products[0]->id)}}" width="100%"
                             height="1000vh" style="border: none;"></iframe>
                 </div>

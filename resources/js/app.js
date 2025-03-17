@@ -1,5 +1,6 @@
 import './bootstrap';
 import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;
 
 import jQuery from 'jquery';
 window.$ = window.jQuery = jQuery;
@@ -8,6 +9,7 @@ import jQueryBridget from 'jquery-bridget';
 
 import imagesLoaded from 'imagesloaded';
 window.imagesLoaded = imagesLoaded;
+import './imagesloaded';
 
 import Masonry from 'masonry-layout';
 jQueryBridget( 'masonry', Masonry, $ );

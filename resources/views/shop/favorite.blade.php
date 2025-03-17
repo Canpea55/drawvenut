@@ -125,8 +125,9 @@
 
 @section('foot-script')
     <script type="module">
+        var $grid;
         $(document).ready(function() {
-            var $grid = $('.grid').masonry({
+            $grid = $('.grid').masonry({
                 itemSelector: '.grid-item',
             });
 
@@ -138,20 +139,8 @@
                 });
             });
         });
-    </script>
-    <script>
-        var currentCount;
-        var $countEl;
-        var $countMobileEl;
-        var $favoritesLink;
-        var newCount;
-        $(document).ready(function(){
-            $countEl = $('#favorites-count');
-            $countMobileEl = $('#favorites-count-mobile');
-            $favoritesLink = $('#favorites-link');
-            currentCount = parseInt($countEl.text().replace(/[^\d]/g, '')) || 0;
-            newCount = currentCount;
 
+        $(document).ready(function(){
             $('.favorite-form').on('submit', function(e){
                 e.preventDefault();
                 var form = $(this);
@@ -164,10 +153,8 @@
                         if(response.favorite === 'removed'){
                             updateFavoritesCount(-1);
                             btnImage.attr('src', '{{ asset("icons/oval-interface/heart.svg") }}');
-                            form.closest('.grid-item').fadeOut(300, function(){
-                                $(this).remove();
-                                $('.grid').masonry('layout');
-                            });
+                            var $item = form.closest('.grid-item');
+                            $grid.masonry('remove', $item).masonry('layout');
                         } else if(response.favorite === 'added'){
                             updateFavoritesCount(1);
                             btnImage.attr('src', '{{ asset("icons/oval-interface/heart-filled.svg") }}');
@@ -178,34 +165,43 @@
                     }
                 });
             });
-
             updateFavoritesCount(0);
         });
 
         // Separate script to update favorites count
         function updateFavoritesCount(delta) {
             if($countEl.length) {
-                // Assume text is in format "(3)" and extract the number
                 newCount += delta;
                 if(newCount > 0) {
-                    // Update the count for desktop view if it exists
                     if ($countEl.length) {
                         $countEl.text('สิ่งที่ถูกใจ (' + newCount + ')');
                     }
-                    // Update the mobile view count if exists
                     if($countMobileEl.length) {
                         $countMobileEl.text(newCount);
                     }
-                    // Make sure the favorites button is visible if it exists
                     if ($favoritesLink.length) {
                         $favoritesLink.fadeIn(300);
                     }
                 } else {
-                    // If count is 0 or lower, hide the favorites button altogether
                     $favoritesLink.fadeOut(300);
                 }
             }
         }
+    </script>
+
+    <script>
+        var currentCount;
+        var $countEl;
+        var $countMobileEl;
+        var $favoritesLink;
+        var newCount;
+        $(document).ready(function(){
+            $countEl = $('#favorites-count');
+            $countMobileEl = $('#favorites-count-mobile');
+            $favoritesLink = $('#favorites-link');
+            currentCount = parseInt($countEl.text().replace(/[^\d]/g, '')) || 0;
+            newCount = currentCount;
+        });
     </script>
 @endsection
 
