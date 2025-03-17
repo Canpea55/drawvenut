@@ -103,13 +103,36 @@
                     @endphp
                     <h2 class="fw-light">{{ $product->name }}</h2>
                     <h1 class="fw-semibold text-success">{{ $pricetag }}</h1>
+                    <div id="tags-container" class="d-flex flex-wrap gap-1 my-2">
+                        @if($product->tags && $product->tags->count() > 0)
+                            @foreach($product->tags as $tag)
+                                <h5>
+                                    <a href="{{ route('search', ['keyword' => $tag->name]) }}" class="badge btn btn-primary btn-sm">
+                                        {{ $tag->name }}
+                                    </a>
+                                </h5>
+                            @endforeach
+                        @endif
+                    </div>
                     <div class="flex-grow-1"></div>
-                    <div class="d-flex gap-2">
+                    <div id="button-container" class="">
                         @if ($owned)
                             @if ($product->isDownloadable)
-                                <a class="btn btn-success btn-lg " href="{{ $product->download }}" download>ดาวน์โหลด</a>
+                                <div class="btn-group">
+                                    <a class="btn btn-success btn-lg w-100" href="{{ $product->download }}" download>ดาวน์โหลด</a>
+                                    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">A</a></li>
+                                        <li><a class="dropdown-item" href="#">B</a></li>
+                                        <li><a class="dropdown-item" href="#">C</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">D</a></li>
+                                    </ul>
+                                </div>
                             @else
-                                <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถดาวน์โหลดได้ค่ะ">ดาวน์โหลด</a>
+                                <a class="btn btn-success btn-lg disabled w-100" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถดาวน์โหลดได้ค่ะ">ดาวน์โหลด</a>
                             @endif
                         @else
                             @if ($product->price <= 0) 

@@ -328,6 +328,17 @@
                                             <strong class="d-flex text-primary-emphasis align-items-center" style="width: 85%">{{ $item->name }}</strong>
                                             <strong class="text-success flex-shrink-0 m-0">{{ $item->price }} ฿</strong>
                                         </div>
+                                        <div id="tags-container" class="d-flex flex-wrap mt-2">
+                                            @if($item->tags && $item->tags->count() > 0)
+                                                @foreach($item->tags as $tag)
+                                                    <h6 class="me-1">
+                                                        <a href="{{ route('search', ['keyword' => $tag->name]) }}" class="badge btn btn-primary btn-sm">
+                                                            {{ $tag->name }}
+                                                        </a>
+                                                    </h6>
+                                                @endforeach
+                                            @endif
+                                        </div>
                                     </div>
                                 </a>
                             </div>

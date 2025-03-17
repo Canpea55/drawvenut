@@ -26,15 +26,17 @@ class ShopController extends Controller
 
     function product($id)
     {
-        $product = Product::find($id);
-        $library=Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+        // Eager load tags with the product
+        $product = Product::with('tags')->find($id);
+        $library = Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
         $owned = false;
-        foreach($library as $item) {
-            if($item->product_id == $id) {
+        foreach ($library as $item) {
+            if ($item->product_id == $id) {
                 $owned = true;
+                break;
             }
         }
-        return view('shop.product', compact(['product', 'owned']));
+        return view('shop.product', compact('product', 'owned'));
     }
 
     function inventory()
