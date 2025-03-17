@@ -22,6 +22,11 @@
         z-index: 0;
     }
     footer {
+        position: relative;
+        z-index: -1;
+    }
+
+    .toast-container {
         z-index: 1;
     }
 

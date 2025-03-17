@@ -125,6 +125,12 @@
 
 @section('foot-script')
     <script type="module">
+        var currentCount;
+        var $countEl;
+        var $countMobileEl;
+        var $favoritesLink;
+        var newCount;
+
         var $grid;
         $(document).ready(function() {
             $grid = $('.grid').masonry({
@@ -141,6 +147,12 @@
         });
 
         $(document).ready(function(){
+            $countEl = $('#favorites-count');
+            $countMobileEl = $('#favorites-count-mobile');
+            $favoritesLink = $('#favorites-link');
+            currentCount = parseInt($countEl.text().replace(/[^\d]/g, '')) || 0;
+            newCount = currentCount;
+            
             $('.favorite-form').on('submit', function(e){
                 e.preventDefault();
                 var form = $(this);
@@ -155,6 +167,8 @@
                             btnImage.attr('src', '{{ asset("icons/oval-interface/heart.svg") }}');
                             var $item = form.closest('.grid-item');
                             $grid.masonry('remove', $item).masonry('layout');
+                            console.log('removeFavToast' + productID);
+                            bootstrap.Toast.getOrCreateInstance(document.getElementById('removeFavToast' + productID)).show();
                         } else if(response.favorite === 'added'){
                             updateFavoritesCount(1);
                             btnImage.attr('src', '{{ asset("icons/oval-interface/heart-filled.svg") }}');
@@ -190,18 +204,10 @@
     </script>
 
     <script>
-        var currentCount;
-        var $countEl;
-        var $countMobileEl;
-        var $favoritesLink;
-        var newCount;
-        $(document).ready(function(){
-            $countEl = $('#favorites-count');
-            $countMobileEl = $('#favorites-count-mobile');
-            $favoritesLink = $('#favorites-link');
-            currentCount = parseInt($countEl.text().replace(/[^\d]/g, '')) || 0;
-            newCount = currentCount;
-        });
+        var productID = 0;
+        function setProductID(x){
+            productID = x;
+        }
     </script>
 @endsection
 
@@ -211,6 +217,82 @@
             <h2 class="mx-3 py-1">สินค้าที่ถูกใจไว้</h2>
             <div class="container">
                 <div class="grid row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    <div class="toast-container position-fixed bottom-0 end-0 p-2 d-none d-md-block">
+                        @foreach ($products as $item)
+                            <div id="addFavToast{{$item->id}}" class="toast mb-2 text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header">
+                                    <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" class="rounded me-2" width="20" alt="info">
+                                    <strong class="me-auto">เพิ่มเป็นสิ่งที่ถูกใจแล้ว</strong>
+                                    {{-- <small>11 mins ago</small> --}}
+                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                                <div class="animU toast-body">
+                                    <a class="no-underline" href="{{ route('product', $item->id) }}">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <!-- Image Section -->
+                                            @php
+                                                $images = json_decode($item->images, true);
+                                                $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
+                                            @endphp
+                                            @if($image)
+                                                <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
+                                                    class="rounded flex-shrink-0"
+                                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                            @else
+                                                <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
+                                                    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                                                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                                                    <rect width="100%" height="100%" fill="#D09CC7" />
+                                                </svg>
+                                            @endif
+                                            <!-- Text Section (Takes up remaining space) -->
+                                            <div class="flex-grow-1">
+                                                <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
+                                                <span class="text-body-secondary">฿{{ $item->price }}</span>
+                                            </div>                    
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                        @foreach ($products as $item)
+                            <div id="removeFavToast{{$item->id}}" class="toast mb-2 text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header">
+                                    <img src="{{ asset('icons/oval-interface/heart.svg') }}" class="rounded me-2" width="20" alt="info">
+                                    <strong class="me-auto">ลบจากสิ่งที่ถูกใจแล้ว</strong>
+                                    {{-- <small>11 mins ago</small> --}}
+                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                                <div class="animU toast-body">
+                                    <a class="no-underline" href="{{ route('product', $item->id) }}">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <!-- Image Section -->
+                                            @php
+                                                $images = json_decode($item->images, true);
+                                                $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
+                                            @endphp
+                                            @if($image)
+                                                <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
+                                                    class="rounded flex-shrink-0"
+                                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                            @else
+                                                <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
+                                                    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                                                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                                                    <rect width="100%" height="100%" fill="#D09CC7" />
+                                                </svg>
+                                            @endif
+                                            <!-- Text Section (Takes up remaining space) -->
+                                            <div class="flex-grow-1">
+                                                <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
+                                                <span class="text-body-secondary">฿{{ $item->price }}</span>
+                                            </div>                    
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                     @foreach ($products as $item)
                         <div class="col grid-item">
                             <div class="card shadow-sm">
@@ -222,7 +304,7 @@
                                                 <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
                                             </a>
                                         @endif
-                                        <form method="POST" action="{{ route('favorite') }}" class="favorite-form">
+                                        <form method="POST" action="{{ route('favorite') }}" class="favorite-form" onsubmit="setProductID({{$item->id}});">
                                             @csrf
                                             <input type="hidden" name="product_id" value="{{ $item->id }}">
                                             <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
