@@ -312,6 +312,10 @@
                                 </div>
                                 @endauth
                                 <a class="no-underline" href="{{route('product', $item->id) }}" >
+                                    @php
+                                        $images = json_decode($item->images, true);
+                                        $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
+                                    @endphp
                                     @if($image)
                                         <img src="{{ Storage::url($image) }}" alt="{{$item->name}}" class="card-img-top"
                                             style="width: 100%; min-height: 225px; max-height: 400px; object-fit: contain;">
