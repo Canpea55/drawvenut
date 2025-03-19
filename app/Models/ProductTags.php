@@ -9,7 +9,7 @@ class ProductTags extends Model
 {
     use HasFactory;
 
-    protected $table = 'products_tags';
+    protected $table = 'product_tags';
 
     public function product()
     {

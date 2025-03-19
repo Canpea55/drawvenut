@@ -10,13 +10,15 @@
 
 @section('head-script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    
+    <!-- Preload existing tags -->
     <script>
-        // Preload existing tags. This assumes that $product->tags is a collection.
         // If there are no tags, it defaults to an empty array.
         var preloadedTags = {!! json_encode(!empty($product) ? $product->tags->pluck('name') : []) !!};
     </script>
 @endsection
 @section('foot-script')
+    <!-- tag scripts -->
     <script>
         $(document).ready(function(){
             let tags = preloadedTags || [];
@@ -174,6 +176,8 @@
             });
         });
     </script>
+    
+    <!-- product image scripts -->
     <script>
         function updateImageOrder() {
             const orderArray = [];
@@ -270,6 +274,176 @@
             });
         }
     </script>
+
+    <!-- product option scripts -->
+    <script>
+        // Keep track of dynamically added option and download indexes.
+        var $grid;
+        let optionIndex = 0;
+
+        //update optionIndex if in 
+        $(function() {
+            let maxIndex = Math.max(...$('.product-option').map(function() {
+                return parseInt($(this).data('option-index')) || 0;
+            }).get());
+            optionIndex = isFinite(maxIndex) ? maxIndex : 0;
+        });
+
+        // When adding a new option, append a new block into the #options-container.
+        // Initialize Masonry once after the document loads.
+        $(document).ready(function(){
+                $grid = $('#options-container').masonry({
+                itemSelector: '.grid-item',
+                percentPosition: true,
+            });
+
+            // When adding a new option, create the new item and append it using Masonry’s appended method.
+            $('#add-option').on('click', function(){
+                optionIndex++;
+                const optionHtml = `
+                    <div class="grid-item product-option card shadow-sm col-12 col-md-4" data-option-index="${optionIndex}">
+                        <div class="option-thumbnail-preview p-2" id="option-preview-${optionIndex}"></div>
+                        <div class="p-4 d-flex flex-column position-static">
+                            <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
+                                <div class="btn-group gap-1">
+                                    <button type="button" class="p-0 border-0 bg-transparent remove-option" title="ลบ">
+                                        <img src="{{ asset('icons/oval-interface/close-x.svg') }}" alt="favorite" width="24">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label>ชื่อตัวเลือกสินค้า</label>
+                                <input type="text" name="options[${optionIndex}][name]" class="form-control" placeholder="ชื่อตัวเลือกสินค้า">
+                            </div>
+                            <div class="form-group mb-2">
+                                <div class="form-group py-2">
+                                    <label for="options[${optionIndex}][price]" class="">ราคา</label>
+                                    <div class="input-group">
+                                        <input type="number" name="options[${optionIndex}][price]" class="form-control">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">฿</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label>ภาพตัวเลือก (Thumbnail)</label>
+                                <input type="file" name="options[${optionIndex}][thumbnail]" class="form-control option-thumbnail-input">
+                                <input type="hidden" name="options[${optionIndex}][existingThumbnail]" value="">
+                            </div>
+                            <div class="downloads-container mb-2">
+                                <label>ดาวน์โหลดสำหรับตัวเลือกนี้</label>
+                                <div class="download-items"></div>
+                                <button type="button" class="btn btn-sm btn-secondary add-download" data-option-index="${optionIndex}">เพิ่มลิ้งค์ดาวน์โหลด</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                // Transform the HTML string into a jQuery object.
+                var $optionItem = $(optionHtml);
+                // Append the new item and tell Masonry about it.
+                $grid.append($optionItem).masonry('appended', $optionItem);
+                // Optionally trigger a layout.
+                $grid.masonry('layout');
+            });
+
+            // Delegate add-download click for dynamically added options.
+            $('#options-container').on('click', '.add-download', function(){
+                const optionIdx = $(this).data('option-index');
+                const downloadIdx = $(this).siblings('.download-items').children().length;
+                const downloadHtml = `
+                    <div class="download-item mb-2">
+                        <div class="input-group">
+                            <input type="text" name="options[${optionIdx}][downloads][${downloadIdx}][link]" class="form-control" style="width: 70%;" placeholder="ลิ้งค์ดาวน์โหลด">
+                            <input type="text" name="options[${optionIdx}][downloads][${downloadIdx}][type]" class="form-control" style="width: 30%;" placeholder="ประเภท">
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="options[${optionIdx}][downloads][${downloadIdx}][isDownload]" checked>
+                                <label class="form-check-label">เป็นลิงค์โหลดไฟล์</label>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-danger remove-download mt-1" 
+                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">ลบ</button>
+                        </div>
+                    </div>
+                `;
+                $(this).siblings('.download-items').append(downloadHtml);
+                $grid.masonry('layout');
+            });
+
+            // Delegate remove download field.
+            $('#options-container').on('click', '.remove-download', function(){
+                $(this).closest('.download-item').remove();
+                $grid.masonry('layout');
+            });
+
+            // Remove option block.
+            $('#options-container').on('click', '.remove-option', function(){
+                $(this).closest('.product-option').remove();
+                $grid.masonry('layout');
+            });
+
+            // Now, attach a change handler to all fields of interest
+            // This handler will trigger Masonry's layout whenever a field changes.
+            $(document).on('change keyup', '.option-thumbnail-input, .form-control', function(){
+                $grid.masonry('layout');
+            });
+        });
+    </script>
+
+    <!-- option thumbnail preview -->
+    <script>
+        // Listen for changes on any option thumbnail input.
+        $(document).on('change', '.option-thumbnail-input', function(){
+            const fileInput = this;
+            const $optionDiv = $(fileInput).closest('.product-option');
+            const optionIdx = $optionDiv.data('option-index');
+
+            // Clear the value in the hidden field so the server knows a new file is selected.
+            $optionDiv.find(`input[name="options[${optionIdx}][existingThumbnail]"]`).val('');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Create an image element
+                    const $img = $('<img>', {
+                        src: e.target.result,
+                        alt: "Option Thumbnail",
+                        class: "img-fluid"
+                    });
+                    // Once the image is loaded, trigger Masonry's layout.
+                    $img.on('load', function(){
+                        if(typeof $grid !== 'undefined'){
+                            $grid.masonry('layout');
+                        }
+                    });
+                    // Add the image to the preview container.
+                    $('#option-preview-' + optionIdx).html($img);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+    <!-- submit enablerer -->
+    <script>
+        // Enable submit on any form changes
+        $(document).on('change keyup', '.option-thumbnail-input, .form-control, input[type="checkbox"]', function(){
+            $('input[type="submit"]').prop('disabled', false);
+        });
+
+        // Enable submit when images are removed or reordered
+        $(document).on('click', '.delete-btn, .remove-option', function() {
+            $('input[type="submit"]').prop('disabled', false);
+        });
+
+        document.getElementById('preview-container').addEventListener('dragend', function() {
+            $('input[type="submit"]').prop('disabled', false);
+        });
+    </script>
 @endsection
 
 @section('style')
@@ -336,8 +510,8 @@
         <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
     @endif
         @csrf
-        <!-- Main Product Display -->
-        <section class="flex card mb-2">
+        <!-- Main -->
+        <section class="card mb-2">
             <div class="container p-4">
                 <div class="row">
                     <!-- Left Column: Main Image and Thumbnails -->
@@ -351,7 +525,7 @@
 
                         <div class="form-group mt-2">
                             <label for="images[]" class="form-check-label">ภาพประกอบ</label>
-                            
+
                             <!-- Display existing and new images -->
                             <div id="preview-container" class="flex gap-2 border p-2" style="display: flex; flex-wrap: wrap;">
                                 @if (!empty($product))
@@ -384,7 +558,7 @@
                                 timeoutUpdateImageOrder = setTimeout(updateImageOrder, 100);
                                 timeoutHighlight = setTimeout(highlightThumbnail, 100);"
                             >
-                
+
                             <input type="hidden" name="image_order" id="image_order">
                         </div>
                     </div>
@@ -405,27 +579,7 @@
                                 <span class="text text-danger">{{ $message }}</span>
                             </div>
                         @enderror
-                        
-                        <div class="form-group py-2">
-                            <label for="price" class="">ราคา</label>
-                            <div class="input-group">
-                                @if (!empty($product))
-                                    <input type="number" name="price" class="form-control" value="{{$product->price}}">
-                                @else
-                                    <input type="number" name="price" class="form-control">
-                                @endif
-                                <div class="input-group-append">
-                                    <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">฿</span>
-                                </div>
-                            </div>
-                        </div>
-                        @error('price')
-                            <div class="ms-2 p-2">
-                                <span class="text text-danger">{{ $message }}</span>
-                            </div>
-                        @enderror
 
-                        <!-- filepath: d:\Projects\mediaroom-reclone\mediaroom\resources\views\admin\products\form.blade.php -->
                         <div class="form-group py-2">
                             <label for="tags-input">แท็ก</label>
                             <div id="tags-container" class="form-control position-relative" style="min-height: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
@@ -438,32 +592,6 @@
                         <div class="flex-grow-1"></div>
 
                         <div class="form-group py-2">
-                            <div class="py-2">
-                                <label for="download" class="">ลิ้งค์ดาวห์โหลดสินค้า</label>
-                                @if (!empty($product))
-                                    <input type="text" name="download" class="form-control" value="{{$product->download}}">
-                                @else
-                                    <input type="text" name="download" class="form-control">
-                                @endif
-                            </div>
-                
-                            <div class="py-2">
-                                @if (!empty($product))
-                                    <label class="switch">
-                                        <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
-                                        <span class="slider"></span>
-                                    </label>
-                                @else
-                                    <label class="switch">
-                                        <input class="form-check-input" name="isDownloadable" type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                @endif
-                                <label for="isDownloadable" class="form-check-label align-top">ดาวน์โหลดได้</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group py-2">
                             <div>
                                 @if (!empty($product))
                                     <label class="switch">
@@ -472,7 +600,7 @@
                                     </label>
                                 @else
                                     <label class="switch">
-                                        <input class="form-check-input" name="isBuyable" type="checkbox">
+                                        <input class="form-check-input" name="isBuyable" type="checkbox" checked>
                                         <span class="slider"></span>
                                     </label>
                                 @endif
@@ -486,25 +614,119 @@
                                     </label>
                                 @else
                                     <label class="switch">
-                                        <input class="form-check-input" name="isPublish" type="checkbox">
+                                        <input class="form-check-input" name="isPublish" type="checkbox" checked>
                                         <span class="slider"></span>
                                     </label>
                                 @endif
                                 <label for="isPublish" class="form-check-label align-top">เผยแพร่</label>
                             </div>
                         </div> 
-                        
+
                         @if (!empty($product))
-                            <input type="submit" value="อัพเดตสินค้า" class="btn btn-primary mt-2">
+                            <input type="submit" value="อัพเดตสินค้า" class="btn btn-primary mt-2" disabled>
                         @else
-                            <input type="submit" value="เพิ่มสินค้าใหม่" class="btn btn-primary mt-2">
+                            <input type="submit" value="เพิ่มสินค้าใหม่" class="btn btn-primary mt-2" disabled>
                         @endif
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="flex card p-4">
+        <!-- Options and Downloads -->
+        <section class="card mb-2 p-4">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="">ตัวเลือกสินค้าและลิ้งค์ดาวน์โหลด</h4>
+                    <div>
+                        @if (!empty($product))
+                            <label class="switch">
+                                <input class="form-check-input" name="isDownloadable" type="checkbox" {{$product->isDownloadable ? 'checked' : ''}}>
+                                <span class="slider"></span>
+                            </label>
+                        @else
+                            <label class="switch">
+                                <input class="form-check-input" name="isDownloadable" type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        @endif
+                        <label for="isDownloadable" class="form-check-label align-top">ดาวน์โหลดได้</label>
+                    </div>
+                </div>
+                <div id="options-container" class="row grid">
+                    @if(!empty($options) && $options->count() > 0)
+                        @foreach($options as $option)
+                            @php
+                                $optionIdx = $loop->index;
+                            @endphp
+                            <div class="grid-item product-option card shadow-sm col-12 col-md-4" data-option-index="{{$optionIdx}}">
+                                <div class="option-thumbnail-preview p-2 d-flex justify-content-center" id="option-preview-{{ $optionIdx }}">
+                                    @if(isset($option->thumbnail))
+                                        <img src="{{ Storage::url($option->thumbnail) }}" alt="Option Thumbnail" class="img-fluid">
+                                    @endif
+                                </div>
+                                <div class="p-4 d-flex flex-column position-static">
+                                    <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 8px; top: 8px; z-index: 1;">
+                                        <div class="btn-group gap-1">
+                                            <button type="button" class="p-0 border-0 bg-transparent remove-option" title="ลบ">
+                                                <img src="{{ asset('icons/oval-interface/close-x.svg') }}" alt="favorite" width="24">
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label>ชื่อตัวเลือกสินค้า</label>
+                                        <input type="text" name="options[{{$optionIdx}}][name]" class="form-control" value="{{ $option->name }}">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <div class="form-group py-2">
+                                            <label for="options[{{$optionIdx}}][price]" class="">ราคา</label>
+                                            <div class="input-group">
+                                                <input type="number" name="options[{{$optionIdx}}][price]" class="form-control" value="{{$option->price}}">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" style="font-family:NotoColorEmoji-Regular;">฿</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label>ภาพตัวเลือก (Thumbnail)</label>
+                                        <input type="file" name="options[{{$optionIdx}}][thumbnail]" class="form-control option-thumbnail-input">
+                                        <input type="hidden" name="options[{{$optionIdx}}][existingThumbnail]" value="{{$option->thumbnail}}">
+                                    </div>
+                                    <div class="downloads-container mb-2">
+                                        <label>ดาวน์โหลดสำหรับตัวเลือกนี้</label>
+                                        <div class="download-items">
+                                            @if($option->downloads && $option->downloads->count() > 0)
+                                                @foreach($option->downloads as $download)
+                                                    <div class="download-item mb-2">
+                                                        <div class="input-group">
+                                                            <input type="text" name="options[{{$optionIdx}}][downloads][{{ $download->id }}][link]" class="form-control" value="{{ $download->link }}" style="width: 70%;" placeholder="ลิ้งค์ดาวน์โหลด">
+                                                            <input type="text" name="options[{{$optionIdx}}][downloads][{{ $download->id }}][type]" class="form-control" value="{{ $download->type }}" style="width: 30%;" placeholder="ประเภท">
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" name="options[{{$optionIdx}}][downloads][{{ $download->id }}][isDownload]" {{ $download->isDownload ? 'checked' : '' }}>
+                                                                <label class="form-check-label">ดาวน์โหลดได้</label>
+                                                            </div>
+                                                            <button type="button" class="btn btn-sm btn-danger remove-download mt-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">ลบ</button>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-secondary add-download" data-option-index="{{$optionIdx}}">เพิ่มลิ้งค์ดาวน์โหลด</button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif 
+
+                </div>
+                <button type="button" class="btn btn-primary mt-4" id="add-option">เพิ่มตัวเลือกสินค้า</button>
+            </div>
+        </section>        
+
+        <!-- Descriptions -->
+        <section class="card p-4">
             <div class="form-group">
                 <label for="description" class="">คำอธิบายสินค้า</label>
                 <textarea id="tinymce" name="description" class="form-control" cols="30" rows="5">
@@ -514,6 +736,5 @@
                 </textarea>
             </div>
         </section>
-
     </form>
 @endsection

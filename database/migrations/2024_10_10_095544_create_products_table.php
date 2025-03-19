@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->float('price')->default(0)->nullable();
             $table->longText('description')->nullable();
 
             $table->json('images')->nullable();
@@ -22,8 +21,6 @@ return new class extends Migration
             $table->boolean('isBuyable')->default(false);
             $table->boolean('isDownloadable')->default(false);
             $table->boolean('isPublish')->default(false);
-
-            $table->string('download', 2048)->nullable();
             
             $table->timestamps();
         });

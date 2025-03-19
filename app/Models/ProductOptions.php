@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ProductOptions extends Model
+{
+    use HasFactory;
+
+    protected $table = 'product_options';
+
+    protected $fillable = [
+        'product_id', 
+        'thumbnail', 
+        'name',
+        'price',
+    ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function downloads()
+    {
+        return $this->hasMany(ProductOptionDownloads::class, 'product_options_id');
+    }
+}

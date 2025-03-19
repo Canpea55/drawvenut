@@ -21,7 +21,6 @@ class ProductFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'price' => fake()->numberBetween(1000, 9999),
             'description' => fake()->sentence(),
             'isBuyable' => fake()->boolean(50),
             'isDownloadable' => fake()->boolean(50),
