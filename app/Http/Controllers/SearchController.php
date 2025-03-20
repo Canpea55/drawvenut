@@ -15,33 +15,26 @@ class SearchController extends Controller
 
         $products = Product::where('name', 'LIKE', "%{$query}%")
             ->where('isPublish', true)
-            ->select('id', 'name', 'price', 'images')
             ->take(3)
-            ->get()
-            ->map(function ($product) {
+            ->get();
+
+            foreach ($products as $product) {
                 $images = json_decode($product->images);
-                $firstImage = !empty($images) ? asset('storage/' . $images[0]) : null;
-                return [
-                    'id'    => $product->id,
-                    'name'  => $product->name,
-                    'price' => $product->price,
-                    'image' => $firstImage,
-                ];
-            });
-        foreach ($products as $product) {
-            $options = ProductOptions::where('product_id', $product->id)->get();
-            if ($options->isNotEmpty()) {
-                $lowest = $options->min('price');
-                $highest = $options->max('price');
-                $product->lowestPrice = $lowest;
-                $product->highestPrice = $highest;
-                $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
-            } else {
-                $product->lowestPrice = null;
-                $product->highestPrice = null;
-                $product->prices = "0";
+                $image = !empty($images) ? asset('storage/' . $images[0]) : null;
+                $options = ProductOptions::where('product_id', $product->id)->get();
+                if ($options->isNotEmpty()) {
+                    $lowest = $options->min('price');
+                    $highest = $options->max('price');
+                    $product->lowestPrice = $lowest;
+                    $product->highestPrice = $highest;
+                    $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
+                } else {
+                    $product->lowestPrice = null;
+                    $product->highestPrice = null;
+                    $product->prices = "0";
+                }
+                $product->image = $image;
             }
-        }
 
         $tags = Tag::where('name', 'LIKE', "%{$query}%")
             ->take(7)
