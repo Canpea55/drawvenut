@@ -125,11 +125,13 @@
     <section class="flex card mb-2">
         <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 16px; top: 16px; z-index: 1;">
             <div class="btn-group gap-1">
-                @if (Auth::user()->isAdmin)
-                    <a href="{{route('product.edit', $product->id)}}" type="button" class="opBtn" title="แก้ไข">
-                        <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
-                    </a>
-                @endif
+                @auth
+                    @if (Auth::user()->isAdmin)
+                        <a href="{{route('product.edit', $product->id)}}" type="button" class="opBtn" title="แก้ไข">
+                            <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
+                        </a>
+                    @endif
+                @endauth
                 {{-- <form method="POST" action="{{ route('favorite') }}" class="favorite-form"  onsubmit="setProductID({{$item->id}});">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
