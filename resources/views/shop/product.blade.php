@@ -1,5 +1,9 @@
 @extends('layouts.shop')
 
+@section('title')
+    {{ $product->name }}
+@endsection
+
 @section('style')
     .thumbnail-container {
     display: flex;
@@ -58,13 +62,87 @@
 
 @endsection
 
-@section('title')
-    {{ $product->name }}
+@section('foot-script')
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const thumbnails = document.querySelectorAll(".thumbnail-img");
+            const mainImage = document.getElementById("mainImage");
+
+            // Function to update main image and active states
+            function updateMainImage(newSrc, clickedElement, elementsToUpdate) {
+                if (mainImage) {
+                    mainImage.src = newSrc;
+                }
+                elementsToUpdate.forEach(el => el.classList.remove("active"));
+                clickedElement.classList.add("active");
+            }
+
+            // Handle thumbnail clicks
+            thumbnails.forEach(function (thumbnail) {
+                thumbnail.addEventListener("click", function () {
+                    updateMainImage(
+                        this.getAttribute("data-image"),
+                        this,
+                        thumbnails
+                    );
+                });
+            });
+
+            // Handle option badge clicks using the added data-image attribute
+            const optionBadges = document.querySelectorAll(".option-badge");
+            const nameDisplay = document.getElementById('name-display');
+            const priceDisplay = document.getElementById('price-display');
+            optionBadges.forEach(function(badge) {
+                badge.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const newSrc = this.getAttribute("data-image");
+                    // Optionally, find the corresponding thumbnail if you want to update active state.
+                    thumbnails.forEach(thumbnail => {
+                        if (thumbnail.getAttribute("data-image") === newSrc) {
+                            updateMainImage(newSrc, thumbnail, thumbnails);
+                        }
+                    });
+                    // If no matching thumbnail exists, directly update the main image.
+                    if (!Array.from(thumbnails).some(thumbnail => thumbnail.getAttribute("data-image") === newSrc)) {
+                        mainImage.src = newSrc;
+                    }
+
+                    let priceText = badge.querySelector('div div:last-child').textContent;
+                    priceDisplay.textContent = '฿' + priceText.replace(/[^\d.,]/g, '').trim();
+                });
+            });
+
+            // Set the first thumbnail as active by default if exists
+            if (thumbnails.length > 0) {
+                thumbnails[0].classList.add("active");
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
     <!-- Main Product Display -->
     <section class="flex card mb-2">
+        <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 16px; top: 16px; z-index: 1;">
+            <div class="btn-group gap-1">
+                @if (Auth::user()->isAdmin)
+                    <a href="{{route('product.edit', $product->id)}}" type="button" class="opBtn" title="แก้ไข">
+                        <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
+                    </a>
+                @endif
+                {{-- <form method="POST" action="{{ route('favorite') }}" class="favorite-form"  onsubmit="setProductID({{$item->id}});">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
+                        @if (isFavorited($product->id))
+                            <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
+                        @else
+                            <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
+                        @endif
+                    </button>
+                </form> --}}
+            </div>
+        </div>
         <div class="container p-4">
             <div class="row">
                 <!-- Left Column: Main Image and Thumbnails -->
@@ -84,8 +162,12 @@
                         <!-- Horizontal Thumbnail Container -->
                         <div class="thumbnail-container mt-2">
                             @foreach($images as $img)
-                                <img src="{{ Storage::url($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img"
-                                    data-image="{{ Storage::url($img) }}">
+                                <img src="{{ Storage::url($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img" data-image="{{ Storage::url($img) }}">
+                            @endforeach
+                            @foreach($product->options as $option)
+                                @if(isset($option->thumbnail))
+                                    <img src="{{ Storage::url($option->thumbnail) }}" alt="{{ $option->name }}" class="img-thumbnail thumbnail-img" data-image="{{ Storage::url($option->thumbnail) }}">
+                                @endif
                             @endforeach
                         </div>
                     @else
@@ -95,28 +177,41 @@
                 <!-- Right Column: Product Details -->
                 <div class="col-12 col-lg-4 my-2 d-flex flex-column">
                     @php
-                        if ($product->price <= 0) {
+                        if ($product->lowestPrice <= 0) {
                             $pricetag = 'ฟรี!';
                         } else {
-                            $pricetag = '฿' . $product->price;
+                            $pricetag = '฿' . $product->prices;
                         }
                     @endphp
-                    <h2 class="fw-light">{{ $product->name }}</h2>
-                    <h1 class="fw-semibold text-success">{{ $pricetag }}</h1>
+                    <h2 id="name-display" class="fw-light">{{ $product->name }}</h2>
+                    <h1 id="price-display" class="fw-semibold text-success">{{ $pricetag }}</h1>
                     <div id="tags-container" class="d-flex flex-wrap gap-1 my-2">
                         @if($product->tags && $product->tags->count() > 0)
                             @foreach($product->tags as $tag)
-                                <h5>
+                                <h7>
                                     <a href="{{ route('search', ['keyword' => $tag->name]) }}" class="badge btn btn-primary btn-sm">
                                         {{ $tag->name }}
                                     </a>
-                                </h5>
+                                </h7>
                             @endforeach
                         @endif
                     </div>
+                    <div class="d-flex flex-wrap gap-2 justify-content-start overflow-y-scroll py-2" style="max-height: 40%">
+                        @foreach($product->options as $option)
+                            @if(isset($option->thumbnail))
+                                <a href="#" class="badge animU d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded no-underline option-badge" data-image="{{ Storage::url($option->thumbnail) }}">
+                                    <img class="rounded me-1" width="32" height="32" src="{{ Storage::url($option->thumbnail) }}" alt="{{ $option->name }}">
+                                    <div>
+                                        <div class="text-start mb-1">{{$option->name}}</div>
+                                        <div class="text-start text-success">฿{{$option->price}}</div>
+                                    </div>
+                                </a>
+                            @endif
+                        @endforeach
+                    </div>
                     <div class="flex-grow-1"></div>
                     <div id="button-container" class="">
-                        @if ($owned)
+                        @if ($product->owned)
                             @if ($product->isDownloadable)
                                 <div class="btn-group">
                                     <a class="btn btn-success btn-lg w-100" href="{{ $product->download }}" download>ดาวน์โหลด</a>
@@ -135,13 +230,13 @@
                                 <a class="btn btn-success btn-lg disabled w-100" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถดาวน์โหลดได้ค่ะ">ดาวน์โหลด</a>
                             @endif
                         @else
-                            @if ($product->price <= 0) 
+                            @if ($product->lowestPrice <= 0) 
                                 @if ($product->isDownloadable)
                                     <a class="btn btn-success btn-lg " href="{{ $product->download }}" download>ดาวน์โหลด</a>
                                 @else
                                     <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถดาวน์โหลดได้ค่ะ">ดาวน์โหลด</a>
                                 @endif
-                                <a type="button" class="btn btn-primary btn-lg" href="#">เพิ่มไปยังคลัง</a>
+                                <a type="button" class="btn btn-primary btn-lg disabled" aria-disabled="true" href="#">เพิ่มไปยังคลัง</a>
                             @else
                                 @if (session('cart'))
                                     @if (array_key_exists($product->id, session('cart')))
@@ -189,28 +284,4 @@
             {!! $product->description !!}
         </div>
     </section>
-
-    <!-- JavaScript to Change Main Image on Thumbnail Click -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let thumbnails = document.querySelectorAll(".thumbnail-img");
-            let mainImage = document.getElementById("mainImage");
-
-            thumbnails.forEach(function (thumbnail) {
-                thumbnail.addEventListener("click", function () {
-                    // Update the main image src
-                    let newSrc = this.getAttribute("data-image");
-                    mainImage.src = newSrc;
-                    // Update active state
-                    thumbnails.forEach(function (img) { img.classList.remove("active"); });
-                    this.classList.add("active");
-                });
-            });
-
-            // Set the first thumbnail as active by default
-            if (thumbnails.length > 0) {
-                thumbnails[0].classList.add("active");
-            }
-        });
-    </script>
 @endsection

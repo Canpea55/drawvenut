@@ -298,7 +298,7 @@
                                             <!-- Text Section (Takes up remaining space) -->
                                             <div class="flex-grow-1">
                                                 <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
-                                                <span class="text-body-secondary">฿{{ $item->price }}</span>
+                                                <span class="text-body-secondary">฿{{ $item->prices }}</span>
                                             </div>                    
                                         </div>
                                     </a>
@@ -335,7 +335,7 @@
                                             <!-- Text Section (Takes up remaining space) -->
                                             <div class="flex-grow-1">
                                                 <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
-                                                <span class="text-body-secondary">฿{{ $item->price }}</span>
+                                                <span class="text-body-secondary">฿{{ $item->prices }}</span>
                                             </div>                    
                                         </div>
                                     </a>
@@ -393,7 +393,7 @@
                                     <div class="card-body" >
                                         <div class="d-flex justify-content-between align-items-center">
                                             <strong class="d-flex text-primary-emphasis align-items-center" style="width: 85%">{{ $item->name }}</strong>
-                                            <strong class="text-success flex-shrink-0 m-0">{{ $item->price }} ฿</strong>
+                                            <strong class="text-success flex-shrink-0 m-0">{{ $item->prices }} ฿</strong>
                                         </div>
                                         <div id="tags-container" class="d-flex flex-wrap mt-2">
                                             @if($item->tags && $item->tags->count() > 0)

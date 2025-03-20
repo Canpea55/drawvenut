@@ -44,7 +44,7 @@
     .animS:hover {
         transform:scale(1.03, 1.03);
         /* transform: translateY(-2px); Moves card up slightly */
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Adds shadow */
+        /* box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05); Adds shadow */
         opacity: 1;
     }
 
@@ -54,7 +54,7 @@
     }
     .animU:hover {
         transform: translateY(-2px);
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Adds shadow */
+        /* box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05); Adds shadow */
         opacity: 1;
     }
 
@@ -363,7 +363,7 @@ $(document).ready(function () {
                                         ${product.image ? `<img src="${product.image}" alt="${product.name}" class="rounded flex-shrink-0 border" style="width: 50px; height: 100%; object-fit: cover;">` : ''}
                                         <div>
                                             <div>${product.name}</div>
-                                            <small class="text-success">฿${product.price}</small>
+                                            <small class="text-success">฿${product.prices}</small>
                                         </div>
                                     </a>
                                 `;

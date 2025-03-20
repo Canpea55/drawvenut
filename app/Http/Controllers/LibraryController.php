@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Library;
 use App\Models\Product;
 use App\Models\Favorite;
+use App\Models\ProductOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -31,13 +32,13 @@ class LibraryController extends Controller
     {
         $product = Product::find($product_id);
         $library=Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
-        $owned = false;
-        foreach($library as $item) {
-            if($item->product_id == $product_id) {
-                $owned = true;
+        foreach ($library as $item) {
+            if ($item->product_id == $product_id) {
+                $product->owned = true;
+                break;
             }
         }
-        return view('shop.library.product-info', compact(['product', 'owned']));
+        return view('shop.library.product-info', compact('product'));
     }
 
     public function manage(Request $request)
@@ -91,6 +92,20 @@ class LibraryController extends Controller
             ->orderBy('favorite.created_at', 'desc')
             ->select('products.*')
             ->paginate(10);
+        foreach ($products as $product) {
+            $options = ProductOptions::where('product_id', $product->id)->get();
+            if ($options->isNotEmpty()) {
+                $lowest = $options->min('price');
+                $highest = $options->max('price');
+                $product->lowestPrice = $lowest;
+                $product->highestPrice = $highest;
+                $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
+            } else {
+                $product->lowestPrice = null;
+                $product->highestPrice = null;
+                $product->prices = "0";
+            }
+        }
         return view('shop.favorite', compact('products'));
     }
 }

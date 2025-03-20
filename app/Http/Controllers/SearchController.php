@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Tag;
+use App\Models\ProductOptions;
 
 class SearchController extends Controller
 {
@@ -27,6 +28,20 @@ class SearchController extends Controller
                     'image' => $firstImage,
                 ];
             });
+        foreach ($products as $product) {
+            $options = ProductOptions::where('product_id', $product->id)->get();
+            if ($options->isNotEmpty()) {
+                $lowest = $options->min('price');
+                $highest = $options->max('price');
+                $product->lowestPrice = $lowest;
+                $product->highestPrice = $highest;
+                $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
+            } else {
+                $product->lowestPrice = null;
+                $product->highestPrice = null;
+                $product->prices = "0";
+            }
+        }
 
         $tags = Tag::where('name', 'LIKE', "%{$query}%")
             ->take(7)
@@ -78,6 +93,20 @@ class SearchController extends Controller
                 ->orderBy('id', 'desc')
                 ->paginate(16)
                 ->appends(request()->query());
+        }
+        foreach ($products as $product) {
+            $options = ProductOptions::where('product_id', $product->id)->get();
+            if ($options->isNotEmpty()) {
+                $lowest = $options->min('price');
+                $highest = $options->max('price');
+                $product->lowestPrice = $lowest;
+                $product->highestPrice = $highest;
+                $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
+            } else {
+                $product->lowestPrice = null;
+                $product->highestPrice = null;
+                $product->prices = "0";
+            }
         }
 
         return view('shop.search', [

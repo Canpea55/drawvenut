@@ -333,6 +333,20 @@ class ProductController extends Controller
     function manage(Request $request)
     {
         $products=Product::orderBy('id', 'desc')->paginate(10);
+        foreach ($products as $product) {
+            $options = ProductOptions::where('product_id', $product->id)->get();
+            if ($options->isNotEmpty()) {
+                $lowest = $options->min('price');
+                $highest = $options->max('price');
+                $product->lowestPrice = $lowest;
+                $product->highestPrice = $highest;
+                $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
+            } else {
+                $product->lowestPrice = null;
+                $product->highestPrice = null;
+                $product->prices = "0";
+            }
+        }
         return view('/admin/products/manage', compact('products'));
     }
 
