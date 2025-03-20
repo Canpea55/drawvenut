@@ -9,12 +9,20 @@
 @section('subnavbar-right') 
         @if (auth()->check())
             @if (session('cart'))
+                @php
+                    // Get count of all option in cart
+                    $optionCount = 0;
+                    $cart = session()->get('cart', []);
+                    foreach($cart as $product){
+                        $optionCount += count($product['selectedOptions']);
+                    }
+                @endphp
                 <a class="animU no-underline fw-light bg-success-subtle rounded px-2 py-1" href="{{route('cart')}}">
                     <!-- This div is visible on large screens (PC) but hidden on small screens (phones) -->
                     <div class="d-none d-md-block">
                         <img src="{{ asset('icons/bag-svgrepo-com.svg') }}" alt="Cart Icon" width="24">
                         <span class="align-middle"> 
-                            ตะกร้าสินค้า {{ "(" . count(session('cart')) . ")" }}
+                            ตะกร้าสินค้า {{ "(" . $optionCount . ")" }}
                         </span>
                     </div>
                     <!-- This div is visible on small screens (phones) but hidden on larger screens -->
@@ -22,7 +30,7 @@
                         <img src="{{ asset('icons/bag-svgrepo-com.svg') }}" alt="Cart Icon" width="24">
                         <div class="position-relative d-inline-block">
                             <span class="position-absolute translate-middle">
-                                {{ count(session('cart')) }}
+                                {{ $optionCount }}
                             </span>
                         </div>
                     </div>

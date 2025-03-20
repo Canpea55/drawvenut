@@ -350,7 +350,7 @@
             <figcaption>
                <p><small>ขออภัยในความไม่สะดวกนะคะ</small></p>
             </figcaption>
-          </figure>
+        </figure>
     @endif
 </div>
 @endsection

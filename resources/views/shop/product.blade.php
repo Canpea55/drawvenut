@@ -68,8 +68,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const thumbnails = document.querySelectorAll(".thumbnail-img");
             const mainImage = document.getElementById("mainImage");
-
-            // Function to update main image and active states
+            
             function updateMainImage(newSrc, clickedElement, elementsToUpdate) {
                 if (mainImage) {
                     mainImage.src = newSrc;
@@ -77,8 +76,8 @@
                 elementsToUpdate.forEach(el => el.classList.remove("active"));
                 clickedElement.classList.add("active");
             }
-
-            // Handle thumbnail clicks
+            
+            // Thumbnail click handler
             thumbnails.forEach(function (thumbnail) {
                 thumbnail.addEventListener("click", function () {
                     updateMainImage(
@@ -88,36 +87,96 @@
                     );
                 });
             });
-
-            // Handle option badge clicks using the added data-image attribute
+            
             const optionBadges = document.querySelectorAll(".option-badge");
-            const nameDisplay = document.getElementById('name-display');
             const priceDisplay = document.getElementById('price-display');
+            const selectedOptionInput = document.getElementById("selected_option");
+            
             optionBadges.forEach(function(badge) {
                 badge.addEventListener("click", function(e) {
                     e.preventDefault();
+            
                     const newSrc = this.getAttribute("data-image");
-                    // Optionally, find the corresponding thumbnail if you want to update active state.
+            
+                    // Toggle indicator:
+                    // If this badge is already selected, remove the indicator and clear the selected_option value.
+                    let currentIndicator = this.querySelector('.selected-indicator');
+                    if(currentIndicator) {
+                        currentIndicator.remove();
+                        selectedOptionInput.value = "";
+                    } else {
+                        // Remove indicators from any badge that has it
+                        document.querySelectorAll('.option-badge .selected-indicator').forEach(function(ind) {
+                            ind.remove();
+                        });
+            
+                        // Create and add the indicator badge
+                        let indicator = document.createElement("span");
+                        indicator.className = "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success selected-indicator";
+                        indicator.innerHTML = "✓<span class='visually-hidden'>unread messages</span>";
+                        this.appendChild(indicator);
+            
+                        // Set the hidden field with the selected option id
+                        selectedOptionInput.value = this.getAttribute("data-option");
+                    }
+            
+                    // Update the main image
+                    let found = false;
                     thumbnails.forEach(thumbnail => {
                         if (thumbnail.getAttribute("data-image") === newSrc) {
                             updateMainImage(newSrc, thumbnail, thumbnails);
+                            found = true;
                         }
                     });
-                    // If no matching thumbnail exists, directly update the main image.
-                    if (!Array.from(thumbnails).some(thumbnail => thumbnail.getAttribute("data-image") === newSrc)) {
+                    if (!found) {
                         mainImage.src = newSrc;
                     }
-
-                    let priceText = badge.querySelector('div div:last-child').textContent;
-                    priceDisplay.textContent = '฿' + priceText.replace(/[^\d.,]/g, '').trim();
+            
+                    if(selectedOptionInput.value === '') {
+                        priceDisplay.textContent = '฿' + "{{$product->prices}}";
+                        document.querySelector('.cart-form button[type="submit"]').disabled = true;
+                    } else {
+                        // Update the price if available (adjust based on your badge structure)
+                        let priceText = this.querySelector('div div:last-child').textContent;
+                        priceDisplay.textContent = '฿' + priceText.replace(/[^\d.,]/g, '').trim();
+                        document.querySelector('.cart-form button[type="submit"]').disabled = false;
+                    }                    
                 });
             });
-
-            // Set the first thumbnail as active by default if exists
+            
+            // Optionally, set the first thumbnail as active by default if exists
             if (thumbnails.length > 0) {
                 thumbnails[0].classList.add("active");
             }
         });
+    </script>
+
+    {{-- button actions --}}
+    <script>
+        // $(document).ready(function(){
+        //     $('.cart-form').on('submit', function(e){
+        //         e.preventDefault();
+        //         var form = $(this);
+        //         $.ajax({
+        //             url: form.attr('action'),
+        //             method: form.attr('method'),
+        //             data: form.serialize(),
+        //             success: function(response){
+        //                 // if(response.favorite === 'removed'){
+        //                 //     updateFavoritesCount(-1);
+        //                 //     btnImage.attr('src', '{{ asset("icons/oval-interface/heart.svg") }}');
+        //                 //     bootstrap.Toast.getOrCreateInstance(document.getElementById('removeFavToast' + productID)).show();
+        //                 // } else if(response.favorite === 'added'){
+        //                 //     updateFavoritesCount(1);
+        //                 //     btnImage.attr('src', '{{ asset("icons/oval-interface/heart-filled.svg") }}');
+        //                 //     bootstrap.Toast.getOrCreateInstance(document.getElementById('addFavToast' + productID)).show();
+        //                 // }
+        //             },
+        //             error: function(jqXHR, textStatus, errorThrown){
+        //                 console.error("Error in favorite toggle:", errorThrown);
+        //             }
+        //         });
+        //     });
     </script>
 
     {{-- favorite system --}}
@@ -278,7 +337,9 @@
                     <div class="d-flex flex-wrap gap-2 justify-content-start overflow-y-scroll py-2" style="max-height: 40%">
                         @foreach($product->options as $option)
                             @if(isset($option->thumbnail))
-                                <a href="#" class="badge animU d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded no-underline option-badge" data-image="{{ Storage::url($option->thumbnail) }}">
+                                <a href="#" class="badge animU d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded no-underline option-badge" 
+                                   data-image="{{ Storage::url($option->thumbnail) }}"
+                                   data-option="{{ $option->id }}">
                                     <img class="rounded me-1" width="32" height="32" src="{{ Storage::url($option->thumbnail) }}" alt="{{ $option->name }}">
                                     <div>
                                         <div class="text-start mb-1">{{$option->name}}</div>
@@ -290,7 +351,16 @@
                     </div>
                     <div class="flex-grow-1"></div>
                     <div id="button-container" class="">
-                        @if ($product->owned)
+                        <form action="{{ route('cart.add') }}" class="cart-form" method="POST">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            @if(!empty($defaultImage))<input type="hidden" name="product_image" value="{{ $defaultImage }}">@endif
+                            <input type="hidden" name="product_name" value="{{ $product->name }}">
+                            <input type="hidden" name="option_id" id="selected_option" value="">
+                        
+                            <button type="submit" class="btn btn-primary btn-lg" disabled>เพิ่มใส่ตะกร้า</button>
+                        </form>
+                        {{-- @if ($product->owned)
                             @if ($product->isDownloadable)
                                 <div class="btn-group">
                                     <a class="btn btn-success btn-lg w-100" href="{{ $product->download }}" download>ดาวน์โหลด</a>
@@ -351,7 +421,7 @@
                                     @endif
                                 @endif
                             @endif
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
             </div>
