@@ -210,11 +210,13 @@
                         if(response.favorite === 'removed'){
                             updateFavoritesCount(-1);
                             btnImage.attr('src', '{{ asset("icons/oval-interface/heart.svg") }}');
+                            bootstrap.Toast.getOrCreateInstance(document.getElementById('addFavToast' + productID)).hide();
                             bootstrap.Toast.getOrCreateInstance(document.getElementById('removeFavToast' + productID)).show();
                         } else if(response.favorite === 'added'){
                             updateFavoritesCount(1);
                             btnImage.attr('src', '{{ asset("icons/oval-interface/heart-filled.svg") }}');
                             bootstrap.Toast.getOrCreateInstance(document.getElementById('addFavToast' + productID)).show();
+                            bootstrap.Toast.getOrCreateInstance(document.getElementById('removeFavToast' + productID)).hide();
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown){
