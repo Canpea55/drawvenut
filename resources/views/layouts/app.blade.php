@@ -27,7 +27,7 @@
     }
 
     .toast-container {
-        z-index: 1;
+        z-index: 9999;
     }
 
     .no-underline {
@@ -291,6 +291,11 @@
             @yield('footer')
         </footer>
     </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-2 d-none d-md-block">
+        @yield('toast-container')
+    </div>
+
 </body>
 
 <!-- Foot Scripts -->

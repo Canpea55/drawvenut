@@ -267,82 +267,6 @@
         <div class="album col-12 col-md-9">
             <div class="container">
                 <div class="grid row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3">
-                    <div class="toast-container position-fixed bottom-0 end-0 p-2 d-none d-md-block">
-                        @foreach ($products as $item)
-                            <div id="addFavToast{{$item->id}}" class="toast mb-2 text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
-                                <div class="toast-header">
-                                    <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" class="rounded me-2" width="20" alt="info">
-                                    <strong class="me-auto">เพิ่มเป็นสิ่งที่ถูกใจแล้ว</strong>
-                                    {{-- <small>11 mins ago</small> --}}
-                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                </div>
-                                <div class="animU toast-body">
-                                    <a class="no-underline" href="{{ route('product', $item->id) }}">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <!-- Image Section -->
-                                            @php
-                                                $images = json_decode($item->images, true);
-                                                $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
-                                            @endphp
-                                            @if($image)
-                                                <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
-                                                    class="rounded flex-shrink-0"
-                                                    style="width: 50px; height: 50px; object-fit: cover;">
-                                            @else
-                                                <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
-                                                    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                                                    preserveAspectRatio="xMidYMid slice" focusable="false">
-                                                    <rect width="100%" height="100%" fill="#D09CC7" />
-                                                </svg>
-                                            @endif
-                                            <!-- Text Section (Takes up remaining space) -->
-                                            <div class="flex-grow-1">
-                                                <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
-                                                <span class="text-body-secondary">฿{{ $item->prices }}</span>
-                                            </div>                    
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        @endforeach
-                        @foreach ($products as $item)
-                            <div id="removeFavToast{{$item->id}}" class="toast mb-2 text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
-                                <div class="toast-header">
-                                    <img src="{{ asset('icons/oval-interface/heart.svg') }}" class="rounded me-2" width="20" alt="info">
-                                    <strong class="me-auto">ลบจากสิ่งที่ถูกใจแล้ว</strong>
-                                    {{-- <small>11 mins ago</small> --}}
-                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                </div>
-                                <div class="animU toast-body">
-                                    <a class="no-underline" href="{{ route('product', $item->id) }}">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <!-- Image Section -->
-                                            @php
-                                                $images = json_decode($item->images, true);
-                                                $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
-                                            @endphp
-                                            @if($image)
-                                                <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
-                                                    class="rounded flex-shrink-0"
-                                                    style="width: 50px; height: 50px; object-fit: cover;">
-                                            @else
-                                                <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
-                                                    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                                                    preserveAspectRatio="xMidYMid slice" focusable="false">
-                                                    <rect width="100%" height="100%" fill="#D09CC7" />
-                                                </svg>
-                                            @endif
-                                            <!-- Text Section (Takes up remaining space) -->
-                                            <div class="flex-grow-1">
-                                                <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
-                                                <span class="text-body-secondary">฿{{ $item->prices }}</span>
-                                            </div>                    
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
                     @foreach ($products as $item)
                         <div class="col grid-item">
                             <div class="card shadow-sm">
@@ -429,4 +353,83 @@
           </figure>
     @endif
 </div>
+@endsection
+
+@section('toast-container')
+    {{-- favorite add --}}
+    @foreach ($products as $item)
+    <div id="addFavToast{{$item->id}}" class="toast mb-2 text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" class="rounded me-2" width="20" alt="info">
+            <strong class="me-auto">เพิ่มเป็นสิ่งที่ถูกใจแล้ว</strong>
+            {{-- <small>11 mins ago</small> --}}
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="animU toast-body">
+            <a class="no-underline" href="{{ route('product', $item->id) }}">
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Image Section -->
+                    @php
+                        $images = json_decode($item->images, true);
+                        $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
+                    @endphp
+                    @if($image)
+                        <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
+                            class="rounded flex-shrink-0"
+                            style="width: 50px; height: 50px; object-fit: cover;">
+                    @else
+                        <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
+                            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                            preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <rect width="100%" height="100%" fill="#D09CC7" />
+                        </svg>
+                    @endif
+                    <!-- Text Section (Takes up remaining space) -->
+                    <div class="flex-grow-1">
+                        <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
+                        <span class="text-body-secondary">฿{{ $item->prices }}</span>
+                    </div>                    
+                </div>
+            </a>
+        </div>
+    </div>
+    @endforeach
+    {{-- favortie remove --}}
+    @foreach ($products as $item)
+    <div id="removeFavToast{{$item->id}}" class="toast mb-2 text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="{{ asset('icons/oval-interface/heart.svg') }}" class="rounded me-2" width="20" alt="info">
+            <strong class="me-auto">ลบจากสิ่งที่ถูกใจแล้ว</strong>
+            {{-- <small>11 mins ago</small> --}}
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="animU toast-body">
+            <a class="no-underline" href="{{ route('product', $item->id) }}">
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Image Section -->
+                    @php
+                        $images = json_decode($item->images, true);
+                        $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
+                    @endphp
+                    @if($image)
+                        <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
+                            class="rounded flex-shrink-0"
+                            style="width: 50px; height: 50px; object-fit: cover;">
+                    @else
+                        <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
+                            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                            preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <rect width="100%" height="100%" fill="#D09CC7" />
+                        </svg>
+                    @endif
+                    <!-- Text Section (Takes up remaining space) -->
+                    <div class="flex-grow-1">
+                        <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
+                        <span class="text-body-secondary">฿{{ $item->prices }}</span>
+                    </div>                    
+                </div>
+            </a>
+        </div>
+    </div>
+    @endforeach
 @endsection
