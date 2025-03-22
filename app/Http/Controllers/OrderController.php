@@ -89,7 +89,7 @@ class OrderController extends Controller
         // Handle file upload
         if ($request->hasFile('receipt')) {
             $image = $request->file('receipt');
-            $imagePath = $image->store('images/receipts', 'public'); // Save to storage/app/public/receipts
+            $imagePath = $image->store('receipts', 'public'); // Save to storage/app/public/receipts
 
             // Update order with image path
             Order::find($id)->update([
@@ -109,7 +109,7 @@ class OrderController extends Controller
         $cancel_status = $request->status;
         if ($request->hasFile('refundslip')) {
             $image = $request->file('refundslip');
-            $imagePath = $image->store('images/refundslip', 'public'); // Save to storage/app/public/receipts
+            $imagePath = $image->store('refundslip', 'public'); // Save to storage/app/public/receipts
         }
         $exist = OrderCancelation::where('order_id', $id)->get();
         DB::beginTransaction();

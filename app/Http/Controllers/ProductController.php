@@ -40,7 +40,7 @@ class ProductController extends Controller
                     // Get the original file name
                     $originalName = $image->getClientOriginalName();
                     
-                    $storedImages[] = $image->storeAs('images/products', $originalName, 'public');
+                    $storedImages[] = $image->storeAs('products', $originalName, 'public');
                     
                     // $storedImages[] = $image->store('products', 'public'); // Save image and store path
                 }
@@ -103,7 +103,7 @@ class ProductController extends Controller
                     $thumbnailPath = null;
                     if ($request->hasFile("options.{$optionKey}.thumbnail")) {
                         $file = $request->file("options.{$optionKey}.thumbnail");
-                        $thumbnailPath = $file->storeAs('images/products', $file->getClientOriginalName(), 'public');
+                        $thumbnailPath = $file->storeAs('products', $file->getClientOriginalName(), 'public');
                     }
                     
                     $productOption = ProductOptions::create([
@@ -176,7 +176,7 @@ class ProductController extends Controller
                     // Get the original file name
                     $originalName = $image->getClientOriginalName();
                     
-                    $storedImages[] = $image->storeAs('images/products', $originalName, 'public');
+                    $storedImages[] = $image->storeAs('products', $originalName, 'public');
                 }
             }
     
@@ -259,7 +259,7 @@ class ProductController extends Controller
                     } else {
                         if ($request->hasFile("options.{$optionKey}.thumbnail")) {
                             $file = $request->file("options.{$optionKey}.thumbnail");
-                            $thumbnailPath = $file->storeAs('images/products', $file->getClientOriginalName(), 'public');
+                            $thumbnailPath = $file->storeAs('products', $file->getClientOriginalName(), 'public');
                         }
                     }
             
