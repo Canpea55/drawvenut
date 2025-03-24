@@ -296,17 +296,17 @@
                         @endphp
                         <!-- Main Image -->
                         <picture>
-                            <img id="mainImage" src="{{ Storage::url($defaultImage) }}" alt="Product Image" width="100%"
+                            <img id="mainImage" src="{{ asset($defaultImage) }}" alt="Product Image" width="100%"
                                 class="rounded border">
                         </picture>
                         <!-- Horizontal Thumbnail Container -->
                         <div class="thumbnail-container mt-2">
                             @foreach($images as $img)
-                                <img src="{{ Storage::url($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img" data-image="{{ Storage::url($img) }}">
+                                <img src="{{ asset($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img" data-image="{{ asset($img) }}">
                             @endforeach
                             @foreach($product->options as $option)
                                 @if(isset($option->thumbnail))
-                                    <img src="{{ Storage::url($option->thumbnail) }}" alt="{{ $option->name }}" class="img-thumbnail thumbnail-img" data-image="{{ Storage::url($option->thumbnail) }}">
+                                    <img src="{{ asset($option->thumbnail) }}" alt="{{ $option->name }}" class="img-thumbnail thumbnail-img" data-image="{{ asset($option->thumbnail) }}">
                                 @endif
                             @endforeach
                         </div>
@@ -340,9 +340,9 @@
                         @foreach($product->options as $option)
                             @if(isset($option->thumbnail))
                                 <a href="#" class="badge animU d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded no-underline option-badge" 
-                                   data-image="{{ Storage::url($option->thumbnail) }}"
+                                   data-image="{{ asset($option->thumbnail) }}"
                                    data-option="{{ $option->id }}">
-                                    <img class="rounded me-1" width="32" height="32" src="{{ Storage::url($option->thumbnail) }}" alt="{{ $option->name }}">
+                                    <img class="rounded me-1" width="32" height="32" src="{{ asset($option->thumbnail) }}" alt="{{ $option->name }}">
                                     <div>
                                         <div class="text-start mb-1">{{$option->name}}</div>
                                         <div class="text-start text-success">฿{{$option->price}}</div>
@@ -455,7 +455,7 @@
                         $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
                     @endphp
                     @if($image)
-                        <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
+                        <img src="{{ asset($image) }}" alt="Product Thumbnail"
                             class="rounded flex-shrink-0"
                             style="width: 50px; height: 50px; object-fit: cover;">
                     @else
@@ -491,7 +491,7 @@
                         $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
                     @endphp
                     @if($image)
-                        <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
+                        <img src="{{ asset($image) }}" alt="Product Thumbnail"
                             class="rounded flex-shrink-0"
                             style="width: 50px; height: 50px; object-fit: cover;">
                     @else

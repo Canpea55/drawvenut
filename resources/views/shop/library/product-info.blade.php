@@ -97,7 +97,7 @@
             
             <div class="position-relative">
                 <img 
-                    src="{{ Storage::url($defaultImage) }}" 
+                    src="{{ asset($defaultImage) }}" 
                     class="w-100 banner-image"
                     alt="Product Image">
 
@@ -151,14 +151,14 @@
                 @endphp
                 <!-- Main Image -->
                 <picture class="mt-4">
-                    <img id="mainImage" src="{{ Storage::url($defaultImage) }}" alt="Product Image" width="100%"
+                    <img id="mainImage" src="{{ asset($defaultImage) }}" alt="Product Image" width="100%"
                         class="rounded border">
                 </picture>
                 <!-- Horizontal Thumbnail Container -->
                 <div class="thumbnail-container mt-2">
                     @foreach($images as $img)
-                        <img src="{{ Storage::url($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img"
-                            data-image="{{ Storage::url($img) }}">
+                        <img src="{{ asset($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img"
+                            data-image="{{ asset($img) }}">
                     @endforeach
                 </div>
             @endif

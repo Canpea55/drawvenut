@@ -40,7 +40,8 @@ class ProductController extends Controller
                     // Get the original file name
                     $originalName = $image->getClientOriginalName();
                     
-                    $storedImages[] = $image->storeAs('products', $originalName, 'public');
+                    $image->move(public_path('products'), $originalName);
+                    $storedImages[] = 'products/' . $originalName;
                     
                     // $storedImages[] = $image->store('products', 'public'); // Save image and store path
                 }
@@ -103,7 +104,8 @@ class ProductController extends Controller
                     $thumbnailPath = null;
                     if ($request->hasFile("options.{$optionKey}.thumbnail")) {
                         $file = $request->file("options.{$optionKey}.thumbnail");
-                        $thumbnailPath = $file->storeAs('products', $file->getClientOriginalName(), 'public');
+                        $thumbnailPath = 'products/' . $file->getClientOriginalName();
+                        $file->move(public_path('products'), $file->getClientOriginalName());
                     }
                     
                     $productOption = ProductOptions::create([
@@ -176,7 +178,8 @@ class ProductController extends Controller
                     // Get the original file name
                     $originalName = $image->getClientOriginalName();
                     
-                    $storedImages[] = $image->storeAs('products', $originalName, 'public');
+                    $image->move(public_path('products'), $originalName);
+                    $storedImages[] = 'products/' . $originalName;
                 }
             }
     
@@ -259,7 +262,8 @@ class ProductController extends Controller
                     } else {
                         if ($request->hasFile("options.{$optionKey}.thumbnail")) {
                             $file = $request->file("options.{$optionKey}.thumbnail");
-                            $thumbnailPath = $file->storeAs('products', $file->getClientOriginalName(), 'public');
+                            $thumbnailPath = 'products/' . $file->getClientOriginalName();
+                            $file->move(public_path('products'), $file->getClientOriginalName());
                         }
                     }
             

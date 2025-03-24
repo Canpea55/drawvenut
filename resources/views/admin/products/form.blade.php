@@ -535,7 +535,7 @@
                                     @if (!empty($images))
                                         @foreach ($images as $image)
                                             <div class="image-wrapper" data-name="{{ $image }}" style="position: relative; display: inline-block;">
-                                                <img src="{{Storage::url($image)}}" width="100" class="rounded border">
+                                                <img src="{{asset($image)}}" width="100" class="rounded border">
                                                 <button 
                                                     style="position: absolute; top: 0px; right: 0px; background: white; color: white; border: none; cursor: pointer;" 
                                                     type="button" 
@@ -661,7 +661,7 @@
                             <div class="grid-item product-option card shadow-sm col-12 col-md-4" data-option-index="{{$optionIdx}}">
                                 <div class="option-thumbnail-preview p-2 d-flex justify-content-center" id="option-preview-{{ $optionIdx }}">
                                     @if(isset($option->thumbnail))
-                                        <img src="{{ Storage::url($option->thumbnail) }}" alt="Option Thumbnail" class="img-fluid">
+                                        <img src="{{ asset($option->thumbnail) }}" alt="Option Thumbnail" class="img-fluid">
                                     @endif
                                 </div>
                                 <div class="p-4 d-flex flex-column position-static">

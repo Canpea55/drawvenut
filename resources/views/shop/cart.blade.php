@@ -75,7 +75,7 @@
                                             @foreach($item['selectedOptions'] as $index => $option)
                                             <a href="{{ route('product', ['id' => $product_id, 'option_id' => $option]) }}" class="animU list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                                 <div class="d-flex justify-content-between align-items-center gap-3">
-                                                    <img class="rounded me-1 img-thumbnail" width="128" height="auto" src="{{ Storage::url($item['optionDetails'][$index]['thumbnail']) }}" >
+                                                    <img class="rounded me-1 img-thumbnail" width="128" height="auto" src="{{ asset($item['optionDetails'][$index]['thumbnail']) }}" >
                                                     <div>
                                                         <div class="">{{ $item['optionDetails'][$index]['name'] }}</div>
                                                         <div class="text-success">฿{{ $item['optionDetails'][$index]['price'] }}</div>

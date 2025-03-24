@@ -235,7 +235,7 @@
                                                 $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
                                             @endphp
                                             @if($image)
-                                                <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
+                                                <img src="{{ asset($image) }}" alt="Product Thumbnail"
                                                     class="rounded flex-shrink-0"
                                                     style="width: 50px; height: 50px; object-fit: cover;">
                                             @else
@@ -272,7 +272,7 @@
                                                 $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
                                             @endphp
                                             @if($image)
-                                                <img src="{{ Storage::url($image) }}" alt="Product Thumbnail"
+                                                <img src="{{ asset($image) }}" alt="Product Thumbnail"
                                                     class="rounded flex-shrink-0"
                                                     style="width: 50px; height: 50px; object-fit: cover;">
                                             @else
@@ -324,7 +324,7 @@
                                         $image = isset($images[0]) ? $images[0] : null; // Get the first image, or null if not available
                                     @endphp
                                     @if($image)
-                                        <img src="{{ Storage::url($image) }}" alt="{{$item->name}}" class="card-img-top"
+                                        <img src="{{ asset($image) }}" alt="{{$item->name}}" class="card-img-top"
                                             style="width: 100%; min-height: 225px; max-height: 400px; object-fit: contain;">
                                     @else
                                         <svg class="bd-placeholder-img card-img-top" width="100%" height="225"

@@ -9,6 +9,7 @@ use App\Models\ProductOptions;
 
 class SearchController extends Controller
 {
+    
     public function live(Request $request)
     {
         $query = $request->get('query');
@@ -20,7 +21,7 @@ class SearchController extends Controller
 
             foreach ($products as $product) {
                 $images = json_decode($product->images);
-                $image = !empty($images) ? asset('storage/' . $images[0]) : null;
+                $image = !empty($images) ? asset($images[0]) : null;
                 $options = ProductOptions::where('product_id', $product->id)->get();
                 if ($options->isNotEmpty()) {
                     $lowest = $options->min('price');
