@@ -100,6 +100,12 @@ class LibraryController extends Controller
                 $product->lowestPrice = $lowest;
                 $product->highestPrice = $highest;
                 $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
+
+                $temp = json_decode($product->images, true);
+                foreach ($options as $option) {
+                    $temp[] = $option->thumbnail;
+                }
+                $product->images = json_encode($temp);
             } else {
                 $product->lowestPrice = null;
                 $product->highestPrice = null;
