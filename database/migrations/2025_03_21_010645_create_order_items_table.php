@@ -10,11 +10,12 @@ return new class extends Migration {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->string('product_name');
             $table->foreignId('product_options_id')->constrained()->onDelete('cascade');
-
-            $table->string('thumbnail')->nullable();
-            $table->string('name');
-            $table->float('price')->default(0);
+            $table->string('option_thumbnail')->nullable();
+            $table->string('option_name');
+            $table->float('option_price')->default(0);
             $table->timestamps();
         });
     }

@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    function add()
-    {
+    function add() {
         return view('admin/products/form');
     }
 
-    function insert(Request $request)
-    {
+    function insert(Request $request) {
         DB::beginTransaction();
         try {
             $request->validate(
@@ -157,8 +155,7 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
-    {
+    function update(Request $request, $id) {
         DB::beginTransaction();
         try {
             $request->validate(
@@ -334,8 +331,7 @@ class ProductController extends Controller
         }
     }
 
-    function manage(Request $request)
-    {
+    function manage(Request $request) {
         $products=Product::orderBy('id', 'desc')->paginate(10);
         foreach ($products as $product) {
             $options = ProductOptions::where('product_id', $product->id)->get();
@@ -351,17 +347,15 @@ class ProductController extends Controller
                 $product->prices = "0";
             }
         }
-        return view('/admin/products/manage', compact('products'));
+        return view('admin.products.manage', compact('products'));
     }
 
-    function delete($id)
-    {
+    function delete($id) {
         Product::find($id)->delete();
         return redirect()->back();
     }
 
-    function isPublish($id)
-    {
+    function isPublish($id) {
         $product = Product::find($id);
         $data = [
             'isPublish' => !$product->isPublish
@@ -369,8 +363,7 @@ class ProductController extends Controller
         Product::find($id)->update($data);
         return redirect()->back();
     }
-    function isBuyable($id)
-    {
+    function isBuyable($id) {
         $product = Product::find($id);
         $data = [
             'isBuyable' => !$product->isBuyable
@@ -378,8 +371,7 @@ class ProductController extends Controller
         Product::find($id)->update($data);
         return redirect()->back();
     }
-    function isDownloadable($id)
-    {
+    function isDownloadable($id) {
         $product = Product::find($id);
         $data = [
             'isDownloadable' => !$product->isDownloadable
@@ -388,8 +380,7 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    function edit($id)
-    {
+    function edit($id) {
         $product = Product::find($id);
         $tags = Tag::whereIn('id', function($query) use ($id) {
             $query->select('tag_id')
@@ -398,6 +389,6 @@ class ProductController extends Controller
         })->pluck('name')->implode(' ');
         $options = ProductOptions::where(['product_id' => $id])->get();
 
-        return view('admin/products/form', compact(['product', 'tags', 'options']));
+        return view('admin.products.form', compact(['product', 'tags', 'options']));
     }
 }

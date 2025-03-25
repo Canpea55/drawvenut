@@ -20,8 +20,6 @@ class SearchController extends Controller
             ->get();
 
             foreach ($products as $product) {
-                $images = json_decode($product->images);
-                $image = !empty($images) ? asset($images[0]) : null;
                 $options = ProductOptions::where('product_id', $product->id)->get();
                 if ($options->isNotEmpty()) {
                     $lowest = $options->min('price');
@@ -29,6 +27,13 @@ class SearchController extends Controller
                     $product->lowestPrice = $lowest;
                     $product->highestPrice = $highest;
                     $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
+
+                    $temp = json_decode($product->images, true);
+                    foreach ($options as $option) {
+                        $temp[] = $option->thumbnail;
+                    }
+                    $product->images = json_encode($temp);
+                    $image = !empty($temp) ? asset($temp[0]) : null;
                 } else {
                     $product->lowestPrice = null;
                     $product->highestPrice = null;
@@ -96,6 +101,12 @@ class SearchController extends Controller
                 $product->lowestPrice = $lowest;
                 $product->highestPrice = $highest;
                 $product->prices = $lowest == $highest ? "$lowest" : "$lowest-$highest";
+
+                $temp = json_decode($product->images, true);
+                foreach ($options as $option) {
+                    $temp[] = $option->thumbnail;
+                }
+                $product->images = json_encode($temp);
             } else {
                 $product->lowestPrice = null;
                 $product->highestPrice = null;

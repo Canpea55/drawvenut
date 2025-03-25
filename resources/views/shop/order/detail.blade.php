@@ -144,46 +144,56 @@
         {{-- order detail --}}     
         <div class="col-md-5 col-lg-4 order-md-last">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-primary">รายการสินค้าที่สั่ง</span>
-                <span class="badge bg-primary rounded-pill">{{ $orderItems ? count($orderItems) : 0 }}</span>
+                <span class="text-dark">รายการสินค้าที่สั่ง</span>
+                <span class="badge bg-dark rounded-pill">{{ $orderItems ? count($orderItems) : 0 }}</span>
             </h4>
-            <ul class="list-group my-3">
+            <div class="list-group my-3">
                 @foreach($orderItems as $id => $item)
-                    <li class="list-group-item d-flex align-items-center justify-content-between lh-sm">
-                        <div class="d-flex align-items-center gap-3">
-
-                            <!-- Image Section -->
-                            <a class="no-underline" href="{{ route('product', $item->product_id) }}">
-                                @if(!empty($item->thumbnail))
-                                    <img src="{{ Storage::url($item->thumbnail) }}" alt="Product Thumbnail"
-                                        class="rounded flex-shrink-0 card" style="width: 50px; height: 50px; object-fit: cover;">
-                                @else
-                                    <svg class="bd-placeholder-img rounded flex-shrink-0 card" width="50" height="50"
-                                        xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                                        preserveAspectRatio="xMidYMid slice" focusable="false">
-                                        <rect width="100%" height="100%" fill="#D09CC7" />
-                                    </svg>
-                                @endif
+                    <div class="list-group-item list-group-item-primary d-flex align-items-center lh-sm">
+                        <div class="w-100">
+                            <a href="{{ route('product', $item->product_id) }}" class="d-flex justify-content-between align-items-center w-100 no-underline">
+                                <div class="d-flex align-items-center p-2">
+                                    <div>
+                                        <h6 class="my-1">{{ Str::limit($item->product_name, 24) }}</h6>
+                                    </div>
+                                </div>
+                                @php
+                                    $product_optionCount = 0;
+                                    foreach ($orderItems as $i => $a) {
+                                        if($a->product_id == $item->product_id) {
+                                            $product_optionCount++;
+                                        }
+                                    }
+                                @endphp
+                                <span class="badge bg-primary rounded-pill">{{$product_optionCount}}</span>
                             </a>
-
-                            <!-- Text Section (Takes up remaining space) -->
-                            <div class="flex-grow-1">
-                                <a class="no-underline" href="{{ route('product', $item->product_id) }}">
-                                    <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
-                                </a>
-                                <span class="text-body-secondary">฿{{ $item->price }}</span>
+                            <div class="my-2 w-100">
+                                <ul class="list-group">
+                                    @foreach ($orderItems as $i => $a)
+                                        @if($a->product_id == $item->product_id)
+                                            <a href="{{ route('product', ['id' => $a->product_id, 'option_id' => $a->product_options_id]) }}" class="animU list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                                <div class="d-flex justify-content-between align-items-center gap-3">
+                                                    <img class="rounded me-1 img-thumbnail" width="128" height="auto" src="{{ asset($a->option_thumbnail) }}" >
+                                                    <div>
+                                                        <div class="">{{ $a->option_name }}</div>
+                                                        <div class="text-success">฿{{ $a->option_price }}</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                </ul>
                             </div>
-
                         </div>
-                    </li>
+                    </div>
                 @endforeach
-                <li class="list-group-item">
-                    <div class="my-3 d-flex justify-content-between">
+                <li class="list-group-item list-group-item-primary">
+                    <div class="my-1 p-2 d-flex justify-content-between">
                         <span>รวม (THB)</span>
-                        <strong>฿{{$order->total}}</strong>
+                        <strong class="text-success">฿{{$order->price}}</strong>
                     </div>
                 </li>
-            </ul>
+            </div>
 
             {{-- redeem code --}}
             {{-- <form class="card p-2">

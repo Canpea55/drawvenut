@@ -266,20 +266,19 @@
                             <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
                         </a>
                     @endif
-                @endauth
 
-                {{-- do this after added toast container to app.blade.php --}}
-                <form method="POST" action="{{ route('favorite') }}" class="favorite-form"  onsubmit="setProductID({{$product->id}});">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
-                        @if (isFavorited($product->id))
-                            <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
-                        @else
-                            <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
-                        @endif
-                    </button>
-                </form>
+                    <form method="POST" action="{{ route('favorite') }}" class="favorite-form"  onsubmit="setProductID({{$product->id}});">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
+                            @if (isFavorited($product->id))
+                                <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
+                            @else
+                                <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
+                            @endif
+                        </button>
+                    </form>
+                @endauth
                 
             </div>
         </div>
@@ -303,11 +302,6 @@
                         <div class="thumbnail-container mt-2">
                             @foreach($images as $img)
                                 <img src="{{ asset($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img" data-image="{{ asset($img) }}">
-                            @endforeach
-                            @foreach($product->options as $option)
-                                @if(isset($option->thumbnail))
-                                    <img src="{{ asset($option->thumbnail) }}" alt="{{ $option->name }}" class="img-thumbnail thumbnail-img" data-image="{{ asset($option->thumbnail) }}">
-                                @endif
                             @endforeach
                         </div>
                     @else
@@ -356,7 +350,6 @@
                         <form action="{{ route('cart.add') }}" class="cart-form" method="POST">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            @if(!empty($defaultImage))<input type="hidden" name="product_image" value="{{ $defaultImage }}">@endif
                             <input type="hidden" name="product_name" value="{{ $product->name }}">
                             <input type="hidden" name="option_id" id="selected_option" value="">
                         

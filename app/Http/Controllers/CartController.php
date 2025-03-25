@@ -29,7 +29,8 @@ class CartController extends Controller
                 }
                 $cart_items[$productId]['optionDetails'] = $selectedOptionsDetails;
             }
-            return view('shop.cart', compact('cart_items'));
+            session()->put('cart', $cart_items);
+            return view('shop.cart');
         } else {
             return redirect(route('index'))->with('danger', 'ยังไม่มีสินค้าในตะกร้าสินค้า');
         }
@@ -52,7 +53,6 @@ class CartController extends Controller
             } else {
                 $cart[$request->product_id] = [
                     "name" => $request->product_name,
-                    "image" => $request->product_image,
                     "selectedOptions" => $selectedOptions,
                 ];
             }

@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function orders()
-    {
+    public function orders() {
         if(auth()){
             $orders = Order::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
             $orderItems = collect();
@@ -29,8 +28,7 @@ class OrderController extends Controller
         }
     }
 
-    public function order($order_id)
-    {
+    public function order($order_id) {
         $order = Order::findOrFail($order_id);
         if($order->user_id == Auth::user()->id || Auth::user()->isAdmin){
             $orderItems = OrderItem::where('order_id', $order_id)->get();
@@ -41,8 +39,7 @@ class OrderController extends Controller
         }
     }
 
-    public function add(Request $request)
-    {
+    public function add(Request $request) {
         DB::beginTransaction();
         try {
             $order = Order::create([
@@ -51,15 +48,25 @@ class OrderController extends Controller
                 'status' => "pending",
             ]);
             
-            $products = json_decode($request->products);
-            foreach($products as $id => $product){
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $id,
-                    'name' => $product->name,
-                    'thumbnail' => $product->image,
-                    'price' => $product->price,
-                ]);
+            $items = json_decode($request->items);
+            foreach($items as $id => $item) {
+                foreach($item->selectedOptions as $option_id) {
+                    foreach($item->optionDetails as $detail) {
+                        if($option_id == $detail->option_id){
+                            $orderitem = OrderItem::create([
+                                'order_id' => $order->id,
+                                
+                                'product_id' => $id,
+                                'product_name' => $item->name,
+        
+                                'product_options_id' => $detail->option_id,
+                                'option_thumbnail' => $detail->thumbnail,
+                                'option_name' => $detail->name,
+                                'option_price' => $detail->price,
+                            ]);
+                        }
+                    }
+                }
             };
     
             app(CartController::class)->clear();
@@ -68,12 +75,12 @@ class OrderController extends Controller
             return redirect(route('order',  $order->id))->with('success', 'Ordered successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return dd($e);
+            // return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
 
-    public function checkout(Request $request)
-    {
+    public function checkout(Request $request) {
         $id = $request->input("id");
 
         $request->validate([
@@ -101,7 +108,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Receipt uploaded successfully!');
     }
 
-    public function cancel(Request $request){
+    public function cancel(Request $request) {
         $id = $request->order_id;
         $order = Order::findOrFail($id);
         $canceller = auth()->id();
@@ -187,8 +194,7 @@ class OrderController extends Controller
     }
 
     //--------------------------------------------admin--------------------------------------------
-    public function manage(Request $request)
-    {
+    public function manage(Request $request) {
         $orders=Order::orderBy('id', 'desc')->paginate(10, ['*'], 'orders');
         $submitted=Order::where('status', 'submitted')->orderBy('created_at', 'asc')->paginate(4, ['*'], 'submitted');
         $canceling=Order::where('status', 'canceling')->orderBy('created_at', 'asc')->paginate(4, ['*'], 'canceling');
@@ -198,8 +204,7 @@ class OrderController extends Controller
         return view('admin.order.manage', compact(['orders', 'submitted', 'canceling','cancelDetail']));
     }
 
-    public function approve(Request $request)
-    {
+    public function approve(Request $request) {
         DB::beginTransaction();
         try {
             $order = Order::findOrFail($request->id);
@@ -222,9 +227,6 @@ class OrderController extends Controller
         }
     }
 
-
-    public function remove(Request $request)
-    {
-        
+    public function remove(Request $request) {
     }
 }

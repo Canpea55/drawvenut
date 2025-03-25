@@ -12,8 +12,8 @@
             @php
                 // Get count of all option in cart
                 $optionCount = 0;
-                $cart = session()->get('cart', []);
-                foreach($cart as $product){
+                $cart_items = session()->get('cart', []);
+                foreach($cart_items as $product){
                     $optionCount += count($product['selectedOptions']);
                 }
             @endphp
@@ -81,7 +81,6 @@
                                                         <div class="text-success">฿{{ $item['optionDetails'][$index]['price'] }}</div>
                                                     </div>
                                                 </div>
-                                                <!-- Remove Button -->
                                                 <form action="{{ route('cart.remove') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="product_id" value="{{$product_id}}">
@@ -106,7 +105,7 @@
                     <div class="my-3">
                         <form action="{{ route('order.add') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="products" value="{{json_encode(session('cart'))}}">
+                            <input type="hidden" name="items" value="{{json_encode(session('cart'))}}">
                             <input type="hidden" name="total" value="{{ $total }}">
                             <button type="submit" class="w-100 btn btn-primary btn-lg">ซื้อสินค้า</button>
                         </form>
