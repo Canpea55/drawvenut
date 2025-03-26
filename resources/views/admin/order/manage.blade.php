@@ -183,13 +183,13 @@
                                 <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
                             </a>
                             <p class="card-text mb-auto"></p>
-                            <form id="approveForm" method="POST" action="{{ route('order.approve') }}" enctype="multipart/form-data">
+                            <form id="approveForm{{$item->id}}" method="POST" action="{{ route('order.approve') }}" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="id" value="{{$item->id}}">
                             </form>
                             <div class="d-flex justify-content-between align-items-center pt-4">
                                 <div class="btn-group w-100">
-                                    <button form="approveForm" type="submit" class="btn btn-lg btn-success" onclick="return confirm('ยืนยันว่าตรวจสอบเรียบร้อยแล้วอนุมัติออร์เดอร์ที่ {{ $item->id }} ยอดรวม ฿{{$item->total}} ไหม?')">อนุมัติ</button>
+                                    <button form="approveForm{{$item->id}}" type="submit" class="btn btn-lg btn-success" onclick="return confirm('ยืนยันว่าตรวจสอบเรียบร้อยแล้วอนุมัติออร์เดอร์ที่ {{ $item->id }} ยอดรวม ฿{{$item->total}} ไหม?')">อนุมัติ</button>
                                     <button id="cancel" class="btn btn-danger btn-lg" onclick="showCancelForm({{$item->id}}); updateReason({{$item->id}}); return false;">ยกเลิกคำสั่งซื้อ</button>
                                 </div>
                             </div>

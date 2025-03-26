@@ -66,3 +66,15 @@ if(!function_exists('isFavorited')) {
         return false;
     }
 }
+
+if(!function_exists('priceTag')) {
+    function priceTag($price){
+        if($price == 0) {
+            $price = "ฟรี!";
+        } else {
+            $price = $price . " ฿";
+        }
+
+        return $price;
+    }
+}

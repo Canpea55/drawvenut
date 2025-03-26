@@ -118,7 +118,14 @@
                                                         @foreach ($items as $option)
                                                             <a href="{{ route('product', ['id' => $option->product_id, 'option_id' => $option->product_options_id]) }}" class="animU list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex justify-content-between align-items-center gap-3">
-                                                                    <img class="rounded me-1 img-thumbnail" width="64" height="auto" src="{{ asset($option->option_thumbnail) }}">
+                                                                    @if ($option->option_thumbnail != null)
+                                                                        <img class="rounded me-1 img-thumbnail" width="64" height="auto" src="{{ asset($option->option_thumbnail) }}" >
+                                                                    @else
+                                                                        <svg class="bd-placeholder-img card-img-top rounded" width="64" height="64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                                                            <title>no image</title>
+                                                                            <rect width="100%" height="100%" fill="#D09CC7"></rect>
+                                                                        </svg>
+                                                                    @endif
                                                                     <div>
                                                                         <div>{{ $option->option_name }}</div>
                                                                         <div class="text-success">฿{{ $option->option_price }}</div>

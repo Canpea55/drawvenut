@@ -91,6 +91,10 @@
             const optionBadges = document.querySelectorAll(".option-badge");
             const priceDisplay = document.getElementById('price-display');
             const selectedOptionInput = document.getElementById("selected_option");
+
+            if(optionBadges.length == 0){
+                document.querySelector('.cart-form button[type="submit"]').disabled = false;
+            }
             
             optionBadges.forEach(function(badge) {
                 badge.addEventListener("click", function(e) {
@@ -131,7 +135,7 @@
                     if (!found) {
                         mainImage.src = newSrc;
                     }
-            
+
                     if(selectedOptionInput.value === '') {
                         priceDisplay.textContent = '฿' + "{{$product->prices}}";
                         document.querySelector('.cart-form button[type="submit"]').disabled = true;
@@ -295,15 +299,24 @@
                         @endphp
                         <!-- Main Image -->
                         <picture>
-                            <img id="mainImage" src="{{ asset($defaultImage) }}" alt="Product Image" width="100%"
-                                class="rounded border">
+                            @if (!$defaultImage == null)
+                                <img id="mainImage" src="{{ asset($defaultImage) }}" alt="Product Image" width="100%" class="rounded border">
+                            @else
+                                <svg class="bd-placeholder-img card-img-top" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                    <title>no image</title>
+                                    <rect width="100%" height="100%" fill="#D09CC7"></rect>
+                                </svg>
+                                <p style="position: absolute;">ไม่มีภาพประกอบ</p>
+                            @endif
                         </picture>
                         <!-- Horizontal Thumbnail Container -->
-                        <div class="thumbnail-container mt-2">
-                            @foreach($images as $img)
-                                <img src="{{ asset($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img" data-image="{{ asset($img) }}">
-                            @endforeach
-                        </div>
+                        @if (!$defaultImage == null)
+                            <div class="thumbnail-container mt-2">
+                                @foreach($images as $img)
+                                    <img src="{{ asset($img) }}" alt="Thumbnail" class="img-thumbnail thumbnail-img" data-image="{{ asset($img) }}">
+                                @endforeach
+                            </div>
+                        @endif
                     @else
                         No Images Available
                     @endif
@@ -331,30 +344,72 @@
                         @endif
                     </div>
                     <div class="d-flex flex-wrap gap-2 justify-content-start overflow-y-scroll py-2" style="max-height: 40%">
-                        @foreach($product->options as $option)
-                            @if(isset($option->thumbnail))
+                        @if(count($product->options) > 1)
+                            @foreach($product->options as $option)
                                 <a href="#" class="badge animU d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded no-underline option-badge" 
-                                   data-image="{{ asset($option->thumbnail) }}"
-                                   data-option="{{ $option->id }}">
-                                    <img class="rounded me-1" width="32" height="32" src="{{ asset($option->thumbnail) }}" alt="{{ $option->name }}">
+                                data-image="{{ asset($option->thumbnail) }}"
+                                data-option="{{ $option->id }}">
+                                    @if(isset($option->thumbnail))
+                                        <img class="rounded me-1" width="auto" height="32" src="{{ asset($option->thumbnail) }}" alt="{{ $option->name }}">
+                                    @endif
                                     <div>
                                         <div class="text-start mb-1">{{$option->name}}</div>
                                         <div class="text-start text-success">฿{{$option->price}}</div>
                                     </div>
                                 </a>
-                            @endif
-                        @endforeach
+                            @endforeach
+                        @else
+                            
+                        @endif
                     </div>
                     <div class="flex-grow-1"></div>
-                    <div id="button-container" class="">
-                        <form action="{{ route('cart.add') }}" class="cart-form" method="POST">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <input type="hidden" name="product_name" value="{{ $product->name }}">
-                            <input type="hidden" name="option_id" id="selected_option" value="">
-                        
-                            <button type="submit" class="btn btn-primary btn-lg" disabled>เพิ่มใส่ตะกร้า</button>
-                        </form>
+                    <div id="button-container" class="d-flex flex-wrap gap-2">
+                        @if ($product->price <= 0)
+                            <a type="button" class="btn btn-success btn-lg disabled" aria-disabled="true" href="#">เพิ่มไปยังคลัง</a>
+                            @if ($product->isDownloadable && $product->options[0]->downloads[0])
+                                <div class="btn-group dropdown-center">
+                                    <a target="_top" href="{{$product->options[0]->downloads[0]->link}}" class="btn btn-lg btn-success" {{$product->options[0]->downloads[0]->isDownload ? 'download' : '' }}>{{$product->options[0]->downloads[0]->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$product->options[0]->downloads[0]->type}})</a>
+                                    <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu bg-primary-subtle" style="--bs-dropdown-min-width:12rem;">
+                                        <p class="px-4 py-2 text-body-secondary text-center w-100 m-0">
+                                            เนื้อหาที่สามารถดาวน์โหลดได้
+                                        </p>
+                                        <li><hr class="dropdown-divider"></li>
+                                        @foreach ($product->options as $option)
+                                            <div class="list-group-item list-group-item-primary d-flex align-items-center lh-sm">
+                                                <div class="w-100">
+                                                    <div class="d-flex justify-content-between align-items-center gap-3 w-100 no-underline px-2">
+                                                        <img class="rounded me-1 img-thumbnail" width="64" height="auto" src="{{ asset($option->thumbnail) }}">
+                                                        <h6 class="my-1">{{ Str::limit($option->name, 32) }}</h6>
+                                                        <div class="d-flex flex-grow-1"></div>
+                                                    </div>
+                                                    <div class="my-2">
+                                                        <ul class="list-group mx-2">
+                                                            @foreach ($option->downloads as $download)
+                                                                <a target="_top" href="{{$download->link}}" class="animU dropdown-item list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center" {{$download->isDownload ? 'download' : '' }}>{{$download->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$download->type}})</a>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @else
+                                <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ไม่สามารถดาวห์โหลดได้">ดาวน์โหลด</a>
+                            @endif
+                        @else
+                            <form action="{{ route('cart.add') }}" class="cart-form" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="product_name" value="{{ $product->name }}">
+                                <input type="hidden" name="option_id" id="selected_option" value="{{count($product->options) > 1 ? '' : $product->options[0]->id}}">
+                            
+                                <button type="submit" class="btn btn-primary btn-lg" disabled>เพิ่มใส่ตะกร้า</button>
+                            </form>
+                        @endif
                         {{-- @if ($product->owned)
                             @if ($product->isDownloadable)
                                 <div class="btn-group">

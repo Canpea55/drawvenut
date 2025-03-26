@@ -135,7 +135,7 @@
                         </button>
                         <ul class="dropdown-menu bg-primary-subtle" style="--bs-dropdown-min-width:24rem;">
                             <p class="px-4 py-2 text-body-secondary text-center w-100 m-0">
-                                เนื้อหาที่สามารถดาวน์โหลดได้อื่นๆ
+                                เนื้อหาที่สามารถดาวน์โหลดได้
                             </p>
                             <li><hr class="dropdown-divider"></li>
                             @foreach ($options as $option)

@@ -55,7 +55,7 @@
                                 <div class="card-body" >
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <strong class="d-flex text-primary-emphasis align-items-center" style="width: 85%">{{ $item->name }}</strong>
-                                        <strong class="text-success flex-shrink-0 m-0">{{ $item->prices }} ฿</strong>
+                                        <strong class="text-success flex-shrink-0 m-0">{{priceTag($item->prices)}}</strong>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small class="d-flex text-primary-emphasis align-items-center" style="width: 85%">เพิ่มเมื่อ</small>

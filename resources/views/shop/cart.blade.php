@@ -75,7 +75,14 @@
                                             @foreach($item['selectedOptions'] as $index => $option)
                                             <a href="{{ route('product', ['id' => $product_id, 'option_id' => $option]) }}" class="animU list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                                 <div class="d-flex justify-content-between align-items-center gap-3">
-                                                    <img class="rounded me-1 img-thumbnail" width="128" height="auto" src="{{ asset($item['optionDetails'][$index]['thumbnail']) }}" >
+                                                    @if ($item['optionDetails'][$index]['thumbnail'] != null)
+                                                        <img class="rounded me-1 img-thumbnail" width="128" height="auto" src="{{ asset($item['optionDetails'][$index]['thumbnail']) }}" >
+                                                    @else
+                                                        <svg class="bd-placeholder-img card-img-top rounded" width="128" height="128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                                            <title>no image</title>
+                                                            <rect width="100%" height="100%" fill="#D09CC7"></rect>
+                                                        </svg>
+                                                    @endif
                                                     <div>
                                                         <div class="">{{ $item['optionDetails'][$index]['name'] }}</div>
                                                         <div class="text-success">฿{{ $item['optionDetails'][$index]['price'] }}</div>
