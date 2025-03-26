@@ -173,32 +173,36 @@
                 <div class="grid-item col-md-6" onmouseover="updateReason({{$item->id}})">
                     <div class="animU row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
-                                <a class="no-underline" href="{{route('order', [$item->id])}}">
-                                    <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
-                                    <h3 class="mb-0">฿{{$item->total}}</h3>
-                                    <div class="mb-1 text-body-secondary">{{ convertTimezone($item->created_at)  }}</div>
-                                    <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
-                                </a>
-                                <p class="card-text mb-auto"></p>
-                                <form id="approveForm" method="POST" action="{{ route('order.approve') }}" enctype="multipart/form-data">
-                                    @csrf
-                                    <input type="hidden" name="id" value="{{$item->id}}">
-                                </form>
+                            <a class="no-underline" href="{{route('order', [$item->id])}}">
+                                <div class="d-flex justify-content-center mb-4">
+                                    <img src="{{asset($item->receipt)}}" alt="receipt" class="img-fluid" width="100%">
+                                </div>
+                                <strong class="d-inline-block mb-2 text-primary-emphasis">หมายเลขคำสั่งซื้อที่ {{$item->id}}</strong>
+                                <h3 class="mb-0">฿{{$item->total}}</h3>
+                                <div class="mb-1 text-body-secondary">{{ convertTimezone($item->created_at)  }}</div>
+                                <small class="text-body-secondary">{{ calculateDuration($item->updated_at, now()) }}ที่แล้ว</small>
+                            </a>
+                            <p class="card-text mb-auto"></p>
+                            <form id="approveForm" method="POST" action="{{ route('order.approve') }}" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="id" value="{{$item->id}}">
+                            </form>
                             <div class="d-flex justify-content-between align-items-center pt-4">
                                 <div class="btn-group w-100">
                                     <button form="approveForm" type="submit" class="btn btn-lg btn-success" onclick="return confirm('ยืนยันว่าตรวจสอบเรียบร้อยแล้วอนุมัติออร์เดอร์ที่ {{ $item->id }} ยอดรวม ฿{{$item->total}} ไหม?')">อนุมัติ</button>
                                     <button id="cancel" class="btn btn-danger btn-lg" onclick="showCancelForm({{$item->id}}); updateReason({{$item->id}}); return false;">ยกเลิกคำสั่งซื้อ</button>
                                 </div>
                             </div>
-                            <form id="cancelForm{{$item->id}}" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;">
+                            <form id="cancelForm{{$item->id}}" method="POST" action="{{route('order.cancel')}}" enctype="multipart/form-data" style="display: none;"
+                                onsubmit="document.getElementById('cancelForm{{$item->id}}').reason.value = '[เหตุผลที่ยกเลิกจากผู้ดูแล]\n' + document.getElementById('cancelReason{{$item->id}}').value + document.getElementById('ectReason{{$item->id}}').value;">
                                 @csrf
                                 <input type="hidden" name="order_id" value="{{$item->id}}">
                                 <input type="hidden" name="reason" value="">
                                 <select class="form-select mt-2" id="cancelReason{{$item->id}}" onchange="updateReason({{$item->id}})">
-                                    <option value="ไม่ชำระเงินในเวลาที่กำหนด">ไม่ชำระเงินในเวลาที่กำหนด</option>
-                                    <option value="การชำระเงินล้มเหลว">การชำระเงินล้มเหลว</option>
-                                    <option value="หลอกลวง">หลอกลวง</option>
-                                    <option value="อื่นๆ : ">อื่นๆ</option>
+                                  <option value="ไม่ชำระเงินในเวลาที่กำหนด">ไม่ชำระเงินในเวลาที่กำหนด</option>
+                                  <option value="การชำระเงินล้มเหลว">การชำระเงินล้มเหลว</option>
+                                  <option value="หลอกลวง">หลอกลวง</option>
+                                  <option value="อื่นๆ : ">อื่นๆ</option>
                                 </select>
                                 <textarea type="text" class="form-control mt-2" id="ectReason{{$item->id}}" style="display: none;" placeholder="กรุณากรอกเหตุผล" onchange="updateReason({{$item->id}})"></textarea>
                                 <button class="btn btn-danger btn-sm mt-2" type="submit" onclick="return confirm('ยืนยันว่าจะยกเลิกการสั่งซื้อนี้')">ยืนยัน</button>
@@ -220,7 +224,7 @@
                         <div class="animU row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                             <div class="col p-4 d-flex flex-column position-static">
                                 <a class="no-underline" href="{{route('order', [$item->id])}}">
-                                    <strong class="d-inline-block mb-2 text-primary-emphasis">{{$item->id}}</strong>
+                                    <strong class="d-inline-block mb-2 text-primary-emphasis">หมายเลขคำสั่งซื้อที่ {{$item->id}}</strong>
                                     <h3 class="mb-0">฿{{$item->total}}</h3>
                                 </a>
                                     <div class="mb-1 text-body-secondary">{{ convertTimezone($item->created_at)  }}</div>

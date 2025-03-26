@@ -152,7 +152,7 @@
         <div class="d-none d-md-block">
             <div class="row g-4">
                 <div class="col-md-5 col-lg-4 ">
-                    <ul class="list-group product-menu" style="height: 80%">
+                    <ul class="list-group product-menu" style="height: 80vh">
                         <!-- Search bar for filtering product list -->
                         <input type="text" id="search-input" class="form-control mb-3" placeholder="ค้นหาของในคลัง...">
                         @foreach($products as $item)
@@ -178,7 +178,7 @@
                                         </svg>
                                     @endif
                                     <div class="flex-grow-1">
-                                        <h6 class="my-1">{{ Str::limit($item['name'], 24) }}</h6>
+                                        <h6 class="my-1">{{ Str::limit($item['name'], 32) }}</h6>
                                     </div>
                                 </div>
                             </a>
@@ -188,7 +188,7 @@
 
                 <div class="col-md-7 col-lg-8">
                     <iframe id="contentframe" src="{{route('library.product.info', $products[0]->id)}}" width="100%"
-                            height="1000vh" style="border: none;"></iframe>
+                            height="800vh" style="border: none;"></iframe>
                 </div>
             </div>
         </div>

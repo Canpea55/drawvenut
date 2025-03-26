@@ -96,7 +96,9 @@ class OrderController extends Controller
         // Handle file upload
         if ($request->hasFile('receipt')) {
             $image = $request->file('receipt');
-            $imagePath = $image->store('receipts', 'public'); // Save to storage/app/public/receipts
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('receipts'), $filename);
+            $imagePath = 'receipts/' . $filename;
 
             // Update order with image path
             Order::find($id)->update([
@@ -213,7 +215,7 @@ class OrderController extends Controller
             $libraryController = new LibraryController(); // Create instance
 
             foreach ($orderItems as $item) {
-                $libraryController->add($order->user_id, $item->product_id);
+                $libraryController->add($order->user_id, $item->product_options_id);
             }
 
             $order->status = 'success';

@@ -23,4 +23,9 @@ class Product extends Model
     {
         return $this->belongsToMany(\App\Models\Tag::class, 'product_tags', 'product_id', 'tag_id');
     }
+
+    public function options()
+    {
+        return $this->hasMany(ProductOptions::class, 'product_id');
+    }
 }

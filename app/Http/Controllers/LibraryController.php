@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Library;
 use App\Models\Product;
 use App\Models\Favorite;
+use App\Models\ProductOptionDownloads;
 use App\Models\ProductOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,12 +18,30 @@ class LibraryController extends Controller
     {
         $library = Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
         $products = [];
+        $product_options = [];
+        $product_option_ids = [];
 
         foreach ($library as $item) {
-            $product = Product::find($item->product_id);
-            if ($product) {
-                $products[] = $product;
+            $option = ProductOptions::find($item->product_options_id);
+            if ($option) {
+                $product_options[] = $option;
+                $product_option_ids[] = $option->id;
             }
+        }
+
+        $product_ids = [];
+        foreach ($product_options as $item) {
+            $product_ids[] = $item->product_id;
+        }
+        $products = Product::whereIn('id', $product_ids)->get();
+
+        foreach($products as $product) {
+            $temp = json_decode($product->images, true);
+            $options = ProductOptions::where(['product_id' => $product->id])->whereIn('id', $product_option_ids)->get();
+            foreach ($options as $option) {
+                $temp[] = $option->thumbnail;
+            }
+            $product->images = json_encode($temp);
         }
 
         return view('shop.library.index', compact(['library', 'products']));
@@ -30,15 +49,21 @@ class LibraryController extends Controller
 
     function info($product_id)
     {
-        $product = Product::find($product_id);
-        $library=Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
-        foreach ($library as $item) {
-            if ($item->product_id == $product_id) {
-                $product->owned = true;
-                break;
-            }
+        $library = Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+        $options_id = [];
+        foreach($library as $item){
+            $options_id[] = $item->product_options_id;
         }
-        return view('shop.library.product-info', compact('product'));
+        $product = Product::find($product_id);
+        $options = $product->options()->whereIn('id', $options_id)->get();
+
+        $temp = json_decode($product->images, true);
+        foreach ($options as $option) {
+            $temp[] = $option->thumbnail;
+        }
+        $product->images = json_encode($temp);
+
+        return view('shop.library.info', compact('product', 'options'));
     }
 
     public function manage(Request $request)
@@ -47,11 +72,11 @@ class LibraryController extends Controller
         return view('admin.library.manage', compact('library'));
     }
 
-    public function add($user_id, $product_id)
+    public function add($user_id, $product_options_id)
     {
         $item = Library::create([
             'user_id' => $user_id,
-            'product_id' => $product_id,
+            'product_options_id' => $product_options_id,
         ]);
     }
 

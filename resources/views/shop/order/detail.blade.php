@@ -148,49 +148,57 @@
                 <span class="badge bg-dark rounded-pill">{{ $orderItems ? count($orderItems) : 0 }}</span>
             </h4>
             <div class="list-group my-3">
-                @foreach($orderItems as $id => $item)
-                    <div class="list-group-item list-group-item-primary d-flex align-items-center lh-sm">
-                        <div class="w-100">
-                            <a href="{{ route('product', $item->product_id) }}" class="d-flex justify-content-between align-items-center w-100 no-underline">
-                                <div class="d-flex align-items-center p-2">
-                                    <div>
-                                        <h6 class="my-1">{{ Str::limit($item->product_name, 24) }}</h6>
+                @php
+                    $previousProduct = null;
+                @endphp
+                @foreach($orderItems as $item)
+                    @if($previousProduct !== $item->product_id)
+                        @php
+                            $previousProduct = $item->product_id;
+                        @endphp
+                        <div class="list-group-item list-group-item-primary d-flex align-items-center lh-sm">
+                            <div class="w-100">
+                                <a href="{{ route('product', $item->product_id) }}" class="d-flex justify-content-between align-items-center w-100 no-underline">
+                                    <div class="d-flex align-items-center p-2">
+                                        <div>
+                                            <h6 class="my-1">{{ Str::limit($item->product_name, 32) }}</h6>
+                                        </div>
                                     </div>
-                                </div>
-                                @php
-                                    $product_optionCount = 0;
-                                    foreach ($orderItems as $i => $a) {
-                                        if($a->product_id == $item->product_id) {
-                                            $product_optionCount++;
-                                        }
-                                    }
-                                @endphp
-                                <span class="badge bg-primary rounded-pill">{{$product_optionCount}}</span>
-                            </a>
-                            <div class="my-2 w-100">
-                                <ul class="list-group">
-                                    @foreach ($orderItems as $i => $a)
-                                        @if($a->product_id == $item->product_id)
-                                            <a href="{{ route('product', ['id' => $a->product_id, 'option_id' => $a->product_options_id]) }}" class="animU list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                                <div class="d-flex justify-content-between align-items-center gap-3">
-                                                    <img class="rounded me-1 img-thumbnail" width="128" height="auto" src="{{ asset($a->option_thumbnail) }}" >
-                                                    <div>
-                                                        <div class="">{{ $a->option_name }}</div>
-                                                        <div class="text-success">฿{{ $a->option_price }}</div>
-                                                    </div>
-                                                </div>
-                                            </a>
+                                    @php
+                                        $product_optionCount = 0;
+                                    @endphp
+                                    @foreach ($orderItems as $option)
+                                        @if($option->product_id == $item->product_id)
+                                            @php $product_optionCount++; @endphp
                                         @endif
                                     @endforeach
-                                </ul>
+                                    <span class="badge bg-primary rounded-pill">{{$product_optionCount}}</span>
+                                </a>
+                                <div class="my-2 w-100">
+                                    <ul class="list-group">
+                                        @foreach ($orderItems as $option)
+                                            @if($option->product_id == $item->product_id)
+                                                <a href="{{ route('product', ['id' => $option->product_id, 'option_id' => $option->product_options_id]) }}" class="animU list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex justify-content-between align-items-center gap-3">
+                                                        <img class="rounded me-1 img-thumbnail" width="128" height="auto" src="{{ asset($option->option_thumbnail) }}" >
+                                                        <div>
+                                                            <div class="">{{ $option->option_name }}</div>
+                                                            <div class="text-success">฿{{ $option->option_price }}</div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 @endforeach
                 <li class="list-group-item list-group-item-primary">
                     <div class="my-1 p-2 d-flex justify-content-between">
                         <span>รวม (THB)</span>
-                        <strong class="text-success">฿{{$order->price}}</strong>
+                        <strong class="text-success">฿{{$order->total}}</strong>
                     </div>
                 </li>
             </div>
@@ -231,7 +239,7 @@
                             <div class="col-12 col-md-6 p-4">
                                 <h4>สลิปที่อัปโหลดไว้</h4>
                                 <img class="img-fluid" 
-                                src="{{ asset('storage/' . $order->receipt) }}" 
+                                src="{{ asset($order->receipt) }}" 
                                 alt="Receipt"
                                 style="height: auto; width: 100%;">
                             </div>
@@ -254,7 +262,7 @@
                         <div class="col-12 col-md-6 p-4">
                             <h4>สลิปที่อัปโหลดไว้</h4>
                             <img class="img-fluid" 
-                            src="{{ asset('storage/' . $order->receipt) }}" 
+                            src="{{ asset($order->receipt) }}" 
                             alt="Receipt"
                             style="height: auto; width: 100%;">
                         </div>
@@ -295,7 +303,7 @@
                         <div class="col-12 col-md-6 p-4">
                             <h4>สลิปที่อัปโหลดไว้</h4>
                             <img class="img-fluid" 
-                            src="{{ asset('storage/' . $order->receipt) }}" 
+                            src="{{ asset($order->receipt) }}" 
                             alt="Receipt"
                             style="height: auto; width: 100%;">
                         </div>
@@ -321,14 +329,14 @@
                         <div class="col-12 col-md-6 p-4">
                             <h4>สลิปที่อัปโหลดไว้</h4>
                             <img class="img-fluid" 
-                            src="{{ asset('storage/' . $order->receipt) }}" 
+                            src="{{ asset($order->receipt) }}" 
                             alt="Receipt"
                             style="height: auto; width: 100%;">
                         </div>
                         <div class="col-12 col-md-6 p-4">
                             <h4>หลักฐานการคืนเงิน</h4>
                             <img class="img-fluid" 
-                            src="{{ asset('storage/' . $cancelDetail->refundslip) }}" 
+                            src="{{ asset($cancelDetail->refundslip) }}" 
                             alt="Refund">
                         </div>
                     </div>
@@ -353,7 +361,7 @@
                         <div class="col-12 col-md-6 p-4">
                             <h4>สลิปที่อัปโหลดไว้</h4>
                             <img class="img-fluid" 
-                            src="{{ asset('storage/' . $order->receipt) }}" 
+                            src="{{ asset($order->receipt) }}" 
                             alt="Receipt"
                             style="height: auto; width: 100%;">
                         </div>
@@ -367,7 +375,7 @@
 
                     <div class="my-2">
                         <p style="margin-bottom: 0;">สลิปที่อัปโหลดไว้</p>
-                        <img style="margin-top: 0;" class="img-fluid" src="{{ asset('storage/' . $order->receipt) }}" alt="Receipt Image">
+                        <img style="margin-top: 0;" class="img-fluid" src="{{ asset($order->receipt) }}" alt="Receipt Image">
                     </div>
                     @break
             @endswitch

@@ -66,6 +66,16 @@
         background: rgba(0, 0, 0, 0.6);
         border-radius: 5px;
     }
+
+    .animU {
+        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+        opacity: 0.9;
+    }
+    .animU:hover {
+        transform: translateY(-2px);
+        /* box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05); Adds shadow */
+        opacity: 1;
+    }
 </style>
 
 <head>
@@ -117,11 +127,40 @@
             </div> --}}
 
             <div class="d-flex justify-content-start mt-3 gap-1">
-            @if ($product->isDownloadable)
-                <a class="btn btn-success btn-lg " href="{{ $product->download }}" download>ดาวน์โหลด</a>
-            @else
-                <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true">ดาวน์โหลด</a>
-            @endif
+                @if ($product->isDownloadable && $options[0]->downloads[0])
+                    <div class="btn-group">
+                        <a target="_top" href="{{$options[0]->downloads[0]->link}}" class="btn btn-lg btn-success" {{$options[0]->downloads[0]->isDownload ? 'download' : '' }}>{{$options[0]->downloads[0]->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$options[0]->downloads[0]->type}})</a>
+                        <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu bg-primary-subtle" style="--bs-dropdown-min-width:24rem;">
+                            <p class="px-4 py-2 text-body-secondary text-center w-100 m-0">
+                                เนื้อหาที่สามารถดาวน์โหลดได้อื่นๆ
+                            </p>
+                            <li><hr class="dropdown-divider"></li>
+                            @foreach ($options as $option)
+                                <div class="list-group-item list-group-item-primary d-flex align-items-center lh-sm">
+                                    <div class="w-100">
+                                        <div class="d-flex justify-content-between align-items-center gap-3 w-100 no-underline px-2">
+                                            <img class="rounded me-1 img-thumbnail" width="64" height="auto" src="{{ asset($option->thumbnail) }}">
+                                            <h6 class="my-1">{{ Str::limit($option->name, 32) }}</h6>
+                                            <div class="d-flex flex-grow-1"></div>
+                                        </div>
+                                        <div class="my-2">
+                                            <ul class="list-group mx-2">
+                                                @foreach ($option->downloads as $download)
+                                                    <a target="_top" href="{{$download->link}}" class="animU dropdown-item list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center" {{$download->isDownload ? 'download' : '' }}>{{$download->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$download->type}})</a>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </ul>
+                    </div>
+                @else
+                    <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ไม่สามารถดาวห์โหลดได้">ดาวน์โหลด</a>
+                @endif
                 <a href="{{route('product', $product->id)}}" class="btn btn-lg align-self-center" target="_top">หน้าร้านค้า</a>
             </div>
         </div>
@@ -143,11 +182,11 @@
         <div class="container p-4">
             {!! $product->description !!}
             @php
-                $images = json_decode($product->images, true);
+$images = json_decode($product->images, true);
             @endphp
             @if(is_array($images) && count($images) > 0)
                 @php
-                    $defaultImage = $images[0];
+    $defaultImage = $images[0];
                 @endphp
                 <!-- Main Image -->
                 <picture class="mt-4">
