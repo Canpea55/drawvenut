@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/library/product/{id}', [LibraryController::class, 'info'])->name('library.product.info');
     Route::get('/favorites', [LibraryController::class, 'favorites'])->name('favorites');
     Route::post('/favorite', [LibraryController::class, 'favorite'])->name('favorite');
+    Route::post('/library/free', [ShopController::class, 'free2Library'])->name('library.free');
 
     // cart system
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');

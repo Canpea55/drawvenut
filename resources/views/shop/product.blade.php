@@ -364,9 +364,14 @@
                     </div>
                     <div class="flex-grow-1"></div>
                     <div id="button-container" class="d-flex flex-wrap gap-2">
-                        @if ($product->price <= 0)
-                            <a type="button" class="btn btn-success btn-lg disabled" aria-disabled="true" href="#">เพิ่มไปยังคลัง</a>
-                            @if ($product->isDownloadable && $product->options[0]->downloads[0])
+                        @if ($product->prices <= 0)
+                            <form action="{{route('library.free')}}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{$product->id}}">
+                                <button type="submit" class="btn btn-success btn-lg">เพิ่มไปยังคลัง</button>
+                            </form>
+                            {{-- <a type="button" class="btn btn-success btn-lg" href="{{route('library.free', ['product_id' => $product->id])}}">เพิ่มไปยังคลัง</a> --}}
+                            @if ($product->isDownloadable && !empty($product->options[0]->downloads[0]))
                                 <div class="btn-group dropdown-center">
                                     <a target="_top" href="{{$product->options[0]->downloads[0]->link}}" class="btn btn-lg btn-success" {{$product->options[0]->downloads[0]->isDownload ? 'download' : '' }}>{{$product->options[0]->downloads[0]->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$product->options[0]->downloads[0]->type}})</a>
                                     <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
