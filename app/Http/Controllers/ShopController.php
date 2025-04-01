@@ -54,14 +54,6 @@ class ShopController extends Controller
     {
         // Eager load tags with the product
         $product = Product::find($id);
-        $library = Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
-        $product->owned = false;
-        foreach ($library as $item) {
-            if ($item->product_id == $id) {
-                $product->owned = true;
-                break;
-            }
-        }
 
         if ($product->options->isNotEmpty()) {
             $lowest = $product->options->min('price');
@@ -90,7 +82,6 @@ class ShopController extends Controller
     }
 
     function free2Library(Request $request){
-        dd($request->product_id);
         $product = Product::find($request->product_id);
         if ($product->options->isNotEmpty()) {
             $lowest = $product->options->min('price');
@@ -111,40 +102,46 @@ class ShopController extends Controller
         }
 
         if($product->prices <= 0){
-            DB::beginTransaction();
-            try {
-                $order = Order::create([
-                    'user_id' => auth()->id(),
-                    'total' => 0,
-                    'status' => "success",
-                ]);
-
-                $orderItems = [];
-                foreach($product->options as $id => $item) {
-                    $orderItems[] = OrderItem::create([
-                        'order_id' => $order->id,
-                        'product_id' => $product->id,
-                        'product_name' => $product->name,
-                        'product_options_id' => $item->id,
-                        'option_thumbnail' => $item->thumbnail,
-                        'option_name' => $item->name,
-                        'option_price' => $item->price,
+            if(!isOwned($request->product_id)){
+                DB::beginTransaction();
+                try {
+                    $order = Order::create([
+                        'user_id' => auth()->id(),
+                        'total' => 0,
+                        'status' => "success",
                     ]);
-                };
-                
-                $libraryController = new LibraryController(); // Create instance
 
-                foreach ($orderItems as $item) {
-                    $libraryController->add($order->user_id, $item->product_options_id);
+                    $orderItems = [];
+                    foreach($product->options as $id => $item) {
+                        $orderItems[] = OrderItem::create([
+                            'order_id' => $order->id,
+                            'product_id' => $product->id,
+                            'product_name' => $product->name,
+                            'product_options_id' => $item->id,
+                            'option_thumbnail' => $item->thumbnail,
+                            'option_name' => $item->name,
+                            'option_price' => $item->price,
+                        ]);
+                    };
+                    
+                    $libraryController = new LibraryController(); // Create instance
+
+                    foreach ($orderItems as $item) {
+                        $libraryController->add($order->user_id, $item->product_options_id);
+                    }
+                    
+                    DB::commit();
+                    return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'Ordered successfully!');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    // return dd($e);
+                    return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
                 }
-                
-                DB::commit();
-                return redirect(route('order',  $order->id))->with('success', 'Ordered successfully!');
-            } catch (\Exception $e) {
-                DB::rollBack();
-                return dd($e);
-                // return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            } else {
+                return redirect()->back()->with('error', 'Already owned, cannot add to library');
             }
+        } else {
+            return redirect()->back()->with('error', 'Not a free product, cannot add to library for free!');
         }
     }
 }

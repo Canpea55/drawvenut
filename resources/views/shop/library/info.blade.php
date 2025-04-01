@@ -127,7 +127,8 @@
             </div> --}}
 
             <div class="d-flex justify-content-start mt-3 gap-1">
-                @if ($product->isDownloadable && $options[0]->downloads[0])
+                {{-- @dd($options) --}}
+                @if ($product->isDownloadable && !empty($options) && isset($options[0]->downloads) && count($options[0]->downloads) > 0)
                     <div class="btn-group">
                         <a target="_top" href="{{$options[0]->downloads[0]->link}}" class="btn btn-lg btn-success" {{$options[0]->downloads[0]->isDownload ? 'download' : '' }}>{{$options[0]->downloads[0]->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$options[0]->downloads[0]->type}})</a>
                         <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">

@@ -2,6 +2,8 @@
 
 use Carbon\Carbon;
 use App\Models\Favorite;
+use App\Models\Library;
+use App\Models\Product;
 
 if (!function_exists('calculateDuration')) {
     function calculateDuration($start, $end)
@@ -53,26 +55,31 @@ if(!function_exists('favoritesCount')) {
         return Favorite::where('user_id', $user_id)->count();
     }
 }
-if(!function_exists('isFavorited')) {
-    function isFavorited($product_id){
-        $user_id = Auth::id();
-        $favorite = Favorite::where([
-            'user_id' => $user_id,
-            'product_id' => $product_id,
-        ])->first();
-        if($favorite){
-            return true;
-        }
-        return false;
+if (!function_exists('isFavorited')) {
+    function isFavorited($product_id)
+    {
+        return Favorite::where('user_id', Auth::id())
+            ->where('product_id', $product_id)
+            ->exists();
+    }
+}
+if (!function_exists('isOwned')) {
+    function isOwned($product_id)
+    {
+        $optionIds = Product::find($product_id)?->options->pluck('id') ?? [];
+        return Library::where('user_id', Auth::id())
+            ->whereIn('product_options_id', $optionIds)
+            ->exists();
     }
 }
 
+
 if(!function_exists('priceTag')) {
     function priceTag($price){
-        if($price == 0) {
+        if($price <= 0) {
             $price = "ฟรี!";
         } else {
-            $price = $price . " ฿";
+            $price = " ฿" . $price;
         }
 
         return $price;

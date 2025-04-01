@@ -45,8 +45,42 @@ class OrderController extends Controller
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total' => $request->total,
-                'status' => "pending",
+                'status' => "success",
             ]);
+
+            if($order->total <= 0) {
+                $items = json_decode($request->items);
+                $orderItems = [];
+                foreach($items as $id => $item) {
+                    foreach($item->selectedOptions as $option_id) {
+                        foreach($item->optionDetails as $detail) {
+                            if($option_id == $detail->option_id){
+                                $orderItems[] = OrderItem::create([
+                                    'order_id' => $order->id,
+                                    
+                                    'product_id' => $id,
+                                    'product_name' => $item->name,
+            
+                                    'product_options_id' => $detail->option_id,
+                                    'option_thumbnail' => $detail->thumbnail,
+                                    'option_name' => $detail->name,
+                                    'option_price' => $detail->price,
+                                ]);
+                            }
+                        }
+                    }
+                };
+
+                app(CartController::class)->clear();
+
+                $libraryController = new LibraryController();
+                foreach ($orderItems as $item) {
+                    $libraryController->add($order->user_id, $item->product_options_id);
+                }
+
+                DB::commit();
+                return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'Ordered successfully!');
+            }
             
             $items = json_decode($request->items);
             foreach($items as $id => $item) {

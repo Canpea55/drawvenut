@@ -142,7 +142,8 @@
                     } else {
                         // Update the price if available (adjust based on your badge structure)
                         let priceText = this.querySelector('div div:last-child').textContent;
-                        priceDisplay.textContent = '฿' + priceText.replace(/[^\d.,]/g, '').trim();
+                        if(priceText)
+                        priceDisplay.textContent = priceText.trim();
                         document.querySelector('.cart-form button[type="submit"]').disabled = false;
                     }                    
                 });
@@ -324,7 +325,7 @@
                 <!-- Right Column: Product Details -->
                 <div class="col-12 col-lg-4 my-2 d-flex flex-column">
                     @php
-                        if ($product->lowestPrice <= 0) {
+                        if ($product->highestPrice <= 0) {
                             $pricetag = 'ฟรี!';
                         } else {
                             $pricetag = '฿' . $product->prices;
@@ -354,7 +355,7 @@
                                     @endif
                                     <div>
                                         <div class="text-start mb-1">{{$option->name}}</div>
-                                        <div class="text-start text-success">฿{{$option->price}}</div>
+                                        <div class="text-start text-success">{{priceTag($option->price)}}</div>
                                     </div>
                                 </a>
                             @endforeach

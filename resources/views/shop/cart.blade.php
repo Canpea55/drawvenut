@@ -114,7 +114,11 @@
                             @csrf
                             <input type="hidden" name="items" value="{{json_encode(session('cart'))}}">
                             <input type="hidden" name="total" value="{{ $total }}">
-                            <button type="submit" class="w-100 btn btn-primary btn-lg">ซื้อสินค้า</button>
+                            @if ($total <= 0)
+                                <button type="submit" class="w-100 btn btn-success btn-lg">รับสินค้าฟรี</button>
+                            @else
+                                <button type="submit" class="w-100 btn btn-primary btn-lg">ซื้อสินค้า</button>
+                            @endif
                         </form>
                     </div>
                 </div>
