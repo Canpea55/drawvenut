@@ -358,7 +358,7 @@
                                     @if (isOwned($option->id))
                                         <button class="Btn" style="position: absolute; background-color: var(--bs-primary);" onclick="document.location='{{route('library', ['product_id' => $option->product])}}'">
                                             <div class="sign">
-                                                <img src="{{ asset('icons/oval-interface/grid-even.svg') }}" alt="Cart Icon" width="16" style="filter: invert(100%) brightness(200%);">
+                                                <img src="{{ asset('icons/oval-interface/folder-open.svg') }}" alt="Library Icon" width="16" style="filter: invert(100%) brightness(200%);">
                                             </div>
                                             <div class="text">ในคลัง</div>
                                         </button>
