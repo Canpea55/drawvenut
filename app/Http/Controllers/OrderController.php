@@ -45,7 +45,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total' => $request->total,
-                'status' => "success",
+                'status' => "pending",
             ]);
 
             if($order->total <= 0) {
@@ -77,6 +77,9 @@ class OrderController extends Controller
                 foreach ($orderItems as $item) {
                     $libraryController->add($order->user_id, $item->product_options_id);
                 }
+
+                $order->status = 'success';
+                $order->save();
 
                 DB::commit();
                 return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'Ordered successfully!');

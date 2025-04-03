@@ -705,7 +705,7 @@
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <div class="form-check">
                                                                 <input type="checkbox" class="form-check-input" name="options[{{$optionIdx}}][downloads][{{ $download->id }}][isDownload]" {{ $download->isDownload ? 'checked' : '' }}>
-                                                                <label class="form-check-label">ดาวน์โหลดได้</label>
+                                                                <label class="form-check-label">เป็นลิงค์โหลดไฟล์</label>
                                                             </div>
                                                             <button type="button" class="btn btn-sm btn-danger remove-download mt-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">ลบ</button>
                                                         </div>

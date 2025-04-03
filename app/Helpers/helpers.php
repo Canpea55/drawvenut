@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ProductOptions;
 use Carbon\Carbon;
 use App\Models\Favorite;
 use App\Models\Library;
@@ -64,14 +65,30 @@ if (!function_exists('isFavorited')) {
     }
 }
 if (!function_exists('isOwned')) {
-    function isOwned($product_id)
+    function isOwned($option_id): bool
     {
-        $optionIds = Product::find($product_id)?->options->pluck('id') ?? [];
-        return Library::where('user_id', Auth::id())
-            ->whereIn('product_options_id', $optionIds)
-            ->exists();
+        return ProductOptions::whereKey($option_id)
+            ->exists() &&
+            Library::where('user_id', Auth::id())
+                ->where('product_options_id', $option_id)
+                ->exists();
     }
 }
+if (!function_exists('isPicked')) {
+    function isPicked($option_id): bool
+    {
+        $cart = session('cart', []);
+
+        foreach ($cart as $product) {
+            if (!empty($product['selectedOptions']) && in_array($option_id, $product['selectedOptions'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
 
 
 if(!function_exists('priceTag')) {

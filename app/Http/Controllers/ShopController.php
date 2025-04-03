@@ -52,7 +52,6 @@ class ShopController extends Controller
 
     function product($id)
     {
-        // Eager load tags with the product
         $product = Product::find($id);
 
         if ($product->options->isNotEmpty()) {
@@ -73,7 +72,14 @@ class ShopController extends Controller
             $product->prices = "0";
         }
 
-        return view('shop.product', compact('product'));
+        $library = Library::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+        $owned_options_id = [];
+        foreach($library as $item) {
+            $owned_options_id[] = $item->product_options_id;
+        }
+        $owned_options = $product->options()->whereIn('id', $owned_options_id)->get();
+
+        return view('shop.product', compact('product', 'owned_options'));
     }
 
     function inventory()

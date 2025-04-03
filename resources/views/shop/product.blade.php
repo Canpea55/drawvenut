@@ -92,8 +92,8 @@
             const priceDisplay = document.getElementById('price-display');
             const selectedOptionInput = document.getElementById("selected_option");
 
-            if(optionBadges.length == 0){
-                document.querySelector('.cart-form button[type="submit"]').disabled = false;
+            if(optionBadges.length <= 0){
+                document.querySelector('.cart-form button[type="submit"]').disabled = true;
             }
             
             optionBadges.forEach(function(badge) {
@@ -261,6 +261,10 @@
 @endsection
 
 @section('content')
+    @php
+        $owned = collect($product->options)->filter(fn($option) => isOwned($option->id))->count();
+        $option_count = count($product->options);
+    @endphp
     <!-- Main Product Display -->
     <section class="flex card mb-2">
         <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 16px; top: 16px; z-index: 1;">
@@ -344,12 +348,29 @@
                             @endforeach
                         @endif
                     </div>
-                    <div class="d-flex flex-wrap gap-2 justify-content-start overflow-y-scroll py-2" style="max-height: 40%">
+                    <div class="d-flex flex-wrap gap-2 justify-content-start overflow-y-scroll py-4" style="max-height: 40%">
                         @if(count($product->options) > 1)
                             @foreach($product->options as $option)
-                                <a href="#" class="badge animU d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded no-underline option-badge" 
+                                <a href="#" class="badge d-flex align-items-center p-1 pe-2 border border-primary-subtle rounded no-underline {{ isOwned($option->id) || isPicked($option->id) ? 'text-body-tertiary bg-secondary-subtle' : 'option-badge animU text-primary-emphasis bg-primary-subtle' }}"
+                                {{ isOwned($option->id) || isPicked($option->id) ? 'aria-disabled=true' : '' }}
                                 data-image="{{ asset($option->thumbnail) }}"
                                 data-option="{{ $option->id }}">
+                                    @if (isOwned($option->id))
+                                        <button class="Btn" style="position: absolute; background-color: var(--bs-primary);" onclick="document.location='{{route('library', ['product_id' => $option->product])}}'">
+                                            <div class="sign">
+                                                <img src="{{ asset('icons/oval-interface/grid-even.svg') }}" alt="Cart Icon" width="16" style="filter: invert(100%) brightness(200%);">
+                                            </div>
+                                            <div class="text">ในคลัง</div>
+                                        </button>
+                                    @endif
+                                    @if (isPicked($option->id))
+                                        <button class="Btn" style="position: absolute; background-color: var(--bs-success-bg-subtle);" onclick="document.location='{{route('cart')}}'">
+                                            <div class="sign">
+                                                <img src="{{ asset('icons/oval-interface/shopping-bag.svg') }}" alt="Cart Icon" width="16">
+                                            </div>
+                                            <div class="text" style="color:black;">ในตะกร้า</div>
+                                        </button>
+                                    @endif
                                     @if(isset($option->thumbnail))
                                         <img class="rounded me-1" width="auto" height="32" src="{{ asset($option->thumbnail) }}" alt="{{ $option->name }}">
                                     @endif
@@ -366,12 +387,15 @@
                     <div class="flex-grow-1"></div>
                     <div id="button-container" class="d-flex flex-wrap gap-2">
                         @if ($product->prices <= 0)
-                            <form action="{{route('library.free')}}" method="POST">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{$product->id}}">
-                                <button type="submit" class="btn btn-success btn-lg">เพิ่มไปยังคลัง</button>
-                            </form>
-                            {{-- <a type="button" class="btn btn-success btn-lg" href="{{route('library.free', ['product_id' => $product->id])}}">เพิ่มไปยังคลัง</a> --}}
+                            @if ($owned <= 0)
+                                <form action="{{route('library.free')}}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{$product->id}}">
+                                    <button type="submit" class="btn btn-success btn-lg">เพิ่มไปยังคลัง</button>
+                                </form>
+                            @else
+                                <button class="btn btn-success btn-lg" disabled>เพิ่มไปยังคลัง</button>
+                            @endif
                             @if ($product->isDownloadable && !empty($product->options[0]->downloads[0]))
                                 <div class="btn-group dropdown-center">
                                     <a target="_top" href="{{$product->options[0]->downloads[0]->link}}" class="btn btn-lg btn-success" {{$product->options[0]->downloads[0]->isDownload ? 'download' : '' }}>{{$product->options[0]->downloads[0]->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$product->options[0]->downloads[0]->type}})</a>
@@ -407,14 +431,85 @@
                                 <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ไม่สามารถดาวห์โหลดได้">ดาวน์โหลด</a>
                             @endif
                         @else
-                            <form action="{{ route('cart.add') }}" class="cart-form" method="POST">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <input type="hidden" name="product_name" value="{{ $product->name }}">
-                                <input type="hidden" name="option_id" id="selected_option" value="{{count($product->options) > 1 ? '' : $product->options[0]->id}}">
-                            
-                                <button type="submit" class="btn btn-primary btn-lg" disabled>เพิ่มใส่ตะกร้า</button>
-                            </form>
+                            @if ($owned == $option_count)
+                                @if ($product->isDownloadable && !empty($product->options[0]->downloads[0]))
+                                    <div class="btn-group dropdown-center">
+                                        <a target="_top" href="{{$product->options[0]->downloads[0]->link}}" class="btn btn-lg btn-success" {{$product->options[0]->downloads[0]->isDownload ? 'download' : '' }}>{{$product->options[0]->downloads[0]->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$product->options[0]->downloads[0]->type}})</a>
+                                        <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu bg-primary-subtle" style="--bs-dropdown-min-width:12rem;">
+                                            <p class="px-4 py-2 text-body-secondary text-center w-100 m-0">
+                                                เนื้อหาที่สามารถดาวน์โหลดได้
+                                            </p>
+                                            <li><hr class="dropdown-divider"></li>
+                                            @foreach ($product->options as $option)
+                                                <div class="list-group-item list-group-item-primary d-flex align-items-center lh-sm">
+                                                    <div class="w-100">
+                                                        <div class="d-flex justify-content-between align-items-center gap-3 w-100 no-underline px-2">
+                                                            <img class="rounded me-1 img-thumbnail" width="64" height="auto" src="{{ asset($option->thumbnail) }}">
+                                                            <h6 class="my-1">{{ Str::limit($option->name, 32) }}</h6>
+                                                            <div class="d-flex flex-grow-1"></div>
+                                                        </div>
+                                                        <div class="my-2">
+                                                            <ul class="list-group mx-2">
+                                                                @foreach ($option->downloads as $download)
+                                                                    <a target="_top" href="{{$download->link}}" class="animU dropdown-item list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center" {{$download->isDownload ? 'download' : '' }}>{{$download->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$download->type}})</a>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @else
+                                    <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ไม่สามารถดาวห์โหลดได้">ดาวน์โหลด</a>
+                                @endif
+                            @else
+                                <form action="{{ route('cart.add') }}" class="cart-form" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="product_name" value="{{ $product->name }}">
+                                    <input type="hidden" name="option_id" id="selected_option" value="{{count($product->options) > 1 ? '' : $product->options[0]->id}}">
+                                
+                                    <button type="submit" class="btn btn-primary btn-lg" disabled>เพิ่มใส่ตะกร้า</button>
+                                </form>
+                                @if ($product->isDownloadable && !empty($owned_options) && isset($owned_options[0]->downloads) && count($owned_options[0]->downloads) > 0)
+                                    <div class="btn-group">
+                                        <a target="_top" href="{{$owned_options[0]->downloads[0]->link}}" class="btn btn-lg btn-success" {{$owned_options[0]->downloads[0]->isDownload ? 'download' : '' }}>{{$owned_options[0]->downloads[0]->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$owned_options[0]->downloads[0]->type}})</a>
+                                        <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu bg-primary-subtle" style="--bs-dropdown-min-width:24rem;">
+                                            <p class="px-4 py-2 text-body-secondary text-center w-100 m-0">
+                                                เนื้อหาที่สามารถดาวน์โหลดได้
+                                            </p>
+                                            <li><hr class="dropdown-divider"></li>
+                                            @foreach ($owned_options as $option)
+                                                <div class="list-group-item list-group-item-primary d-flex align-items-center lh-sm">
+                                                    <div class="w-100">
+                                                        <div class="d-flex justify-content-between align-items-center gap-3 w-100 no-underline px-2">
+                                                            <img class="rounded me-1 img-thumbnail" width="64" height="auto" src="{{ asset($option->thumbnail) }}">
+                                                            <h6 class="my-1">{{ Str::limit($option->name, 32) }}</h6>
+                                                            <div class="d-flex flex-grow-1"></div>
+                                                        </div>
+                                                        <div class="my-2">
+                                                            <ul class="list-group mx-2">
+                                                                @foreach ($option->downloads as $download)
+                                                                    <a target="_top" href="{{$download->link}}" class="animU dropdown-item list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center" {{$download->isDownload ? 'download' : '' }}>{{$download->isDownload ? 'ดาวน์โหลด' : 'รับ' }} ({{$download->type}})</a>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @else
+                                    <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ไม่สามารถดาวห์โหลดได้">ดาวน์โหลด</a>
+                                @endif
+                            @endif
                         @endif
                         {{-- @if ($product->owned)
                             @if ($product->isDownloadable)

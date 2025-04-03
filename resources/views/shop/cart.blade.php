@@ -6,6 +6,10 @@
     }
 @endsection
 
+@section('title')
+ตะกร้าสินค้า
+@endsection
+
 @section('content')
     <div class="container">
         @if(session('cart'))
