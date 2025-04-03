@@ -215,27 +215,44 @@
                     @foreach ($products as $item)
                         <div class="col grid-item">
                             <div class="card shadow-sm">
+                                @php
+                                    $own = false;
+                                    foreach($item->options as $option) {
+                                        if(isOwned($option->id)) {
+                                            $own = true;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                @if ($own)
+                                    <button class="Btn" style="position: absolute; background-color: var(--bs-primary); top: 4%;" onclick="document.location='{{route('library', ['product_id' => $item->id])}}'">
+                                        <div class="sign">
+                                            <img src="{{ asset('icons/oval-interface/folder-open.svg') }}" alt="Library Icon" width="16" style="filter: invert(100%) brightness(200%);">
+                                        </div>
+                                        <div class="text">ในคลัง</div>
+                                    </button>
+                                @endif
                                 @auth
-                                <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
-                                    <div class="btn-group gap-1">
-                                        @if (Auth::user()->isAdmin)
-                                            <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
-                                                <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
-                                            </a>
-                                        @endif
-                                        <form method="POST" action="{{ route('favorite') }}" class="favorite-form"  onsubmit="setProductID({{$item->id}});">
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{ $item->id }}">
-                                            <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
-                                                @if (isFavorited($item->id))
-                                                    <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
-                                                @else
-                                                    <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
-                                                @endif
-                                            </button>
-                                        </form>
+                                    <div class="d-flex justify-content-between align-items-start" style="position: absolute; right: 3%; top: 4%; z-index: 1;">
+                                        <div class="btn-group gap-1">
+                                            @if (Auth::user()->isAdmin)
+                                                <a href="{{route('product.edit', $item->id)}}" type="button" class="opBtn" title="แก้ไข">
+                                                    <img src="{{ asset('icons/oval-interface/edit.svg') }}" alt="edit" width="24">
+                                                </a>
+                                            @endif
+                                            <form method="POST" action="{{ route('favorite') }}" class="favorite-form"  onsubmit="setProductID({{$item->id}});">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $item->id }}">
+                                                <button type="submit" class="opBtn p-0 border-0 bg-transparent" title="ถูกใจ">
+                                                    @if (isFavorited($item->id))
+                                                        <img src="{{ asset('icons/oval-interface/heart-filled.svg') }}" alt="favorite" width="24">
+                                                    @else
+                                                        <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="favorite" width="24">
+                                                    @endif
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
-                                </div>
                                 @endauth
                                 <a class="no-underline" href="{{route('product', $item->id) }}" >
                                     @php
