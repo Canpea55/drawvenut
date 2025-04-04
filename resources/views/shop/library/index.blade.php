@@ -44,7 +44,17 @@
             contentframe.src = '/library/product/' + x;
         }
 
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
         $(document).ready(function(){
+            const initialId = getQueryParam('product_id');
+            if (initialId) {
+                setIframe(initialId);
+            }
+
             $('#search-input').on('input', function(){
                 const query = $(this).val().toLowerCase().trim();
                 // console.log('Search query:', query);
