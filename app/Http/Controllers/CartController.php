@@ -32,7 +32,7 @@ class CartController extends Controller
             session()->put('cart', $cart_items);
             return view('shop.cart');
         } else {
-            return redirect(route('index'))->with('danger', 'ยังไม่มีสินค้าในตะกร้าสินค้า');
+            return redirect(route('index'))->with('danger', 'ตะกร้าสินค้าว่างเปล่า!');
         }
     }
 
@@ -60,7 +60,7 @@ class CartController extends Controller
             session()->put('cart', $cart);
             return redirect()->back()->with('success', 'สินค้าถูกเพิ่มลงตะกร้าแล้ว!');
         } else {
-            return redirect()->back()->with('danger', 'ไม่พบเจอตัวเลือกสินค้า (option_id)');
+            return redirect()->back()->with('danger', 'ไม่พบเจอตัวเลือกสินค้า ' . $request->option_id);
         }
     }
 
@@ -86,7 +86,9 @@ class CartController extends Controller
     public function clear()
     {
         session()->forget('cart');
-        return redirect()->back()->with('success', 'ตะกร้าว่างแล้ว!');
+        return redirect(route('index'))->with([
+            'success' => 'ตะกร้าว่างแล้ว!'
+        ]);
     }
 }
 

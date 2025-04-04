@@ -137,17 +137,17 @@ class ShopController extends Controller
                     }
                     
                     DB::commit();
-                    return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'Ordered successfully!');
+                    return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'ของฟรีมีในโลก! สินค้าอยู่ในคลังลูกค้าแล้วนะคะ!!!');
                 } catch (\Exception $e) {
                     DB::rollBack();
                     // return dd($e);
-                    return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+                    return redirect()->back()->with('danger', 'พบ error : ' . $e->getMessage());
                 }
             } else {
-                return redirect()->back()->with('error', 'Already owned, cannot add to library');
+                return redirect()->back()->with('danger', 'มีอยู่ในคลังอยู่แล้ว, ไม่สามารถเพิ่มได้อีก!');
             }
         } else {
-            return redirect()->back()->with('error', 'Not a free product, cannot add to library for free!');
+            return redirect()->back()->with('danger', 'ไม่สามารถเพิ่มสินค้าได้, สินค้านี้ไม่ใช่ของฟรีนะคะ! แฮ็กเกอร์รึเปล่าเนีย?!');
         }
     }
 }

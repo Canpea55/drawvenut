@@ -336,7 +336,7 @@
                     <!-- Text Section (Takes up remaining space) -->
                     <div class="flex-grow-1">
                         <h6 class="my-1">{{ Str::limit($item->name, 24) }}</h6>
-                        <span class="text-body-secondary">฿{{priceTag($item->prices)}}</span>
+                        <span class="text-body-secondary">{{priceTag($item->prices)}}</span>
                     </div>                    
                 </div>
             </a>

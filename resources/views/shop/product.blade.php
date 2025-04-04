@@ -511,68 +511,6 @@
                                 @endif
                             @endif
                         @endif
-                        {{-- @if ($product->owned)
-                            @if ($product->isDownloadable)
-                                <div class="btn-group">
-                                    <a class="btn btn-success btn-lg w-100" href="{{ $product->download }}" download>ดาวน์โหลด</a>
-                                    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="visually-hidden">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">A</a></li>
-                                        <li><a class="dropdown-item" href="#">B</a></li>
-                                        <li><a class="dropdown-item" href="#">C</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="#">D</a></li>
-                                    </ul>
-                                </div>
-                            @else
-                                <a class="btn btn-success btn-lg disabled w-100" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถดาวน์โหลดได้ค่ะ">ดาวน์โหลด</a>
-                            @endif
-                        @else
-                            @if ($product->lowestPrice <= 0) 
-                                @if ($product->isDownloadable)
-                                    <a class="btn btn-success btn-lg " href="{{ $product->download }}" download>ดาวน์โหลด</a>
-                                @else
-                                    <a class="btn btn-success btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถดาวน์โหลดได้ค่ะ">ดาวน์โหลด</a>
-                                @endif
-                                <a type="button" class="btn btn-primary btn-lg disabled" aria-disabled="true" href="#">เพิ่มไปยังคลัง</a>
-                            @else
-                                @if (session('cart'))
-                                    @if (array_key_exists($product->id, session('cart')))
-                                        <a type="button" class="btn bg-success-subtle btn-lg" href="{{route('cart')}}">ไปที่รถเข็น</a>
-                                    @else
-                                        @if ($product->isBuyable)
-                                            <form action="{{ route('cart.add') }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $product->id }}">
-                                                @if(!empty($defaultImage))<input type="hidden" name="image" value="{{ $defaultImage }}">@endif
-                                                <input type="hidden" name="name" value="{{ $product->name }}">
-                                                <input type="hidden" name="description" value="{{ $product->description }}">
-                                                <input type="hidden" name="price" value="{{ $product->price }}">
-                                                <button type="submit" class="btn btn-primary btn-lg">เพิ่มใส่ตะกร้า</button>
-                                            </form>
-                                        @else
-                                            <a class="btn btn-primary btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถซื้อได้ค่ะ">เพิ่มใส่ตะกร้า</a>
-                                        @endif
-                                    @endif
-                                @else
-                                    @if ($product->isBuyable)    
-                                        <form action="{{ route('cart.add') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="id" value="{{ $product->id }}">
-                                            @if(!empty($defaultImage))<input type="hidden" name="image" value="{{ $defaultImage }}">@endif
-                                            <input type="hidden" name="name" value="{{ $product->name }}">
-                                            <input type="hidden" name="description" value="{{ $product->description }}">
-                                            <input type="hidden" name="price" value="{{ $product->price }}">
-                                            <button type="submit" class="btn btn-primary btn-lg">เพิ่มใส่ตะกร้า</button>
-                                        </form>
-                                    @else
-                                        <a class="btn btn-primary btn-lg disabled" role="button" aria-disabled="true" title="ขณะนี้ยังไม่สามารถซื้อได้ค่ะ">เพิ่มใส่ตะกร้า</a>
-                                    @endif
-                                @endif
-                            @endif
-                        @endif --}}
                     </div>
                 </div>
             </div>
@@ -617,7 +555,7 @@
                     <!-- Text Section (Takes up remaining space) -->
                     <div class="flex-grow-1">
                         <h6 class="my-1">{{ Str::limit($product->name, 24) }}</h6>
-                        <span class="text-body-secondary">฿{{ $product->prices }}</span>
+                        <span class="text-body-secondary">{{ $product->prices }}</span>
                     </div>                    
                 </div>
             </a>
@@ -653,7 +591,7 @@
                     <!-- Text Section (Takes up remaining space) -->
                     <div class="flex-grow-1">
                         <h6 class="my-1">{{ Str::limit($product->name, 24) }}</h6>
-                        <span class="text-body-secondary">฿{{ $product->prices }}</span>
+                        <span class="text-body-secondary">{{ $product->prices }}</span>
                     </div>                    
                 </div>
             </a>

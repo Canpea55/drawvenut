@@ -294,6 +294,27 @@
     </div>
 
     <div class="toast-container position-fixed bottom-0 end-0 p-2 d-none d-md-block">
+        @if (session('success'))
+            <div id="success" class="toast align-items-center text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                        <div class="toast-body">
+                            {{session('success') }}
+                        </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
+        @if (session('danger'))
+            <div id="danger" class="toast align-items-center text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                        <div class="toast-body">
+                            {{session('danger') }}
+                        </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
+
         @yield('toast-container')
     </div>
 
@@ -445,6 +466,21 @@ $(document).ready(function () {
     input.addEventListener('blur', () => {
         if (!input.value) {
             startPlaceholderCycle();
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastSuccess = document.getElementById('success');
+        const toastDanger = document.getElementById('danger');  
+        if (toastSuccess) {
+            const bsToast = new bootstrap.Toast(toastSuccess);
+            bsToast.show();
+        }
+        if (toastDanger) {
+            const bsToast = new bootstrap.Toast(toastDanger);
+            bsToast.show();
         }
     });
 </script>

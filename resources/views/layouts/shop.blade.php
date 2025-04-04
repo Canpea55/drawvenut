@@ -40,14 +40,14 @@
             <a id="favorites-link" class="animU no-underline fw-light bg-danger-subtle rounded px-2 py-1" style="display: none" href="{{route('favorites')}}">
                 <!-- Desktop -->
                 <div class="d-none d-md-block">
-                    <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
+                    <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="Heart Icon" width="24">
                     <span id="favorites-count" class="align-middle">
                         สิ่งที่ถูกใจ {{ "(" . favoritesCount() . ")" }}
                     </span>
                 </div>
                 <!-- Mobile -->
                 <div class="d-md-none">
-                    <img src="{{ asset('icons/heart-svgrepo-com.svg') }}" alt="Heart Icon" width="24">
+                    <img src="{{ asset('icons/oval-interface/heart.svg') }}" alt="Heart Icon" width="24">
                     <div class="position-relative d-inline-block">
                         <span id="favorites-count-mobile" class="position-absolute translate-middle">
                             {{ favoritesCount() }}

@@ -82,7 +82,7 @@ class OrderController extends Controller
                 $order->save();
 
                 DB::commit();
-                return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'Ordered successfully!');
+                return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'ได้รับสินค้าฟรีแล้วค่ะ!');
             }
             
             $items = json_decode($request->items);
@@ -109,11 +109,10 @@ class OrderController extends Controller
             app(CartController::class)->clear();
             
             DB::commit();
-            return redirect(route('order',  $order->id))->with('success', 'Ordered successfully!');
+            return redirect(route('order',  $order->id))->with('success', 'สั่งซื้อเรียบร้อยแล้ว!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return dd($e);
-            // return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with('danger', 'พบ error : ' . $e->getMessage());
         }
     }
 
@@ -144,7 +143,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Receipt uploaded successfully!');
+        return redirect()->back()->with('success', 'ส่งสลิปเรียบร้อยแล้ว! รอการอนุมัติจากผู้ดูแลระบบนะคะ');
     }
 
     public function cancel(Request $request) {
@@ -172,10 +171,10 @@ class OrderController extends Controller
                         $order->status = "refund";
                         $order->save();
                         DB::commit();
-                        return redirect()->back()->with('success', 'Order cancelled successfully! refunded');
+                        return redirect()->back()->with('success', 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว! และทำการคืนเงินเรียบร้อย');
                     } catch (\Exception $e) {
                         DB::rollBack();
-                        return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+                        return redirect()->back()->with('error', 'พบ error : ' . $e->getMessage());
                     }
                 case "not-refund": 
                     try {
@@ -187,10 +186,10 @@ class OrderController extends Controller
                         $order->status = "not-refund";
                         $order->save();
                         DB::commit();
-                        return redirect()->back()->with('success', 'Order cancelled successfully! not refund');
+                        return redirect()->back()->with('success', 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว! และไม่คืนเงิน!');
                     } catch (\Exception $e) {
                         DB::rollBack();
-                        return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+                        return redirect()->back()->with('error', 'พบ error : ' . $e->getMessage());
                     }
                 default:
                     break;
@@ -207,7 +206,7 @@ class OrderController extends Controller
                     $order->status = "cancelled";
                     $order->save();
                     DB::commit();
-                    return redirect()->back()->with('success', 'Order cancelled successfully!');
+                    return redirect()->back()->with('success', 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว!');
                 } catch (\Exception $e) {
                     DB::rollBack();
                     return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
@@ -223,10 +222,10 @@ class OrderController extends Controller
                     $order->status = "canceling";
                     $order->save();
                     DB::commit();
-                    return redirect()->back()->with('pending', 'Order cancelation submited!');
+                    return redirect()->back()->with('pending', 'ส่งคำขอยกเลิกการสั่งซื้อแล้ว! รอการอนุมัติจากผู้ดูแลระบบนะคะ');
                 } catch (\Exception $e) {
                     DB::rollBack();
-                    return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+                    return redirect()->back()->with('error', 'พบ error : ' . $e->getMessage());
                 }
             }
         }
@@ -259,10 +258,10 @@ class OrderController extends Controller
             $order->save();
 
             DB::commit();
-            return redirect()->back()->with('success', 'Order approved successfully!');
+            return redirect()->back()->with('success', 'อนุมัติการสั่งซื้อเรียบร้อย! ทำการส่งสินค้าไปยังคลังของลูกค้าแล้ว!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'พบ error : ' . $e->getMessage());
         }
     }
 
