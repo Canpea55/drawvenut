@@ -137,17 +137,31 @@ class ShopController extends Controller
                     }
                     
                     DB::commit();
-                    return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'ของฟรีมีในโลก! สินค้าอยู่ในคลังลูกค้าแล้วนะคะ!!!');
+                    return redirect(route('library',  [
+                        'product_id' => $request->product_id
+                        ]))->with([
+                            'success' => 'ของฟรีมีในโลก! สินค้าอยู่ในคลังลูกค้าแล้วนะคะ!!!',
+                            'toast-icon' => asset('icons/oval-interface/gift-present.svg'),
+                        ]);
                 } catch (\Exception $e) {
                     DB::rollBack();
                     // return dd($e);
-                    return redirect()->back()->with('danger', 'พบ error : ' . $e->getMessage());
+                    return redirect()->back()->with([
+                        'error' => 'พบ error : ' . $e->getMessage(),
+                        'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+                    ]);
                 }
             } else {
-                return redirect()->back()->with('danger', 'มีอยู่ในคลังอยู่แล้ว, ไม่สามารถเพิ่มได้อีก!');
+                return redirect()->back()->with([
+                    'danger' => 'มีอยู่ในคลังอยู่แล้ว, ไม่สามารถเพิ่มได้อีก!',
+                    'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+                ]);
             }
         } else {
-            return redirect()->back()->with('danger', 'ไม่สามารถเพิ่มสินค้าได้, สินค้านี้ไม่ใช่ของฟรีนะคะ! แฮ็กเกอร์รึเปล่าเนีย?!');
+            return redirect()->back()->with([
+                'danger' => 'ไม่สามารถเพิ่มสินค้าได้, สินค้านี้ไม่ใช่ของฟรีนะคะ! แฮ็กเกอร์รึเปล่าเนีย?!',
+                'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+            ]);;
         }
     }
 }

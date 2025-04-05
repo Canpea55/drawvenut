@@ -82,7 +82,10 @@ class OrderController extends Controller
                 $order->save();
 
                 DB::commit();
-                return redirect(route('library',  ['product_id' => $request->product_id]))->with('success', 'ได้รับสินค้าฟรีแล้วค่ะ!');
+                return redirect(route('library',  ['product_id' => $request->product_id]))->with([
+                    'success' => 'ได้รับสินค้าฟรีแล้วค่ะ!',
+                    'toast-icon' => asset('icons/oval-interface/gift-present.svg'),
+                ]);
             }
             
             $items = json_decode($request->items);
@@ -112,7 +115,10 @@ class OrderController extends Controller
             return redirect(route('order',  $order->id))->with('success', 'สั่งซื้อเรียบร้อยแล้ว!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('danger', 'พบ error : ' . $e->getMessage());
+            return redirect()->back()->with([
+                'error' => "พบ error : \n\n" . $e->getMessage(),
+                'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+            ]);
         }
     }
 
@@ -143,7 +149,10 @@ class OrderController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'ส่งสลิปเรียบร้อยแล้ว! รอการอนุมัติจากผู้ดูแลระบบนะคะ');
+        return redirect()->back()->with([
+            'success' => 'ส่งสลิปเรียบร้อยแล้ว! รอการอนุมัติจากผู้ดูแลระบบนะคะ',
+            'toast-icon' => asset('icons/oval-interface/done-v.svg'),
+        ]);
     }
 
     public function cancel(Request $request) {
@@ -171,10 +180,16 @@ class OrderController extends Controller
                         $order->status = "refund";
                         $order->save();
                         DB::commit();
-                        return redirect()->back()->with('success', 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว! และทำการคืนเงินเรียบร้อย');
+                        return redirect()->back()->with([
+                            'success' => 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว! และคืนเงินเรียบร้อยแล้ว!',
+                            'toast-icon' => asset('icons/oval-interface/done-v.svg'),
+                        ]);
                     } catch (\Exception $e) {
                         DB::rollBack();
-                        return redirect()->back()->with('error', 'พบ error : ' . $e->getMessage());
+                        return redirect()->back()->with([
+                            'error' => "พบ error : \n\n" . $e->getMessage(),
+                            'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+                        ]);
                     }
                 case "not-refund": 
                     try {
@@ -186,10 +201,16 @@ class OrderController extends Controller
                         $order->status = "not-refund";
                         $order->save();
                         DB::commit();
-                        return redirect()->back()->with('success', 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว! และไม่คืนเงิน!');
+                        return redirect()->back()->with([
+                            'success' => 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว! และไม่คืนเงิน!',
+                            'toast-icon' => asset('icons/oval-interface/done-v.svg'),
+                        ]);
                     } catch (\Exception $e) {
                         DB::rollBack();
-                        return redirect()->back()->with('error', 'พบ error : ' . $e->getMessage());
+                        return redirect()->back()->with([
+                            'error' => "พบ error : \n\n" . $e->getMessage(),
+                            'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+                        ]);
                     }
                 default:
                     break;
@@ -206,10 +227,16 @@ class OrderController extends Controller
                     $order->status = "cancelled";
                     $order->save();
                     DB::commit();
-                    return redirect()->back()->with('success', 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว!');
+                    return redirect()->back()->with([
+                        'success' => 'การสั่งซื้อถูกยกเลิกเรียบร้อยแล้ว!',
+                        'toast-icon' => asset('icons/oval-interface/done-v.svg'),
+                    ]);
                 } catch (\Exception $e) {
                     DB::rollBack();
-                    return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+                    return redirect()->back()->with([
+                        'error' => "พบ error : \n\n" . $e->getMessage(),
+                        'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+                    ]);
                 }
             } else {
                 try {
@@ -222,10 +249,16 @@ class OrderController extends Controller
                     $order->status = "canceling";
                     $order->save();
                     DB::commit();
-                    return redirect()->back()->with('pending', 'ส่งคำขอยกเลิกการสั่งซื้อแล้ว! รอการอนุมัติจากผู้ดูแลระบบนะคะ');
+                    return redirect()->back()->with([
+                        'pending' => 'ส่งคำขอยกเลิกการสั่งซื้อแล้ว! รอการอนุมัติจากผู้ดูแลระบบนะคะ',
+                        'toast-icon' => asset('icons/oval-interface/done-v.svg'),
+                    ]);
                 } catch (\Exception $e) {
                     DB::rollBack();
-                    return redirect()->back()->with('error', 'พบ error : ' . $e->getMessage());
+                    return redirect()->back()->with([
+                        'error' => "พบ error : \n\n" . $e->getMessage(),
+                        'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+                    ]);
                 }
             }
         }
@@ -258,10 +291,16 @@ class OrderController extends Controller
             $order->save();
 
             DB::commit();
-            return redirect()->back()->with('success', 'อนุมัติการสั่งซื้อเรียบร้อย! ทำการส่งสินค้าไปยังคลังของลูกค้าแล้ว!');
+            return redirect()->back()->with([
+                'success' => "อนุมัติการสั่งซื้อเรียบร้อย! ส่งสินค้าไปยังคลังของลูกค้าแล้ว! \n\n" . "หมายเลขการสั่งซื้อ : " . $request->id . " \n" . "ยอดรวม : " . priceTag($order->total), 
+                'toast-icon' => asset('icons/oval-interface/done-v.svg'),
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'พบ error : ' . $e->getMessage());
+            return redirect()->back()->with([
+                'error' => "พบ error : \n\n" . $e->getMessage(),
+                'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+            ]);
         }
     }
 

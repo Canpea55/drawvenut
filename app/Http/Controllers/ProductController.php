@@ -147,11 +147,17 @@ class ProductController extends Controller
             // }
 
             DB::commit();
-            return redirect(route('product.manage'))->with('success', 'Product added successfully!');
+            return redirect(route('product.manage'))->with([
+                'success' => 'เพิ่มรายการสินค้าเรียบร้อย!',
+                'toast-icon' => asset('icons/oval-interface/circle-add.svg'),
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'error' => "พบ error : \n\n" . $e->getMessage(),
+                'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+            ]);
         }
     }
 
@@ -323,11 +329,17 @@ class ProductController extends Controller
             }
     
             DB::commit();
-            return redirect()->back()->with('success', 'Product updated successfully!');
+            return redirect()->back()->with([
+                'success' => 'แก้ไขข้อมูลสินค้าเรียบร้อย!',
+                'toast-icon' => asset('icons/oval-interface/edit.svg'),
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'error' => "พบ error : \n\n" . $e->getMessage(),
+                'toast-icon' => asset('icons/oval-interface/circle-emphasis.svg'),
+            ]);
         }
     }
 

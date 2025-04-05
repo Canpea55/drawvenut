@@ -32,7 +32,10 @@ class CartController extends Controller
             session()->put('cart', $cart_items);
             return view('shop.cart');
         } else {
-            return redirect(route('index'))->with('danger', 'ตะกร้าสินค้าว่างเปล่า!');
+            return redirect(route('index'))->with([
+                'danger' => 'ตะกร้าสินค้าว่างเปล่า!',
+                'toast-icon' => asset('icons/oval-interface/shopping-bag.svg'),
+            ]);
         }
     }
 
@@ -45,7 +48,10 @@ class CartController extends Controller
             if (!in_array($request->option_id, $selectedOptions)) {
                 $selectedOptions[] = $request->option_id;
             } else {
-                return redirect()->back()->with('danger', 'สินค้าและตัวเลือกนี้ถูกเพิ่มไปแล้ว');
+                return redirect()->back()->with([
+                    'danger' => 'สินค้าและตัวเลือกนี้ถูกเพิ่มไปแล้ว',
+                    'toast-icon' => asset('icons/oval-interface/shopping-bag.svg'),
+                ]);
             }
 
             if (isset($cart[$request->product_id])) {
@@ -58,9 +64,15 @@ class CartController extends Controller
             }
 
             session()->put('cart', $cart);
-            return redirect()->back()->with('success', 'สินค้าถูกเพิ่มลงตะกร้าแล้ว!');
+            return redirect()->back()->with([
+                'success' => 'เพิ่มสินค้าลงตะกร้าเรียบร้อยค่ะ!',
+                'toast-icon' => asset('icons/oval-interface/shopping-bag.svg'),
+            ]);
         } else {
-            return redirect()->back()->with('danger', 'ไม่พบเจอตัวเลือกสินค้า ' . $request->option_id);
+            return redirect()->back()->with([
+                'danger' => 'ไม่พบเจอตัวเลือกสินค้า ' . $request->option_id,
+                'toast-icon' => asset('icons/oval-interface/shopping-bag.svg'),
+            ]);
         }
     }
 
@@ -79,7 +91,10 @@ class CartController extends Controller
         }
         
         session()->put('cart', $cart);
-        return redirect()->back()->with('success', 'สินค้าถูกลบออกแล้ว!');
+        return redirect()->back()->with([
+            'success' => 'สินค้าถูกลบออกแล้ว!',
+            'toast-icon' => asset('icons/oval-interface/shopping-bag.svg'),
+        ]);
     }
 
     // Clear cart
@@ -87,7 +102,8 @@ class CartController extends Controller
     {
         session()->forget('cart');
         return redirect(route('index'))->with([
-            'success' => 'ตะกร้าว่างแล้ว!'
+            'success' => 'ตะกร้าว่างแล้ว!',
+            'toast-icon' => asset('icons/oval-interface/shopping-bag.svg'),
         ]);
     }
 }
